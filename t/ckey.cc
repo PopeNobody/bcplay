@@ -1,24 +1,56 @@
 #include <coinfwd.hh>
 #include <bitcoin/bitcoin.hpp>
-#include <bitset>
+#include <algorithm>
+
+
 
 using std::hex;
-using std::bitset;
 using std::array;
 
 using namespace bc;
+using namespace std;
 
+ostream &operator<<(ostream &ostream, const ec_compressed &data) {
+		return ostream <<  bc::encode_base16(data);
+};
+template<size_t _n>
+ostream &operator<<(ostream &ostream, const std::array<unsigned char,_n> &data) {
+		return ostream <<  bc::encode_base16(data);
+};
+using libbitcoin::wallet::decode_mnemonic;
 int main(int, char**) {
-  auto my_secret = base16_literal(
-	  "f3c8f9a6198cca98f481edde13bcc031b1470a81e367b838fe9e0a9db0f5993d"
-	  );
-  cout <<  bc::encode_base16(my_secret) << endl;;
-  ec_compressed my_pubkey;
-//  cout << "pubkey: " << my_pubkey << endl;
-  secret_to_public(my_pubkey, my_secret);
-  cout << bc::encode_base16(my_secret) << endl;
-//  cout << "secret: " << my_secret << endl;
-  return 0;
+	try {
+		auto my_secret = base16_literal(
+				"f3c8f9a6891cca98f481edde13bcc031b1470a81e367b838fe9e0a9db0f5993d"
+				);
+		
+		cout << "secret: " << my_secret << endl;
+
+		auto list	= bc::wallet::create_mnemonic(my_secret);
+		auto hd_seed = decode_mnemonic(list);
+		cout << "hd_seed: " << hd_seed << endl;
+//   		int row=0;
+//   		ostringstream sentence;
+//   		for(auto b(list.begin()), e(list.end()); b!=e; b++) {
+//   			sentence << "  " << left << setw(12) << *b;
+//   			if(++row % 4 == 0)
+//   				sentence << endl;
+//   		};
+//   		cout << "(" << endl << sentence.str() << ")" << endl;
+//   		auto my_word_list = split(sentence.str(), " \n", true);
+//   		auto hd_seed = decode_mnemonic(my_word_list);
+//   		for(auto b(my_word_list.begin()), e(my_word_list.end()); b!=e; b++){
+//   			cout << "(" << *b << ")" << endl;
+//   		};
+//   		cout << typeid(hd_seed).name() << endl;	
+//		cout << encode_base16(hd_seed) << endl;
+		return 0;
+	} catch ( const exception &ex ) {
+		cerr << "exception: " << ex.what() << endl;
+	} catch ( ... ) {
+		cerr << "caught shit!" << endl;
+	};
+  return 1;
 };
 
 
@@ -35,6 +67,10 @@ int main(int, char**) {
 //   	while(beg!=end){
 //   			
 //   	};
+//   		ec_compressed my_pubkey;
+//   		secret_to_public(my_pubkey, my_secret);
+//   
+//   		cout << "pubkey: " << my_pubkey << endl;
 //   	cout << bc::encode_base16(sec) << endl << endl;
 //   	ec_compressed public_key;
 //   	bc::secret_to_public(public_key,sec);

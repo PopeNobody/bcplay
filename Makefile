@@ -5,16 +5,25 @@ all:
 CXX := clang++-6.0
 CXXFLAGS += -std=gnu++2a -g -pthread -I inc -MD
 CXXFLAGS += -fPIC
-CXXFLAGS += $(DBINCS)
 LDFLAGS += -g -L. 
+#LDFLAGS += -Wl,--verbose 
 
-BCLIBS +=  -lbitcoin -lsecp256k1
-LDLIBS = -lcurlpp -lcurl -lcoin -lboost_system $(BCLIBS)
-DBLIBS = $(shell mariadb_config --libs)
-DBINCS = $(shell mariadb_config --include )
-
-DB_MODS:=get_historical mysql_test
-
+BCLIBS +=  
+LDLIBS := 
+LDLIBS += -lcoin
+#LDLIBS += -Llib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu/mit-krb5 -lcurlpp -Wl,-Bsymbolic-functions -Wl,-z,relro -lcurl -lnghttp2 -lidn2 -lrtmp -lpsl -lssl -lcrypto -lssl -lcrypto -Wl,-Bsymbolic-functions -Wl,-z,relro -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err -llber -lldap -llber -lz
+LDLIBS += -lcurl -lcurlpp
+LDLIBS += -lcrypto
+LDLIBS += -lssl
+LDLIBS += -lcrypto
+LDLIBS += -lssl
+LDLIBS += -lbitcoin 
+LDLIBS += -lsecp256k1
+LDLIBS += -lboost_system
+LDLIBS += -lboost_thread
+LDLIBS += -lboost_regex
+LDLIBS += -lboost_program_options
+LDLIBS += -ldl
 
 LCOIN_SRC:=$(wildcard lib/*.cc)
 LCOIN_OBJ:=$(patsubst %.cc,%.o,$(LCOIN_SRC))
@@ -34,15 +43,11 @@ libcoin.a: $(LCOIN_MEM)
 %.o: %.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-$(TESTS): %: t/%.o libcoin.a
+$(TESTS): %: t/%.o
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS) -lpthread
 
 test: all
 	./prices
-
-xxx:
-	./ham | tr -d ' \n' | md5sum
-	./ham
 
 lcoin_obj: $(LCOIN_OBJ)
 tests_obj: $(TESTS_OBJ)
@@ -65,3 +70,4 @@ deps.all: $(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
 	all_deps $^ -o $@
 
 include $(wildcard /dev/null */*.d)
+#-L/usr/lib/x86_64-linux-gnu/mit-krb5 -lcurl -lnghttp2 -lidn2 -lrtmp -lpsl -lssl -lcrypto -lssl -lcrypto -Wl,-Bsymbolic-functions -Wl,-z,relro -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err -llber -lldap -llber -lz
