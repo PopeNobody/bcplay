@@ -1,6 +1,7 @@
 #include <coinfwd.hh>
 #include <bitcoin/bitcoin.hpp>
 #include <algorithm>
+#include <cxxabi.h>
 
 
 
@@ -11,24 +12,24 @@ using namespace bc;
 using namespace std;
 
 ostream &operator<<(ostream &ostream, const ec_compressed &data) {
-		return ostream <<  bc::encode_base16(data);
+		return ostream << sizeof(data) << ": " <<  bc::encode_base16(data);
 };
 template<size_t _n>
 ostream &operator<<(ostream &ostream, const std::array<unsigned char,_n> &data) {
-		return ostream <<  bc::encode_base16(data);
+		return ostream << sizeof(data) << ": " <<  bc::encode_base16(data);
 };
 using libbitcoin::wallet::decode_mnemonic;
 int main(int, char**) {
 	try {
 		auto my_secret = base16_literal(
-				"f3c8f9a6891cca98f481edde13bcc031b1470a81e367b838fe9e0a9db0f5993d"
+				"f3c8f9a6891cca98f481edde130cc031b1479a81e367b838fe9e0a9db0f5993d"
 				);
 		
 		cout << "secret: " << my_secret << endl;
 
 		auto list	= bc::wallet::create_mnemonic(my_secret);
-		auto hd_seed = decode_mnemonic(list);
-		cout << "hd_seed: " << hd_seed << endl;
+		auto seed = decode_mnemonic(list);
+		cout << seed << endl;
 //   		int row=0;
 //   		ostringstream sentence;
 //   		for(auto b(list.begin()), e(list.end()); b!=e; b++) {

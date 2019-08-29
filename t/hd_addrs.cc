@@ -9,7 +9,8 @@ int main(int, char**) {
     // ******* part 1 *******
     // Begin with a private key
     auto my_secret = base16_literal(
-        "0000000000000000000000000000000000000000000000000000000000000000");
+				"f3c8f9a6891cca98f481edde13bcc031b1470a81e367b838fe9e0a9db0f5993d"
+				);
 
     // Derive pubkey
     ec_compressed my_pubkey;
