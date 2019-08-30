@@ -13,3 +13,5 @@ output
 prices
 show_deps
 include
+xkey
+make.out
