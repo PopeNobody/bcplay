@@ -1,28 +1,31 @@
-test_ckey: all
-	./ckey
+test_xkey: all
+	./xkey
 
 all:
-CXX := clang++-6.0
-CXXFLAGS += -std=gnu++2a -g -pthread -I inc -MD
+#CXX := clang++-6.0
+CXXFLAGS += -g -pthread -I inc -MD
 CXXFLAGS += -fPIC
+CXXFLAGS += -DWITH_ICU -I$(HOME)/include
+LDFLAGS += -L$(HOME)/lib
 LDFLAGS += -g -L. 
-#LDFLAGS += -Wl,--verbose 
+#    LDFLAGS += -Wl,--verbose 
 
 BCLIBS +=  
 LDLIBS := 
 LDLIBS += -lcoin
-#LDLIBS += -Llib/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu/mit-krb5 -lcurlpp -Wl,-Bsymbolic-functions -Wl,-z,relro -lcurl -lnghttp2 -lidn2 -lrtmp -lpsl -lssl -lcrypto -lssl -lcrypto -Wl,-Bsymbolic-functions -Wl,-z,relro -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err -llber -lldap -llber -lz
 LDLIBS += -lcurl -lcurlpp
 LDLIBS += -lcrypto
 LDLIBS += -lssl
 LDLIBS += -lcrypto
 LDLIBS += -lssl
 LDLIBS += -lbitcoin 
-LDLIBS += -lsecp256k1
+LDLIBS += -lsecp256k1 -lgmp
 LDLIBS += -lboost_system
 LDLIBS += -lboost_thread
 LDLIBS += -lboost_regex
+LDLIBS += -lboost_locale
 LDLIBS += -lboost_program_options
+LDLIBS += -licudata
 LDLIBS += -ldl
 
 LCOIN_SRC:=$(wildcard lib/*.cc)

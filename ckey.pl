@@ -10,11 +10,11 @@ my $seed=
 	"f3c8f9a6891cca98f481edde13bcc031b1470a81e367b838fe9e0a9db0f5993d";
 my $secret = Bitcoin::Crypto::PrivateKey->fromHex($seed);
 
-print $seed, "\n";
 use Data::Dumper;
-$Data::Dumper::Useqq=1;
-print unpack("H*", $secret->rawKey), "\n";
+my $words=   $secret->toBip39Mnemonic();
+print "words: $words\n\n";
+my $copy=Bitcoin::Crypto::PrivateKey->fromBip39Mnemonic($words);
+print "key: ", unpack("H*", $secret->rawKey), "\n";
+print "dup: ", unpack("H*", $copy->rawKey), "\n";
 
-#print $secret->rawKey;
-#print $secret->toBip39Mnemonic();
 

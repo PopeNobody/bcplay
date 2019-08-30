@@ -6,19 +6,6 @@
 using fmt::nl;
 
 namespace coin {
-//   		balance_t::balance_t(const json &data)
-//   			: sym("wtf?")
-//   		{
-//   			sym=data.at("Currency");
-//   			bal=data.at("Balance");
-//   			ava=data.at("Available");
-//   			pend=data.at("Pending");
-//   			using coin::market_l;
-//   			auto const &markets=market_l::get_markets();
-//   			usd=ava*markets.conv(sym,"USDT");
-//   			eth=ava*markets.conv(sym,"ETH");
-//   			btc=ava*markets.conv(sym,"BTC");
-//   		};
 		balance_l balance_l::list;
 		bool balance_t::operator<(const balance_t &rhs) const {
 			if( btc < rhs.btc )

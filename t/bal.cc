@@ -2,7 +2,6 @@
 #include <bitcoin/bitcoin.hpp>
 #include <typeinfo>
 #include <web_api.hh>
-#include <json.hh>
 #include <markets.hh>
 #include <fmt.hh>
 #include <bittrex.hh>
