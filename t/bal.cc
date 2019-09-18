@@ -38,9 +38,9 @@ class goals_t : public map<sym_t,pct_t> {
 goals_t const &mk_goals() {
 	static goals_t res;
 	
-	res["BCH"]=100;
-	res["BTC"]=100;
-	res["USDT"]=0;
+	res["BTC"]=49;
+	res["BCH"]=49;
+	res["USDT"]=2;
 
 	double tot=0;
 	for ( auto goal : res ) {

@@ -1,6 +1,7 @@
+#define WITH_ICU
+#include <bitcoin/bitcoin.hpp>
 #include <coinfwd.hh>
 #include <web_api.hh>
-#include <bitcoin/bitcoin.hpp>
 #include <algorithm>
 #include <cxxabi.h>
 #include <json.hh>
@@ -73,21 +74,13 @@ ostream &operator <<(ostream &lhs, const HD_Wallet &rhs)
 	lhs << "seed: " << encode_base16(rhs.seed) << endl;
 	lhs << "words: " << join(rhs.mnemonic) << endl;
 	lhs << "priKey: " << rhs.privateKey.encoded() << endl;
-	lhs << "addr: " << rhs.childAddress(1) << endl;
+	lhs << "addr: " << rhs.childAddress(0) << endl;
 	lhs << "pubKey: " << rhs.publicKey.encoded() << endl;
 		return lhs;
 };
-int main(int, char**) {
+int xmain(int, char**) {
 	try {
-//   		json vecs;
-//   		{
-//   			std::ifstream vecs_file;
-//   			vecs_file.exceptions( std::ifstream::badbit );
-//   			vecs_file.open("t/ckey.vectors.json");
-//   			vecs_file >> vecs;
-//   			vecs=vecs["english"];
-//   		}
-string words = "lava sketch nurse clever write biology vibrant curtain recipe help fly delay butter sad gun forest nature game asthma news diet crime pistol differ";
+		string words = "lava sketch nurse clever write biology vibrant curtain recipe help fly delay butter sad gun forest nature game asthma news diet crime pistol differ";
 		wallet::word_list list = split(words);
 //   		string s_entr;
 //   		for( auto vec : vecs ) {
@@ -112,3 +105,43 @@ string words = "lava sketch nurse clever write biology vibrant curtain recipe he
 	};
   return 1;
 };
+
+int main(int, char**) {
+
+		string my_sentence = "lava sketch nurse clever write biology vibrant curtain recipe help fly delay butter sad gun forest nature game asthma news diet crime pistol differ";
+    // Load mnemonic sentence into word list
+    auto my_word_list = split(my_sentence, " ", true);
+
+    // Create an optional secret passphrase
+    std::string my_passphrase = "my secret passphrase";
+
+    // Create 512bit seed (without optional secret passphrase)
+    auto hd_seed = decode_mnemonic(my_word_list);
+
+    // Create 512bit seed (with optional secret passphrase)
+    // Requires: Libbitcoin compiled with ICU.
+    // auto hd_seed = decode_mnemonic(my_word_list, my_passphrase);
+
+    // ******* part 2 *******
+
+		using bc::wallet::hd_private;
+		using bc::wallet::hd_public;
+    // We reuse 512 bit hd_seed from the previous example
+    // Derivation of master private key m
+    data_chunk seed_chunk(to_chunk(hd_seed));
+    hd_private m(seed_chunk, hd_private::mainnet);
+
+    // Derivation of master public key M
+    hd_public M = m.to_public();
+
+
+    // ******* part 3 *******
+
+		using bc::wallet::ec_public;
+		auto M44 = M.derive_public(44);
+		auto M44_0 = M44.derive_public(0);
+		auto M44_0_0 = M44_0.derive_public(0);
+		cout << M44 << endl;
+		cout << ec_public(M44.point()).to_payment_address();
+
+}
