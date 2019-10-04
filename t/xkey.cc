@@ -80,7 +80,7 @@ ostream &operator <<(ostream &lhs, const HD_Wallet &rhs)
 };
 int xmain(int, char**) {
 	try {
-		string words = "lava sketch nurse clever write biology vibrant curtain recipe help fly delay butter sad gun forest nature game asthma news diet crime pistol differ";
+		string words = getenv("WALLET_WORDS");
 		wallet::word_list list = split(words);
 //   		string s_entr;
 //   		for( auto vec : vecs ) {
@@ -108,7 +108,7 @@ int xmain(int, char**) {
 
 int main(int, char**) {
 
-		string my_sentence = "lava sketch nurse clever write biology vibrant curtain recipe help fly delay butter sad gun forest nature game asthma news diet crime pistol differ";
+		string my_sentence = getenv("WALLET_WORDS");
     // Load mnemonic sentence into word list
     auto my_word_list = split(my_sentence, " ", true);
 
