@@ -1,15 +1,24 @@
 all:
 
-#CXX := clang++-6.0
+#Make
+MAKEFLAGS:= -Rr --warn-undefined-variable
+
+#CXX
+CXX:= g++
 CXXFLAGS += -g -pthread -I inc -MD
 CXXFLAGS += -fPIC
 CXXFLAGS += -DWITH_ICU -I$(HOME)/opt/include
+
+#AR
+AR:= ar
+
+#CPP
+CPPFLAGS :=
+
+#LD
 LDFLAGS += -L$(HOME)/opt/lib
 LDFLAGS += -g -L. 
-#LDFLAGS += --static
-#LDFLAGS += -Wl,--verbose 
 
-BCLIBS +=  
 LDLIBS := 
 LDLIBS += -lcoin
 LDLIBS += -lcurl -lcurlpp
@@ -40,22 +49,26 @@ TESTS:=$(TESTS_MOD)
 
 ARFLAGS:= Urv
 
+LCOIN_OBJ: $(LCOIN_OBJ)
+	echo "LCOIN_OBJ: done"
+
+(%): %
+	flock $@.lock $(AR) $(ARFLAGS) $@ $<
+
 libcoin.a: $(LCOIN_MEM)
 
 %.o: %.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-$(TESTS): %: t/%.o
+$(TESTS): %: t/%.o libcoin.a
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS) -lpthread
 
 test: all
 	./prices
 
-lcoin_obj: $(LCOIN_OBJ)
-tests_obj: $(TESTS_OBJ)
 tests: $(TESTS)
 
-all: libcoin.a $(TESTS)
+all: $(TESTS)
 
 
 CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt
