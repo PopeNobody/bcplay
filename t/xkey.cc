@@ -1,4 +1,3 @@
-#define WITH_ICU
 #include <bitcoin/bitcoin.hpp>
 #include <coinfwd.hh>
 #include <web_api.hh>
