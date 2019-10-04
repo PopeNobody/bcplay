@@ -71,34 +71,8 @@ int main(int, char**) {
 
 				cout 	<< "root_prv: " << root_prv << endl;
 				cout 	<< "root_pub: " << root_pub << endl;
-//   				auto data = decode_mnemonic(list,"TREZOR");
-//   				assert(encode_base16(data)==v_data);
-//   				wallet::hd_private xprv(seed);
-//   				cout << xprv.encoded() << endl;
-//   				assert(xprv.encoded()==s_xprv);
-//   				
 			};
 		}
-//   		for( auto vec : vecs ) {
-//   			cout << vec << endl;
-//   			break;
-//   		};
-//   		auto seed1 = base16_literal(
-//   				"00000000000000000000000000000000"
-//   				);
-//   		
-//   		auto list	= bc::wallet::create_mnemonic(seed1);
-//   		{ 
-//   			auto b(list.begin()), e(list.end());
-//   			if(b!=e)
-//   				cout << *b;
-//   			while(++b!=e)
-//   				cout << " " << *b;
-//   			cout << endl;
-//   		};
-//   		auto seed2 = decode_mnemonic(list,"TREZOR");
-//   		cout << "seed1: " << seed1 << endl;
-//   		cout << "seed2: " << seed2 << endl;
 		return 0;
 	} catch ( const exception &ex ) {
 		cerr << "exception: " << ex.what() << endl;

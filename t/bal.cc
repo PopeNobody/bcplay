@@ -38,9 +38,11 @@ class goals_t : public map<sym_t,pct_t> {
 goals_t const &mk_goals() {
 	static goals_t res;
 	
-	res["BTC"]=49;
-	res["BCH"]=49;
-	res["USDT"]=2;
+	res["BTC"]=24;
+	res["BCH"]=24;
+	res["XLM"]=24;
+	res["RVN"]=24;
+	res["USDT"]=24;
 
 	double tot=0;
 	for ( auto goal : res ) {
@@ -79,7 +81,7 @@ int xmain(int argc, char**argv) {
 			;
 		} else if ( b.sym == "BTC" ) {
 			;
-		} else {;
+		} else {
 			continue;
 		};
 		bals.push_back(b);

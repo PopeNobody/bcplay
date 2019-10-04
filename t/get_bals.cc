@@ -19,12 +19,11 @@ int xmain(int argc, char**argv) {
 	const balance_l bals = balance_l::load_balances();
 	int i = 0;
 	vector<int> cw = { 5, 6, 15, 15, 15, 15, 15 };
+	vector<const char *> nm = { "num", "sym", "bal", "usd", "btc", "pct" };
 	money_t btc_sum=0;
 	money_t usd_sum=0;
 	size_t num_bals=0;
-	cout << bals.size() << endl;
 	for( auto bal : bals ) {
-		cout << bal.bal << endl;
 		if( bal.usd < 0.01 )
 			continue;
 		btc_sum += bal.btc;
@@ -39,13 +38,13 @@ int xmain(int argc, char**argv) {
 	cout << "    USD: " << usd_avg << nl << nl;
 	cout
 		<< left
-		<< setw(cw[0]) << "num "
-		<< setw(cw[1]) << "sym "
+		<< setw(cw[0]) << nm[0] << " "
+		<< setw(cw[1]) << nm[1] << " "
 		<< right
-		<< setw(cw[2]) << "bal "
-		<< setw(cw[3]) << "usd "
-		<< setw(cw[4]) << "btc "
-		<< setw(cw[5]) << "pct "
+		<< setw(cw[2]) << nm[2] << " "
+		<< setw(cw[3]) << nm[3] << " "
+		<< setw(cw[4]) << nm[4] << " "
+		<< setw(cw[5]) << nm[5] << " "
 		<< endl;
 	int num=0;
 	for( auto bal : bals ) {

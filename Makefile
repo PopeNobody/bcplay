@@ -1,14 +1,12 @@
-test_xkey: all
-	./xkey
-
 all:
 #CXX := clang++-6.0
 CXXFLAGS += -g -pthread -I inc -MD
 CXXFLAGS += -fPIC
-CXXFLAGS += -DWITH_ICU -I$(HOME)/include
-LDFLAGS += -L$(HOME)/lib
+CXXFLAGS += -DWITH_ICU -I$(HOME)/opt/include
+LDFLAGS += -L$(HOME)/opt/lib
 LDFLAGS += -g -L. 
-#    LDFLAGS += -Wl,--verbose 
+#LDFLAGS += --static
+#LDFLAGS += -Wl,--verbose 
 
 BCLIBS +=  
 LDLIBS := 

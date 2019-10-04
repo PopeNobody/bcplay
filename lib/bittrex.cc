@@ -16,12 +16,14 @@ namespace coin {
 		m.name=j.at("MarketName");
 		if( !market_t::split_name(m.name,m.t_coin,m.f_coin) )
 			throw runtime_error("split_name failed");
-		m.last=j.at("Last");
-		m.bid=j.at("Bid");
-		m.ask=j.at("Ask");
-		m.high=j.at("High");
-		m.low=j.at("Low");
-		m.vol=j.at("Volume");
+#define decode(x,y) if(j.at(#x).is_null()){m.y=0;}else{m.y=j.at(#x);}
+#define do_decode(x,y) do{ decode(x,y) }while(0)
+		do_decode(Last,last);
+		do_decode(Bid,bid);
+		do_decode(Ask,ask);
+		do_decode(High,high);
+		do_decode(Low,low);
+		do_decode(Volume,vol);
 		m.buy=false;
 	};
 	void from_json(json &j, market_l &ml)
@@ -35,7 +37,9 @@ namespace coin {
 		};
 	};
 	void from_json(const json &j, money_t &val) {
-		val=(double)j;
+		val=0;
+		if( !j.is_null() )
+			val=(double)j;
 	};
 	void from_json(const json &j, balance_t &bal) {
 		using coin::market_l;
