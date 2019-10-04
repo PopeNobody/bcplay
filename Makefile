@@ -1,4 +1,5 @@
 all:
+
 #CXX := clang++-6.0
 CXXFLAGS += -g -pthread -I inc -MD
 CXXFLAGS += -fPIC
