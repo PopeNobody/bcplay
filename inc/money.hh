@@ -4,6 +4,8 @@
 #include <fmt.hh>
 
 namespace coin {
+	class money_t;
+	ostream &operator<<(ostream &lhs,const money_t &);
 	class money_t {
 		double val;
 		public:
