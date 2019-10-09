@@ -32,10 +32,12 @@ int xmain(int argc, char**argv) {
 	};
 	money_t btc_avg=btc_sum/num_bals;
 	money_t usd_avg=usd_sum/num_bals;
-	cout << "tot BTC: " << btc_sum << nl;
-	cout << "    USD: " << usd_sum << nl << nl;
-	cout << "avg BTC: " << btc_avg << nl;
-	cout << "    USD: " << usd_avg << nl << nl;
+#define ROW(lab,val1,val2) lab << setw(16) << val1 << setw(16) << val2 << nl;
+
+cout  <<  ROW("....","BTC","USD")
+cout  <<  ROW("tot:",btc_sum,usd_sum);
+cout  <<  ROW("avg:",btc_avg,usd_avg);
+cout  <<  "-----------------------------" << endl;
 	cout
 		<< left
 		<< setw(cw[0]) << nm[0] << " "

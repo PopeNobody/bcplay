@@ -4,7 +4,7 @@ all:
 MAKEFLAGS:= -Rr --warn-undefined-variable
 
 #CXX
-CXX:= g++
+CXX:= clang++
 CXXFLAGS += -g -pthread -I inc -MD
 CXXFLAGS += -fPIC
 CXXFLAGS += -DWITH_ICU -I$(HOME)/opt/include
