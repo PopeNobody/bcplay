@@ -1,0 +1,2 @@
+lib/bittrex.cc:38:				cout << "fwd is inf" << endl;
+lib/bittrex.cc:42:				cout << "rev is inf" << endl;

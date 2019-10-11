@@ -1,7 +1,8 @@
-all:
+test: all
+	./onebal
 
 #Make
-MAKEFLAGS:= -Rr --warn-undefined-variable
+MAKEFLAGS:= -Rr --warn-undefined-variable -j6
 
 #CXX
 CXX:= clang++
@@ -63,10 +64,7 @@ libcoin.a: $(LCOIN_MEM)
 $(TESTS): %: t/%.o libcoin.a
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS) -lpthread
 
-test: all
-	./prices
-
-tests: $(TESTS)
+test: $(TESTS)
 
 all: $(TESTS)
 

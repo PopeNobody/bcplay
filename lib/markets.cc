@@ -38,8 +38,8 @@ money_t market_l::conv(const string &from, const string &to) {
 market_l market_l::get_conv(const string &f, const string &t)
 {
 	market_l res;
-	vector<string> flist = split<vector<string>>(',',f.begin(),f.end());
-	vector<string> tlist = split<vector<string>>(',',t.begin(),t.end());
+	const auto flist = split<vector<string>>(',',f.begin(),f.end());
+	const auto tlist = split<vector<string>>(',',t.begin(),t.end());
 	for( auto const &m : get_markets() )
  	{
 		if( tlist.size()!=0 && !contains(tlist,m.t_coin) )
@@ -62,44 +62,44 @@ ostream &coin::market_l::stream(ostream &lhs, int ind) const
 	return lhs;
 };
 static const sym_t no_sym;
-sym_t market_path::to_coin() const 
-{
-	return t_coin;
-};
-sym_t market_path_l::to_coin() const 
-{
-	if( size() ) {
-		const auto &mark=back();
-		return mark.to_coin();
-	} else {
-		return no_sym;
-	};
-};
-sym_t market_path::from_coin() const 
-{
-	return f_coin;
-};
-sym_t market_path_l::from_coin() const 
-{
-	if( size() ) {
-		const auto &mark=back();
-		return mark.from_coin();
-	} else {
-		return no_sym;
-	};
-};
-ostream &coin::market_path_l::stream(ostream &lhs, int ind) const
-{
-	lhs 
-		<< setw(ind)<<""
-		<< "market_path_l(" << from_coin() << "=>" << to_coin() << ") {" << nl
-		;
-	for( auto const &mp : *this )
-		mp.stream(lhs,ind+2) << nl;
-	lhs
-		<< setw(ind)<<"" << "}";
-	return lhs;
-};
+//   sym_t market_path::to_coin() const 
+//   {
+//   	return t_coin;
+//   };
+//   sym_t market_path_l::to_coin() const 
+//   {
+//   	if( size() ) {
+//   		const auto &mark=back();
+//   		return mark.to_coin();
+//   	} else {
+//   		return no_sym;
+//   	};
+//   };
+//   sym_t market_path::from_coin() const 
+//   {
+//   	return f_coin;
+//   };
+//   sym_t market_path_l::from_coin() const 
+//   {
+//   	if( size() ) {
+//   		const auto &mark=back();
+//   		return mark.from_coin();
+//   	} else {
+//   		return no_sym;
+//   	};
+//   };
+//   ostream &coin::market_path_l::stream(ostream &lhs, int ind) const
+//   {
+//   	lhs 
+//   		<< setw(ind)<<""
+//   		<< "market_path_l(" << from_coin() << "=>" << to_coin() << ") {" << nl
+//   		;
+//   	for( auto const &mp : *this )
+//   		mp.stream(lhs,ind+2) << nl;
+//   	lhs
+//   		<< setw(ind)<<"" << "}";
+//   	return lhs;
+//   };
 ostream &coin::market_t::stream( ostream &lhs, int ind ) const
 {
 	lhs 
@@ -110,25 +110,25 @@ ostream &coin::market_t::stream( ostream &lhs, int ind ) const
 		;
 	return lhs;
 };
-ostream &coin::market_path::stream(ostream &lhs, int ind) const
-{
-	ostringstream str;
-	str << setw(ind) << "";
-	str << "market_path( " << f_coin << "," << t_coin << ") {" << nl;
-	sym_t cur(f_coin);
-	money_t rate=1;
-	for( auto const &m : path ) {
-		str << setw(ind+2) << "";
-		str << (m.buy?"b ":"s ") << cur << ":" << m.last << " " << m.name << nl;
-		rate*=m.last;
-		cur=m.t_coin;
-	}	
-	str << setw(ind+2) << "";
-	str << "  " << cur << rate << nl;
-	str << setw(ind) << "";
-	str << "}";
-	return lhs << str.str();
-};
+//   ostream &coin::market_path::stream(ostream &lhs, int ind) const
+//   {
+//   	ostringstream str;
+//   	str << setw(ind) << "";
+//   	str << "market_path( " << f_coin << "," << t_coin << ") {" << nl;
+//   	sym_t cur(f_coin);
+//   	money_t rate=1;
+//   	for( auto const &m : path ) {
+//   		str << setw(ind+2) << "";
+//   		str << (m.buy?"b ":"s ") << cur << ":" << m.last << " " << m.name << nl;
+//   		rate*=m.last;
+//   		cur=m.t_coin;
+//   	}	
+//   	str << setw(ind+2) << "";
+//   	str << "  " << cur << rate << nl;
+//   	str << setw(ind) << "";
+//   	str << "}";
+//   	return lhs << str.str();
+//   };
 string market_t::price() const {
 	ostringstream str;
 	str << fixed << setprecision(10);
@@ -137,68 +137,70 @@ string market_t::price() const {
 	str << last << " " << setw(6) << t_coin;
 	return move(str.str());
 };
-money_t market_path::rate() const {
-	money_t res(1);
-	for( auto const &m : path )
-		res*=m.last;
-	return res;
-};
-bool market_path::operator<(const market_path &rhs) const {
-	if(f_coin!=rhs.f_coin)
-		return f_coin<rhs.f_coin;
-	if(t_coin!=rhs.t_coin)
-		return t_coin<rhs.t_coin;
-	if(rate()!=rhs.rate())
-		return rate()<rhs.rate();
-	if(path.size()!=rhs.path.size())
-		return 	path.size()<rhs.path.size();
-	if(path.size())
-		return path[0].name < rhs.path[0].name;
-	return false;
-};
-market_path::market_path(sym_t f_coin, sym_t t_coin, market_t m )
-	: f_coin(f_coin), t_coin(t_coin)
-{
-	path.push_back(m);
-};
-market_path::market_path(sym_t f_coin, sym_t t_coin, market_t m1, market_t m2 )
-	: f_coin(f_coin), t_coin(t_coin)
-{
-	path.push_back(m1);
-	path.push_back(m2);
-};
-market_path_l::market_path_l(
-		const sym_t &fsym, 
-		const sym_t &tsym,
-		const sym_l &syms
-		)
-{
-	auto const &ml1=market_l::get_conv(fsym,"");
-	for( auto const &m1 : ml1 ) {
-		if(syms.size() && !contains(syms,m1.t_coin))
-			continue;
-		if( m1.t_coin == tsym ) {
-			push_back(market_path(fsym,tsym,m1));
-		} else {
-			for( auto const &m2 : market_l::get_conv(m1.t_coin, tsym) ) {
-				push_back(market_path(fsym,tsym,m1,m2));
-			};
-		};
-		if(size()) {
-			assert(back().f_coin==fsym);
-			assert(back().t_coin==tsym);
-		};
-	};
-	sort(begin(),end());
-};
-market_path_l market_l::get_paths(
-		const sym_t &fsym, 
-		const sym_t &tsym,
-		const sym_l &syms
-		)
-{
-	return market_path_l(fsym,tsym,syms);
-};
+//   money_t market_path::rate() const {
+//   	money_t res(1);
+//   	for( auto const &m : path ) {
+//   		res*=m.last;
+//   		res*=(1-1.0/400);
+//   	}
+//   	return res;
+//   };
+//   bool market_path::operator<(const market_path &rhs) const {
+//   	if(f_coin!=rhs.f_coin)
+//   		return f_coin<rhs.f_coin;
+//   	if(t_coin!=rhs.t_coin)
+//   		return t_coin<rhs.t_coin;
+//   	if(rate()!=rhs.rate())
+//   		return rate()<rhs.rate();
+//   	if(path.size()!=rhs.path.size())
+//   		return 	path.size()<rhs.path.size();
+//   	if(path.size())
+//   		return path[0].name < rhs.path[0].name;
+//   	return false;
+//   };
+//   market_path::market_path(sym_t f_coin, sym_t t_coin, market_t m )
+//   	: f_coin(f_coin), t_coin(t_coin)
+//   {
+//   	path.push_back(m);
+//   };
+//   market_path::market_path(sym_t f_coin, sym_t t_coin, market_t m1, market_t m2 )
+//   	: f_coin(f_coin), t_coin(t_coin)
+//   {
+//   	path.push_back(m1);
+//   	path.push_back(m2);
+//   };
+//   market_path_l::market_path_l(
+//   		const sym_t &fsym, 
+//   		const sym_t &tsym,
+//   		const sym_l &syms
+//   		)
+//   {
+//   	auto const &ml1=market_l::get_conv(fsym,"");
+//   	for( auto const &m1 : ml1 ) {
+//   		if(syms.size() && !contains(syms,m1.t_coin))
+//   			continue;
+//   		if( m1.t_coin == tsym ) {
+//   			push_back(market_path(fsym,tsym,m1));
+//   		} else {
+//   			for( auto const &m2 : market_l::get_conv(m1.t_coin, tsym) ) {
+//   				push_back(market_path(fsym,tsym,m1,m2));
+//   			};
+//   		};
+//   		if(size()) {
+//   			assert(back().f_coin==fsym);
+//   			assert(back().t_coin==tsym);
+//   		};
+//   	};
+//   	sort(begin(),end());
+//   };
+//   market_path_l market_l::get_paths(
+//   		const sym_t &fsym, 
+//   		const sym_t &tsym,
+//   		const sym_l &syms
+//   		)
+//   {
+//   	return market_path_l(fsym,tsym,syms);
+//   };
 bool market_t::split_name(const string &name, string &f_coin, string &t_coin)
 {
 	do {
@@ -219,6 +221,6 @@ bool market_t::split_name(const string &name, string &f_coin, string &t_coin)
 empty_des(can_str);
 empty_des(market_l);
 empty_des(market_t);
-empty_des(market_path);
-empty_des(market_path_l);
+//   empty_des(market_path);
+//   empty_des(market_path_l);
 

@@ -4,7 +4,7 @@
 #include <symbol.hh>
 
 namespace coin {
-	struct balance_t {
+	struct balance_t : public fmt::can_str {
 		sym_t sym;
 		money_t bal;
 		money_t ava;
@@ -13,6 +13,8 @@ namespace coin {
 		money_t eth;
 		money_t btc;
 		bool operator<(const balance_t &rhs) const;
+		virtual ostream &stream(ostream &lhs, int ind=0) const;
+		virtual ~balance_t();
 	};
 	struct balance_l : public std::vector<balance_t> {
 		static balance_l list;

@@ -13,25 +13,14 @@ namespace fmt {
 		};
 		public:
 		virtual string fmt() const=0;
-		explicit operator double()const{
+		virtual int get_width() const=0;
+		double get() const {
 			return val;
 		};
+		explicit operator double()const{
+			return get();
+		};
 	};
-//   	class price_t : public fp_val  {
-//   		public:
-//   		price_t(double val=0)
-//   			: fp_val(val)
-//   		{
-//   		};
-//   		double get_val() const {
-//   			return val;
-//   		};
-//   		string fmt(bool b0, bool b1) const;
-//   		string fmt() const;
-//   		static int get_width() {
-//   			return 16;
-//   		};
-//   	};
 	class pct_t : public fp_val  {
 		public:
 			pct_t(double val=0)
@@ -43,9 +32,7 @@ namespace fmt {
 				: fp_val(lhs/rhs)
 				{
 				};
-		static int get_width() {
-			return 7;
-		};
+		virtual int get_width() const;
 		string fmt() const;
 	};
 	inline ostream &operator<<(ostream &lhs, const fp_val &rhs)
@@ -59,6 +46,14 @@ namespace fmt {
 		}
 	};
 	const static nl_t nl;
+	struct can_str {
+		virtual ostream &stream(ostream &lhs, int ind=0) const=0;
+		virtual ~can_str();
+	};
+	inline ostream &operator<<( ostream &lhs, const fmt::can_str &rhs )
+	{
+		return rhs.stream(lhs,0);
+	};
 }
 #endif
 

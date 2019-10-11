@@ -1,5 +1,8 @@
 #include <money.hh>
 
+int coin::money_t::get_width() const {
+	return 17;
+};
 std::ostream &coin::operator<<(std::ostream&lhs, coin::money_t const&rhs)
 {
 	char buf[128];

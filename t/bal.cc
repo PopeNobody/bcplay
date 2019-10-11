@@ -19,11 +19,11 @@ using bc::decode_base16;
 using coin::market_l;
 using coin::market_t;
 
-class goals_t : public map<sym_t,pct_t> {
+class goals_t : public map<sym_t,float> {
 	public:
 	mapped_type &operator[](const key_type& k)
 	{
-		return map<sym_t,pct_t>::operator[](k);
+		return map<sym_t,float>::operator[](k);
 	};
 	mapped_type operator[](const key_type& k) const 
 	{
@@ -38,11 +38,11 @@ class goals_t : public map<sym_t,pct_t> {
 goals_t const &mk_goals() {
 	static goals_t res;
 	
-	res["BTC"]=24;
-	res["BCH"]=24;
-	res["XLM"]=24;
-	res["RVN"]=24;
-	res["USDT"]=24;
+	res["USDT"]+=res["BTC"]=1;
+	res["USDT"]+=res["BCH"]=1;
+	res["USDT"]+=res["XLM"]=1;
+	res["USDT"]+=res["RVN"]=1;
+	res["USDT"]+=res["BSV"]=1;
 
 	double tot=0;
 	for ( auto goal : res ) {
@@ -67,10 +67,7 @@ money_t abs(money_t rhs)
 	return rhs;
 };
 int xmain(int argc, char**argv) {
-	bittrex::fake_buys=true;
-	if(argc>1 && string(argv[1])=="-y") {
-		bittrex::fake_buys=false;
-	}
+	bittrex::fake_buys=!(argc>1 && string(argv[1])=="-y");
 	const market_l &markets=market_l::load_markets();
 	balance_l bals;
 	money_t tot_usd, tot_btc;

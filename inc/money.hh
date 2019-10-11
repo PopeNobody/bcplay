@@ -48,6 +48,7 @@ namespace coin {
 			{
 				return val-lhs.val;
 			};
+			int get_width() const;
 			friend ostream &operator<<(ostream &lhs,const money_t &);
 	};
 #define def_op(op) \
