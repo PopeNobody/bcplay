@@ -18,3 +18,4 @@ make.out
 markets.json
 libcoin.a.lock
 balance.json
+t/ham.txt
