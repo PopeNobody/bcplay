@@ -3,11 +3,12 @@
 
 
 namespace coin {
-	ostream &operator<<(ostream &lhs, const sym_t &rhs) {
-		string tmp=rhs;
-		assert(tmp.size()<6);
-		tmp.resize(8,' ');
-		return lhs << tmp;
-	};
+  ostream &operator<<(ostream &lhs, const sym_t &rhs) {
+    string tmp=rhs;
+    tmp.resize(8,' ');
+    lhs << tmp;
+    //		assert(tmp.size()<6);
+    return lhs;
+  };
 };
 

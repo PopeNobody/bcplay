@@ -1,20 +1,20 @@
 test: all
-	./onebal
+	./bal
 
 #Make
 MAKEFLAGS:= -Rr --warn-undefined-variable -j6
 
 #CXX
 CXX:= clang++
-CXXFLAGS += -g -pthread -I inc -MD
+CXXFLAGS += -g
 CXXFLAGS += -fPIC
 CXXFLAGS += -DWITH_ICU -I$(HOME)/opt/include
-
 #AR
 AR:= ar
 
 #CPP
 CPPFLAGS :=
+CPPFLAGS += -I inc -MD
 
 #LD
 LDFLAGS += -L$(HOME)/opt/lib
@@ -23,10 +23,6 @@ LDFLAGS += -g -L.
 LDLIBS := 
 LDLIBS += -lcoin
 LDLIBS += -lcurl -lcurlpp
-LDLIBS += -lcrypto
-LDLIBS += -lssl
-LDLIBS += -lcrypto
-LDLIBS += -lssl
 LDLIBS += -lbitcoin 
 LDLIBS += -lsecp256k1 -lgmp
 LDLIBS += -lboost_system
@@ -40,7 +36,6 @@ LDLIBS += -ldl
 LCOIN_SRC:=$(wildcard lib/*.cc)
 LCOIN_OBJ:=$(patsubst %.cc,%.o,$(LCOIN_SRC))
 LCOIN_MOD:=$(patsubst lib/%.cc,%,$(LCOIN_SRC))
-LCOIN_MEM:=$(patsubst %,libcoin.a(%),$(LCOIN_OBJ))
 LCOIN:=$(MYLIB_MOD)
 
 TESTS_SRC:=$(wildcard t/*.cc)
@@ -53,13 +48,14 @@ ARFLAGS:= Urv
 LCOIN_OBJ: $(LCOIN_OBJ)
 	echo "LCOIN_OBJ: done"
 
-(%): %
-	flock $@.lock $(AR) $(ARFLAGS) $@ $<
+libcoin.a: $(LCOIN_OBJ)
+	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
-libcoin.a: $(LCOIN_MEM)
+%.o: %.ii
+	$(CXX) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
 
-%.o: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+%.ii: %.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
 
 $(TESTS): %: t/%.o libcoin.a
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS) -lpthread
@@ -74,7 +70,7 @@ CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt
 clean:
 	rm -f libcoin.a $(TESTS)
 	rm -f tags deps.all
-	rm -f */*.[od]
+	rm -f */*.[od] */*.ii
 
 tags:	deps.all
 	ctags $(CTAGS_FLAGS) -L $^
