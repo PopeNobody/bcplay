@@ -39,10 +39,9 @@ goals_t const& mk_goals()
 {
   static goals_t res;
 
-  res[ "BCH" ] = 31;
-  res[ "BSV" ] = 31;
-  res[ "BTC" ] = 31;
-  res[ "USDT" ] = 7;
+  res[ "BCH" ] = 48;
+  res[ "BSV" ] = 48;
+  res[ "USDT" ] = 4;
 
   double tot = 0;
   for ( auto goal : res )
@@ -68,19 +67,31 @@ inline money_t abs( money_t rhs )
   return ( rhs < 0 ) ? -rhs : rhs;
 };
 
+struct coin_data
+{
+  balance_t bal;
+  pct_t     per_goal;
+  money_t   usd_goal;
+  money_t   delta;
+};
+struct coin_less {
+  bool operator()( const coin_data &lhs, const coin_data &rhs )
+  {
+    if(lhs.delta < rhs.delta)
+      return true;
+    if(rhs.delta < lhs.delta)
+      return false;
+    return lhs.bal.sym < rhs.bal.sym;
+  };
+};
 int xmain( int argc, char** argv )
 {
-  struct coin_data
-  {
-    balance_t bal;
-    pct_t goal;
-  };
   typedef std::map< sym_t, coin_data > data_m;
   data_m data;
   for ( auto g : goals )
   {
     data[ g.first ].bal.sym = g.first;
-    data[ g.first ].goal = g.second;
+    data[ g.first ].per_goal = g.second;
   };
   money_t tot = 0.0000001;
   for ( auto b : balance_l::load_balances() )
@@ -96,6 +107,20 @@ int xmain( int argc, char** argv )
     };
   }
   cout << "tot: " << tot << "USD" << endl;
+  std::vector<coin_data> todo;
+  for ( auto d : data )
+  {
+    pct_t per_goal( d.second.per_goal.get() );
+    d.second.usd_goal = tot * per_goal.get();
+    d.second.bal.sym = d.first;
+    d.second.delta = d.second.usd_goal - d.second.bal.usd;
+    todo.push_back(d.second);
+  };
+  sort(todo.begin(),todo.end(),coin_less());
+  for( auto t : todo ) {
+    cout << t.bal.sym << " => " << t.delta << endl;
+  };
+#if 0
   {
     auto const& temp = data[ "BTC" ];
     cout << "|" << setw( temp.bal.sym.get_width() ) << "SYM "
@@ -103,22 +128,22 @@ int xmain( int argc, char** argv )
          << "|" << setw( temp.goal.get_width() ) << "cur% "
          << "|" << setw( temp.goal.get_width() ) << "goal% "
          << "|" << setw( temp.bal.usd.get_width() ) << "goal$ "
+         << "|" << setw( temp.bal.usd.get_width() ) << "delta "
          << "|" << endl;
     for ( auto d : data )
     {
-      pct_t per_goal( d.second.goal.get() );
-      money_t usd_goal = tot * per_goal.get();
-      d.second.bal.sym = d.first;
       cout
         << "|" 
         << d.first << "|"
         << d.second.bal.usd << "|"
         << pct_t( d.second.bal.usd / tot ) << "|"
         << per_goal << "|"
-        << usd_goal
+        << usd_goal << "|"
+        << delta << "|"
         << "|" << endl;
     };
   };
+#endif
   return 0;
 };
 int main( int argc, char** argv )

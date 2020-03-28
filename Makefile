@@ -51,11 +51,8 @@ LCOIN_OBJ: $(LCOIN_OBJ)
 libcoin.a: $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
-%.o: %.ii
-	$(CXX) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
-
-%.ii: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
+%.o: %.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 $(TESTS): %: t/%.o libcoin.a
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS) -lpthread
