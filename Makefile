@@ -73,7 +73,10 @@ tags:	deps.all
 	ctags $(CTAGS_FLAGS) -L $^
 #    
 deps.all: $(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
-	all_deps $^ -o $@
+	rm -f $@ tags
+	vi_perl all_deps.pl  $@ $^
+
+.PHONY: deps.all
 
 include $(wildcard /dev/null */*.d)
 #-L/usr/lib/x86_64-linux-gnu/mit-krb5 -lcurl -lnghttp2 -lidn2 -lrtmp -lpsl -lssl -lcrypto -lssl -lcrypto -Wl,-Bsymbolic-functions -Wl,-z,relro -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err -llber -lldap -llber -lz
