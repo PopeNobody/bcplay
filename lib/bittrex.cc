@@ -227,21 +227,21 @@ void bittrex::show_deposits() {
   cout << setw(4) << jpage;
   cout << endl << endl;
 };
-namespace {
-  void save_json(const string &fname, const json &json) {
-    assert(fname.length());
-    ofstream ofile(fname.c_str());
-    if(!ofile) {
-      cerr << "unable to save json!";
-    } else {
-      cerr << "writing to file" << endl;
-      ofile << setw(4) << json << endl;
-      if(!ofile) {
-        cerr << "unable to save json!";
-      }
-    }
-  };
-}
+//   namespace {
+//     void save_json(const string &fname, const json &json) {
+//       assert(fname.length());
+//       ofstream ofile(fname.c_str());
+//       if(!ofile) {
+//         cerr << "unable to save json!";
+//       } else {
+//         cerr << "writing to file" << endl;
+//         ofile << setw(4) << json << endl;
+//         if(!ofile) {
+//           cerr << "unable to save json!";
+//         }
+//       }
+//     };
+//   }
 const coin::balance_l bittrex::load_balances()
 {
   balance_l temp;
@@ -255,7 +255,7 @@ const coin::balance_l bittrex::load_balances()
         );
   };
   jpage=*jpage.find("result");
-  save_json("balance.json",jpage);
+  //  save_json("balance.json",jpage);
   for( json bal : jpage ) {
     temp.push_back(balance_t(bal));
   };
@@ -281,7 +281,7 @@ const market_l bittrex::load_markets() {
     throw runtime_error("no result in page");
   };
   jpage=*res_it;
-  save_json("markets.json",jpage);
+  // save_json("markets.json",jpage);
   market_l markets;
   from_json(jpage,markets);
   return markets;
