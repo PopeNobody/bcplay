@@ -20,6 +20,9 @@ namespace bittrex {
 			sym_t qunit
 			);
 	void dump_orders();	
+	void cancel_order(const string &id);	
+        bool orders_pending();
+	void cancel_orders();	
 	void show_deposits();
 	void show_withdrawals();
 };

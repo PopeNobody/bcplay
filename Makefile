@@ -1,6 +1,9 @@
-test: all
-	./bal
+#    test: test_prices
+#    
 
+test_bal: all
+
+all:
 #Make
 MAKEFLAGS:= -Rr --warn-undefined-variable -j6
 
@@ -8,22 +11,23 @@ MAKEFLAGS:= -Rr --warn-undefined-variable -j6
 CXX:= clang++
 CXXFLAGS += -g
 CXXFLAGS += -fPIC
-CXXFLAGS += -DWITH_ICU -I$(HOME)/opt/include
 #AR
 AR:= ar
 
 #CPP
 CPPFLAGS :=
 CPPFLAGS += -I inc -MD
+CPPFLAGS += -DWITH_ICU -I$(HOME)/include
+CPPFLAGS += -DSYSCONFDIR="\"/home/rfp/stow/bx/etc\""
 
 #LD
-LDFLAGS += -L$(HOME)/opt/lib
+LDFLAGS += -L$(HOME)/lib
 LDFLAGS += -g -L. 
 
-LDLIBS := 
+LDLIBS := -Wl,--start-group
 LDLIBS += -lcoin
 LDLIBS += -lcurl -lcurlpp
-LDLIBS += -lbitcoin 
+LDLIBS += -lbitcoin-system
 LDLIBS += -lsecp256k1 -lgmp
 LDLIBS += -lboost_system
 LDLIBS += -lboost_thread
@@ -31,7 +35,11 @@ LDLIBS += -lboost_regex
 LDLIBS += -lboost_locale
 LDLIBS += -lboost_program_options
 LDLIBS += -licudata
+LDLIBS += -licuuc
+LDLIBS += -licui18n
 LDLIBS += -ldl
+LDLIBS += -lpthread
+LDLIBS += -Wl,--end-group
 
 LCOIN_SRC:=$(wildcard lib/*.cc)
 LCOIN_OBJ:=$(patsubst %.cc,%.o,$(LCOIN_SRC))
@@ -43,6 +51,12 @@ TESTS_OBJ:=$(patsubst %.cc,%.o,$(TESTS_SRC))
 TESTS_MOD:=$(patsubst t/%.cc,%,$(TESTS_SRC))
 TESTS:=$(TESTS_MOD)
 
+test_%: %
+	./$<
+
+test_markets: markets
+	./$< BCH BSV
+
 ARFLAGS:= Urv
 
 LCOIN_OBJ: $(LCOIN_OBJ)
@@ -52,10 +66,11 @@ libcoin.a: $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
 %.o: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
+	$(CXX) $(CXXFLAGS) -c $(<:.cc=.ii) -o $@
 
 $(TESTS): %: t/%.o libcoin.a
-	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS) -lpthread
+	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
 test: $(TESTS)
 
@@ -72,7 +87,9 @@ clean:
 tags:	deps.all
 	ctags $(CTAGS_FLAGS) -L $^
 #    
-deps.all: $(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
+DEPS:=$(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
+$(DEPS): ;
+deps.all: $(DEPS)
 	rm -f $@ tags
 	vi_perl all_deps.pl  $@ $^
 

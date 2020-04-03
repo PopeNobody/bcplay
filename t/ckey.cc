@@ -1,26 +1,26 @@
 #include <coinfwd.hh>
 #include <web_api.hh>
-#include <bitcoin/bitcoin.hpp>
 #include <algorithm>
 #include <cxxabi.h>
 #include <json.hh>
+#include <util.hh>
+#include <bitcoin/system.hpp>
 
 
 
 using std::hex;
 using std::array;
 
-using namespace bc;
 using namespace std;
 
-ostream &operator<<(ostream &ostream, const ec_compressed &data) {
-		return ostream << bc::encode_base16(data);
-};
-template<size_t _n>
-ostream &operator<<(ostream &ostream, const std::array<unsigned char,_n> &data) {
-		return ostream << bc::encode_base16(data);
-};
-using libbitcoin::wallet::decode_mnemonic;
+using util::join;
+using libbitcoin::system::data_chunk;
+using libbitcoin::system::decode_base16;
+using libbitcoin::system::encode_base16;
+using libbitcoin::system::wallet::create_mnemonic;
+using libbitcoin::system::wallet::decode_mnemonic;
+using libbitcoin::system::wallet::hd_private;
+
 int main(int, char**) {
 	try {
 		json vecs;
@@ -41,16 +41,16 @@ int main(int, char**) {
 
 				cout << "s_seed: " << s_seed << endl;
 				data_chunk b_seed;
-				bc::decode_base16(b_seed,s_seed);
+				decode_base16(b_seed,s_seed);
 				assert(encode_base16(b_seed)==s_seed);
 				cout << "b_seed: " << encode_base16(b_seed) << endl;
 				cout << endl;
 
-				auto b_list=bc::wallet::create_mnemonic(b_seed);
+				auto b_list=create_mnemonic(b_seed);
 				cout << "s_list: " << s_list << endl;
-				cout << "b_list: " << join(b_list) << endl;
+				cout << "b_list: " << join(' ',b_list) << endl;
 				cout << endl;
-				assert(join(b_list)==s_list);
+				assert(join(' ',b_list)==s_list);
 
 				auto decoded=decode_mnemonic(b_list,"TREZOR");
 				data_chunk b_data(decoded.begin(),decoded.end());
@@ -60,7 +60,7 @@ int main(int, char**) {
 				assert(encode_base16(b_data) == s_data);
 
 
-				auto b_xprv=wallet::hd_private(b_data);
+				auto b_xprv=hd_private(b_data);
 				cout << "b_xprv: " << b_xprv << endl;
 				cout << "s_xprv: " << s_xprv << endl;
 				cout << endl;

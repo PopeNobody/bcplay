@@ -1,4 +1,3 @@
-#include <bitcoin/bitcoin.hpp>
 #include <bittrex.hh>
 #include <fmt.hh>
 #include <markets.hh>
@@ -10,10 +9,6 @@ using namespace coin;
 using namespace fmt;
 
 using namespace std;
-
-using bc::data_chunk;
-using bc::decode_base16;
-using bc::hmac_sha512_hash;
 
 using coin::market_l;
 using coin::market_t;

@@ -1,5 +1,6 @@
 **.a
 **.d
+**.ii
 **.o
 bal
 balance.json
@@ -25,3 +26,8 @@ t/ham.txt
 tags
 tc_stat
 xkey
+can_orders
+convtest
+markets
+orders
+ppjson

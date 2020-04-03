@@ -29,11 +29,10 @@ public:
 goals_t const& mk_goals()
 {
   static goals_t res;
-  res[ "BTC" ] = 20;
-  res[ "DASH" ] = 20;
-  res[ "BCH" ] = 20;
-  res[ "BSV" ] = 20;
-  res[ "USDT" ] = 20;
+
+  res[ "BCH" ] = 48;
+  res[ "BSV" ] = 48;
+  res[ "USDT" ] = 4;
 
   double tot = 0;
   for ( auto goal : res )
@@ -122,53 +121,19 @@ int xmain( const argv_t &args )
   };
   sort(todo.begin(),todo.end(),coin_less());
   show_todos(todo, tot);
-
-  auto pivot=data["BTC"].bal;
-  auto b(todo.begin()), e(todo.end());
-  for( ; b!=e && b->delta < 0; b++ )
-  {
-    if( b->bal.sym == pivot.sym ) {
-      cout << "skip: " << b->bal.sym << endl;
-      continue;
-    };
-    if( b->delta > -5 ) {
-      cout << "skip: " << b->bal.sym << endl;
-      continue;
-    };
-    cout 
-      << -b->delta 
-      << " in " 
-      << b->bal.sym 
-      << " to " 
-      << pivot.sym 
-      << endl;
+  auto big_neg = todo.front();
+  assert(big_neg.delta < 0);
+  auto big_pos = todo.back();
+  assert(big_pos.delta > 0);
+  money_t delta = abs(big_neg.delta);
+  if( big_pos.delta < delta )
+    delta=big_pos.delta;
+  cout << "delta: " << delta << endl;
+  if( delta >= 5 ) {
     xact_limit(
-        pivot.sym,
-        b->bal.sym,
-        b->delta,
-        "USDT"
-        );
-  };
-  for( ; b!=e; b++ ) {
-    if( b->bal.sym == pivot.sym ) {
-      cout << "skip: " << b->bal.sym << endl;
-      continue;
-    };
-    if( b->delta < 5 ) {
-      cout << "skip: " << b->bal.sym << endl;
-      continue;
-    };
-    cout 
-      << b->delta 
-      << " in " 
-      << pivot.sym 
-      << " to " 
-      << b->bal.sym 
-      << endl;
-    xact_limit(
-        pivot.sym,
-        b->bal.sym,
-        b->delta,
+        big_neg.bal.sym,
+        big_pos.bal.sym,
+        delta,
         "USDT"
         );
   };

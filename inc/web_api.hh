@@ -11,6 +11,7 @@ namespace web {
 		return load_page(url,list<string>());
 	};
 	const string load_hmac_page( const string &url );
+	string pp_json_url(const string &url);
 	string pp_json(const string &url);
 	extern bool verbose;
 };
