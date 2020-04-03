@@ -220,7 +220,7 @@ void bittrex::show_deposits() {
   json jpage=json::parse(page);
   if(!jpage.at("success")) {
     throw runtime_error(
-        "no success in getbalances result\n\n"+page
+        "no success in getdeposithistory result\n\n"+page
         );
   };
   cout << endl << endl;
