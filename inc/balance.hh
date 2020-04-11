@@ -10,8 +10,6 @@ namespace coin {
 		money_t ava;
 		money_t pend;
 		money_t usd;
-		money_t eth;
-		money_t btc;
 		bool operator<(const balance_t &rhs) const;
 		virtual ostream &stream(ostream &lhs, int ind=0) const;
 		virtual ~balance_t();
@@ -34,6 +32,14 @@ namespace coin {
 			};
 			throw runtime_error("no such bal!");
 		};
+    const balance_t *get_ptr(const string &sym) const
+    {
+			for( auto &b : *this ) {
+				if(b.sym==sym)
+					return &b;
+			};
+      return 0;
+    };
 		static const balance_l &get_balances() {
 			if(list.size()==0)
 				list=load_balances();

@@ -49,7 +49,7 @@ LCOIN:=$(MYLIB_MOD)
 TESTS_SRC:=$(wildcard t/*.cc)
 TESTS_OBJ:=$(patsubst %.cc,%.o,$(TESTS_SRC))
 TESTS_MOD:=$(patsubst t/%.cc,%,$(TESTS_SRC))
-TESTS:=$(TESTS_MOD)
+TESTS:=$(filter-out markets,$(TESTS_MOD))
 
 test_%: %
 	./$<

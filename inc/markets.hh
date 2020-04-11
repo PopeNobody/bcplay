@@ -54,11 +54,9 @@ namespace coin {
     virtual ~market_t();
     ostream &stream(ostream &lhs, int ind=0) const;
   };
-  struct market_l : public vector<market_t> //, public fmt::can_str
+  struct market_l : public vector<market_t>, public fmt::can_str
   {
-    market_l()
-    {
-    }
+    market_l();
     sym_t from_coin()const;
     sym_t to_coin()const;
     virtual ~market_l();
@@ -66,10 +64,10 @@ namespace coin {
     static market_l markets;
     static const market_l &get_markets();
     static const market_l &load_markets();
-    static market_l all_conv(const string &from, const string &to);
+    static vector<market_l> all_conv(const string &from, const string &to);
     static money_t conv(const string &from, const string &to);
     static money_t conv1(const string &from, const string &to);
-    //ostream &stream(ostream &lhs, int ind=0) const;
+    ostream &stream(ostream &lhs, int ind=0) const;
   };
 }
 #endif

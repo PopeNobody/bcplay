@@ -13,14 +13,11 @@ using namespace std;
 
 int xmain(int argc, char**argv) {
   using coin::market_l;
-  cerr << "Loading Markets" << endl;
   const market_l &markets=market_l::get_markets();
-  cerr << "Loading Balances" << endl;
   balance_l bals = balance_l::load_balances();
   int i = 0;
   vector<int> cw = { 5, 6, 15, 15, 15, 15, 15 };
-  vector<const char *> nm = { "num", "sym", "bal", "usd", "btc", "pct" };
-  money_t btc_sum=0;
+  vector<const char *> nm = { "num", "sym", "bal", "usd", "pend", "pct" };
   money_t usd_sum=0;
   {
     balance_l tmp(bals);
@@ -28,18 +25,17 @@ int xmain(int argc, char**argv) {
     for( auto bal : tmp ) {
       if( bal.usd < 0.01 )
         continue;
-      btc_sum += bal.btc;
       usd_sum += bal.usd;
       bals.push_back(bal);
     };
   };
-  money_t btc_avg=btc_sum/bals.size();
   money_t usd_avg=usd_sum/bals.size();
-#define ROW(lab,val1,val2) lab << setw(16) << val1 << setw(16) << val2 << nl;
+#define ROW(lab,val1) lab << setw(16) << val1 << nl;
 
-  cout  <<  ROW("....","BTC","USD")
-    cout  <<  ROW("tot:",btc_sum,usd_sum);
-  cout  <<  ROW("avg:",btc_avg,usd_avg);
+  cout  <<  ROW("....","USD");
+  cout  <<  ROW("tot:",usd_sum);
+  cout  <<  ROW("avg:",usd_avg);
+#undef ROW
   cout  <<  "-----------------------------" << endl;
   cout
     << left
@@ -62,8 +58,8 @@ int xmain(int argc, char**argv) {
       << right << fixed << setprecision(8)
       << setw(cw[1]) << bal.ava 
       << setw(cw[2]) << bal.usd
-      << setw(cw[4]) << bal.btc
-      << setw(cw[5]) << pct_t(bal.btc,btc_sum)
+      << setw(cw[4]) << bal.pend
+      << setw(cw[5]) << pct_t(bal.usd,usd_sum)
       << endl;
   };
   return 0;

@@ -35,21 +35,42 @@ money_t market_l::conv(const string &from, const string &to) {
   c2=conv1("BTC",to);
   return c1*c2;
 };
-market_l market_l::all_conv(const string &f, const string &t)
+#if 0
+vector<market_l> market_l::all_conv(const string &f, const string &t)
 {
-  market_l res;
+  vector<market_l> res;
   const auto flist = split(',',f);
   const auto tlist = split(',',t);
-  for( auto const &m : get_markets() )
+  for( auto const &m1 : get_markets() )
   {
-    if( !contains(tlist,m.t_coin) )
+    if( flist.size() && !contains(flist,m1.f_coin) )
       continue;
-    if( !contains(flist,m.f_coin) )
-      continue;
-    res.push_back(m);
+    if(contains(tlist, m1.t_coin))
+    {
+      market_l marks;
+      marks.push_back(m1);
+      res.push_back(marks);
+    };
   };
+  for( auto const &m1 : get_markets() )
+  {
+    if( flist.size() && !contains(flist,m1.f_coin) )
+      continue;
+    if(contains(tlist, m1.t_coin))
+      continue;
+    auto m2list = get_conv(m1.t_coin,t);
+    for( auto m2 : m2list )
+    {
+      market_l marks;
+      marks.push_back(m1);
+      marks.push_back(m2);
+      res.push_back(marks);
+    };
+  };
+  
   return res;
 };
+#endif
 market_l market_l::get_conv(const string &f, const string &t)
 {
   market_l res;
@@ -57,25 +78,25 @@ market_l market_l::get_conv(const string &f, const string &t)
   const auto tlist = split(',',t);
   for( auto const &m : get_markets() )
   {
-    if( !contains(tlist,m.t_coin) )
+    if( tlist.size() && !contains(tlist,m.t_coin) )
       continue;
-    if( !contains(flist,m.f_coin) )
+    if( flist.size() && !contains(flist,m.f_coin) )
       continue;
     res.push_back(m);
   };
   return res;
 };
-//   ostream &coin::market_l::stream(ostream &lhs, int ind) const
-//   {
-//     lhs << setw(ind) << "" << "market_l {";
-//     if(size())
-//       lhs << nl;
-//     for( auto m : *this ) {
-//       m.stream(lhs,ind+2) << nl;
-//     };
-//     lhs << setw(ind) << "" << "}";
-//     return lhs;
-//   };
+ostream &coin::market_l::stream(ostream &lhs, int ind) const
+{
+  lhs << setw(ind) << "" << "market_l {";
+  if(size())
+    lhs << nl;
+  for( auto m : *this ) {
+    m.stream(lhs,ind+2) << nl;
+  };
+  lhs << setw(ind) << "" << "}";
+  return lhs;
+};
 static const sym_t no_sym;
 ostream &coin::market_t::stream( ostream &lhs, int ind ) const
 {
@@ -111,10 +132,14 @@ bool market_t::split_name(const string &name, string &f_coin, string &t_coin)
   return false;
 };
 
-#define empty_des(x) x::~ x(){}
-empty_des(can_str);
-empty_des(market_l);
-empty_des(market_t);
-//   empty_des(market_path);
-//   empty_des(market_path_l);
-
+can_str::~ can_str(){
+};
+market_l::market_l()
+{
+//  cerr << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << endl;
+};
+market_l::~ market_l(){
+//  cerr << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << endl;
+};
+market_t::~ market_t(){
+};

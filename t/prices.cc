@@ -20,10 +20,8 @@ int xmain(int argc, char**argv) {
     "BCH", "BSV"
   };
   bool first=true;
-  auto stime = 1;
-  while((stime%15)!=1) {
-    stime=time(0);
-  };
+  auto stime = time(0);
+  stime-=(stime%3600);
   while(true) {
     market_l markets=market_l::load_markets();
     if(first) {
@@ -55,7 +53,7 @@ int xmain(int argc, char**argv) {
     cout << endl;
     bool done=false;
     while(!done) {
-      done=!(time(0)%15);
+      done=!(time(0)%3600);
       sleep(1);
     };
   }

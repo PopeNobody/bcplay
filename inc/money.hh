@@ -70,8 +70,9 @@ namespace coin {
 			inline bool operator op(money_t lhs, money_t rhs) \
 			{ \
 				return lhs.cmp(rhs) op 0.0; \
-			};
-			def_op(==); def_op(<); def_op(>); def_op(<=); def_op(>=);
+      };
+      
+      def_op(==); def_op(<); def_op(>); def_op(<=); def_op(>=);
 			def_op(!=);
 };
 
