@@ -6,62 +6,45 @@
 
 namespace coin {
 
-//     "result" : [{
-//   			"Uuid" : null,
-//   			"OrderUuid" : "09aa5bb6-8232-41aa-9b78-a5a1093e0211",
-//   			"Exchange" : "BTC-LTC",
-//   			"OrderType" : "LIMIT_SELL",
-//   			"Quantity" : 5.00000000,
-//   			"QuantityRemaining" : 5.00000000,
-//   			"Limit" : 2.00000000,
-//   			"CommissionPaid" : 0.00000000,
-//   			"Price" : 0.00000000,
-//   			"PricePerUnit" : null,
-//   			"Opened" : "2014-07-09T03:55:48.77",
-//   			"Closed" : null,
-//   			"CancelInitiated" : false,
-//   			"ImmediateOrCancel" : false,
-//   			"IsConditional" : false,
-//   			"Condition" : null,
-//   			"ConditionTarget" : null
-//   		}, {
-//   			"Uuid" : null,
-//   			"OrderUuid" : "8925d746-bc9f-4684-b1aa-e507467aaa99",
-//   			"Exchange" : "BTC-LTC",
-//   			"OrderType" : "LIMIT_BUY",
-//   			"Quantity" : 100000.00000000,
-//   			"QuantityRemaining" : 100000.00000000,
-//   			"Limit" : 0.00000001,
-//   			"CommissionPaid" : 0.00000000,
-//   			"Price" : 0.00000000,
-//   			"PricePerUnit" : null,
-//   			"Opened" : "2014-07-09T03:55:48.583",
-//   			"Closed" : null,
-//   			"CancelInitiated" : false,
-//   			"ImmediateOrCancel" : false,
-//   			"IsConditional" : false,
-//   			"Condition" : null,
-//   			"ConditionTarget" : null
-//   		}
-//   	]
+//      {
+//         "OrderUuid": "89de4465-714e-4f6a-9f82-5b1c70db9c28",
+//         "Closed": "2020-04-12T16:35:05.47",
+//         "Commission": 0.03141024,
+//         "Condition": "",
+//         "ConditionTarget": 0.0,
+//         "Exchange": "USDT-RVN",
+//         "ImmediateOrCancel": false,
+//         "IsConditional": false,
+//         "Limit": 0.01899911,
+//         "OrderType": "LIMIT_BUY",
+//         "Price": 31.41024479,
+//         "PricePerUnit": 0.0189991,
+//         "Quantity": 1653.24909028,
+//         "QuantityRemaining": 0.0,
+//         "TimeStamp": "2020-04-12T16:35:05.47"
+//      },
 
-	class order_t 
+  struct date_t
+  {
+    tm val;
+  };
+	struct order_t 
 	{
 		string uuid;
-		string order_id;
-		string exchange;
-		string type;
-		money_t quanity;
-		money_t comission;
-		money_t price;
-		money_t price_per;
-		string opened;
-		string closed;
-		bool canceled;
-		bool immediate;
-		bool cond;
-		string condition;
-		string target;
+    date_t closed;
+    money_t comission;
+    string condition;
+    string condition_target;
+    string exchange;
+    bool immediate_or_cancel;
+    bool is_conditional;
+    money_t limit;
+    string order_type;
+    money_t price;
+    money_t price_per_unit;
+    size_t quantity;
+    size_t quantity_remaining;
+    date_t timestamp;
 	};
 	class order_l : public std::vector<order_t>
 	{

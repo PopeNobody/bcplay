@@ -8,8 +8,7 @@
 namespace bittrex {
 	using namespace coin;
 	const market_l load_markets();
-	const balance_l load_balances();
-	const order_l load_orders();
+	const balance_l &load_balances();
 
 	extern bool fake_buys;
 	extern bool show_urls;
@@ -19,12 +18,14 @@ namespace bittrex {
 			money_t fqty,
 			sym_t qunit
 			);
-	void dump_orders();	
+	bool dump_orders();	
 	void cancel_order(const string &id);	
   bool orders_pending();
 	void cancel_orders();	
 	void show_deposits();
 	void show_withdrawals();
+  market_l get_market(const string &id);
+  order_l get_order_history(const string &mkt);
 };
 
 #endif // bittrex_hh

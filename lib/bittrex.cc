@@ -3,6 +3,7 @@
 #include <json.hh>
 #include <web_api.hh>
 #include <cmath>
+#include <order.hh>
 
 using namespace coin;
 using namespace util;
@@ -13,10 +14,14 @@ bool bittrex::show_urls=true;
 const static string api_url="https://bittrex.com/api/v1.1/";
 
 namespace coin {
+  void from_json(json &j, date_t &d)
+  {
+
+  };
   void from_json(json &j, order_t &o)
   {
     o.uuid=j.at("OrderUuid");
-    o.closed=j.at("Closed");
+//    o.closed=j.at("Closed");
     o.comission=j.at("Commission");
     o.condition=j.at("Condition");
     o.condition_target=j.at("ConditionTarget");
@@ -29,37 +34,7 @@ namespace coin {
     o.price_per_unit=j.at("PricePerUnit");
     o.quantity=j.at("Quantity");
     o.quantity_remaining=j.at("QuantityRemaining");
-    o.timestamp=j.at("TimeStamp");
-//  "OrderUuid":           "89de4465-714e-4f6a-9f82-5b1c70db9c28",
-//  o.uuid                 =j.at("OrderUuid");
-//  "Closed":              "2020-04-12T16:35:05.47",
-//  o.closed               =j.at("Closed");
-//  "Commission":          0.03141024,
-//  o.comission            =j.at("Commission");
-//  "Condition":           "",
-//  o.condition            =j.at("Condition");
-//  "ConditionTarget":     0.0,
-//  o.condition_target     =j.at("ConditionTarget");
-//  "Exchange":            "USDT-RVN",
-//  o.exchange             =j.at("Exchange");
-//  "ImmediateOrCancel":   false,
-//  o.immediate_or_cancel  =j.at("ImmediateOrCancel");
-//  "IsConditional":       false,
-//  o.is_conditional       =j.at("IsConditional");
-//  "Limit":               0.01899911,
-//  o.limit                =j.at("Limit");
-//  "OrderType":           "LIMIT_BUY",
-//  o.order_type           =j.at("OrderType");
-//  "Price":               31.41024479,
-//  o.price                =j.at("Price");
-//  "PricePerUnit":        0.0189991,
-//  o.price_per_unit       =j.at("PricePerUnit");
-//  "Quantity":            1653.24909028,
-//  o.quantity             =j.at("Quantity");
-//  "QuantityRemaining":   0.0,
-//  o.quantity_remaining   =j.at("QuantityRemaining");
-//  "TimeStamp":           "2020-04-12T16:35:05.47"
-//  o.timestamp            =j.at("TimeStamp");
+ //   o.timestamp=j.at("TimeStamp");
   };
   void from_json(json &j, market_t &m)
   {
@@ -405,6 +380,14 @@ order_l bittrex::get_order_history(const string &msg)
   string page = web::load_hmac_page(url);
   auto jpage = json::parse(page);
   jpage = jpage["result"];
+  for( auto b(begin(jpage)), e(end(jpage)); b!=e; b++)
+  {
+    cout << "b: " << *b << endl;
+    auto &tmp(*b);
+    for( auto b(begin(tmp)), e(end(tmp)); b!=e; b++)
+    {
+    };
+  };
   order_l orders;
   return orders;
 };

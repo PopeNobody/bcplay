@@ -1,7 +1,14 @@
 #    test: test_prices
 #    
 
+test_get_order_hist: all
+
 test_bal: all
+
+test_ftest: all
+
+test_ppjson: all
+	./ppjson < balance.json
 
 all:
 #Make
@@ -16,7 +23,7 @@ AR:= ar
 
 #CPP
 CPPFLAGS :=
-CPPFLAGS += -I inc -MD
+CPPFLAGS += -I inc
 CPPFLAGS += -DWITH_ICU -I$(HOME)/include
 CPPFLAGS += -DSYSCONFDIR="\"/home/rfp/stow/bx/etc\""
 
@@ -66,7 +73,7 @@ libcoin.a: $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
 %.o: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
+	$(CXX) $(CPPFLAGS) -MD -MT $@ -MF $(<:.cc=.d) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
 	$(CXX) $(CXXFLAGS) -c $(<:.cc=.ii) -o $@
 
 $(TESTS): %: t/%.o libcoin.a

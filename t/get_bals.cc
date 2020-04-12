@@ -19,6 +19,7 @@ int xmain(int argc, char**argv) {
   vector<int> cw = { 5, 6, 15, 15, 15, 15, 15 };
   vector<const char *> nm = { "num", "sym", "bal", "usd", "pend", "pct" };
   money_t usd_sum=0;
+  money_t btc_sum=0;
   {
     balance_l tmp(bals);
     bals.clear();
@@ -26,15 +27,17 @@ int xmain(int argc, char**argv) {
       if( bal.usd < 0.01 )
         continue;
       usd_sum += bal.usd;
+      btc_sum += bal.btc;
       bals.push_back(bal);
     };
   };
   money_t usd_avg=usd_sum/bals.size();
-#define ROW(lab,val1) lab << setw(16) << val1 << nl;
+  money_t btc_avg=btc_sum/bals.size();
+#define ROW(lab,val1,val2) lab << setw(16) << val1 << setw(16) << val2 << nl;
 
-  cout  <<  ROW("....","USD");
-  cout  <<  ROW("tot:",usd_sum);
-  cout  <<  ROW("avg:",usd_avg);
+  cout  <<  ROW("....","USD","BTC");
+  cout  <<  ROW("tot:",usd_sum,btc_sum);
+  cout  <<  ROW("avg:",usd_avg,btc_avg);
 #undef ROW
   cout  <<  "-----------------------------" << endl;
   cout

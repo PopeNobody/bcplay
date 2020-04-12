@@ -31,3 +31,10 @@ convtest
 markets
 orders
 ppjson
+core
+ftest
+get_order_hist
+log_prices
+order_hist
+out
+tmp

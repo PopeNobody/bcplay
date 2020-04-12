@@ -52,6 +52,7 @@ namespace coin {
       return t_coin;
     }
     virtual ~market_t();
+    ostream &header(ostream &lhs, int ind=0) const;
     ostream &stream(ostream &lhs, int ind=0) const;
   };
   struct market_l : public vector<market_t>, public fmt::can_str
@@ -68,6 +69,7 @@ namespace coin {
     static money_t conv(const string &from, const string &to);
     static money_t conv1(const string &from, const string &to);
     ostream &stream(ostream &lhs, int ind=0) const;
+    ostream &header(ostream &lhs, int ind=0) const;
   };
 }
 #endif

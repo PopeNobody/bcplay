@@ -5,14 +5,17 @@
 
 namespace coin {
 	class money_t;
-	ostream &operator<<(ostream &lhs,const money_t &);
-	class money_t {
+	class money_t : public fmt::can_str {
 		double val;
 		public:
 			money_t(double val=0)
 				: val(val)
 			{
 			};
+      virtual ~money_t();
+      virtual ostream &header(ostream &lhs, int ind=0) const;
+      virtual ostream &stream(ostream &lhs, int ind=0) const;
+      virtual size_t get_width() const;
 			double get() const
 			{
 				return val;
@@ -48,8 +51,6 @@ namespace coin {
 			{
 				return val-lhs.val;
 			};
-			int get_width() const;
-			friend ostream &operator<<(ostream &lhs,const money_t &);
 	};
 #define def_op(op) \
 			inline money_t operator op(double lhs, const money_t &rhs) \
@@ -74,6 +75,10 @@ namespace coin {
       
       def_op(==); def_op(<); def_op(>); def_op(<=); def_op(>=);
 			def_op(!=);
+      inline money_t abs( const money_t &rhs )
+      {
+        return ( rhs < 0 ) ? -rhs : rhs;
+      };
 };
 
 #endif

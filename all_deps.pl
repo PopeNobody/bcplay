@@ -7,6 +7,8 @@ use autodie qw(:all);
 
 use Data::Dumper;
 
+die "usage: $0 <ofn> <deps>\n" if @ARGV<2;
+
 my $ofn = shift;
 if( -e $ofn ) {
   die "$ofn exists";

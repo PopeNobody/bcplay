@@ -86,6 +86,10 @@ market_l market_l::get_conv(const string &f, const string &t)
   };
   return res;
 };
+ostream &coin::market_l::header(ostream &lhs, int ind) const
+{
+  return lhs;
+};
 ostream &coin::market_l::stream(ostream &lhs, int ind) const
 {
   lhs << setw(ind) << "" << "market_l {";
@@ -98,7 +102,11 @@ ostream &coin::market_l::stream(ostream &lhs, int ind) const
   return lhs;
 };
 static const sym_t no_sym;
-ostream &coin::market_t::stream( ostream &lhs, int ind ) const
+ostream &coin::market_t::header(ostream &lhs, int ind) const
+{
+  return lhs;
+};
+ostream &coin::market_t::stream(ostream &lhs, int ind) const
 {
   lhs 
     << setw(ind) << ""

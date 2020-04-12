@@ -3,7 +3,14 @@
 
 #include <coinfwd.hh>
 namespace fmt {
-	class fp_val {
+	struct can_str {
+    virtual ostream &header(ostream &lhs, int ind=0) const=0;
+		virtual ostream &stream(ostream &lhs, int ind=0) const=0;
+		virtual size_t get_width() const;
+		virtual ~can_str();
+	};
+	class fp_val : public can_str
+  {
 		protected:
 		double val;
 		virtual ~fp_val ();
@@ -12,8 +19,9 @@ namespace fmt {
 		{
 		};
 		public:
-		virtual string fmt() const=0;
-		virtual int get_width() const=0;
+//       virtual ostream &header(ostream &lhs, int ind=0) const;
+//   		virtual ostream &stream(ostream &lhs, int ind=0) const;
+//   		virtual size_t get_width() const;
 		double get() const {
 			return val;
 		};
@@ -32,13 +40,18 @@ namespace fmt {
 				: fp_val(lhs/rhs)
 				{
 				};
-		virtual int get_width() const;
-		string fmt() const;
+		virtual size_t get_width() const;
+    virtual ostream &header(ostream &lhs, int ind=0) const;
+		virtual ostream &stream(ostream &lhs, int ind=0) const;
 	};
-	inline ostream &operator<<(ostream &lhs, const fp_val &rhs)
-	{
-		return lhs<<rhs.fmt();
-	};
+  inline bool operator<(const pct_t &lhs, const pct_t &rhs)
+  {
+    return lhs.get()<rhs.get();
+  };
+  inline bool operator==(const pct_t &lhs, const pct_t &rhs)
+  {
+    return lhs.get()==rhs.get();
+  };
 	struct nl_t {
 		friend ostream &operator<<(ostream &lhs, nl_t nl)
 		{
@@ -46,10 +59,6 @@ namespace fmt {
 		}
 	};
 	const static nl_t nl;
-	struct can_str {
-		virtual ostream &stream(ostream &lhs, int ind=0) const=0;
-		virtual ~can_str();
-	};
 	inline ostream &operator<<( ostream &lhs, const fmt::can_str &rhs )
 	{
 		return rhs.stream(lhs,0);

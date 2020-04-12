@@ -6,15 +6,26 @@ namespace fmt {
 	fp_val::~fp_val()
 	{
 	};
-	int pct_t::get_width() const {
+	size_t pct_t::get_width() const {
 		return 8;
 	};
-	string pct_t::fmt() const {
-		const static string sign("%");
-		char buf[12];
-		assert(get_width()==8);
-		snprintf(buf,sizeof(buf),"%7.3f",100*val);
-		return buf+sign;
-	};
+  ostream &pct_t::header(ostream &lhs, int ind) const
+  {
+    return lhs;
+  };
+  ostream &pct_t::stream(ostream &lhs, int ind) const
+  {
+    char fill=lhs.fill();
+    lhs<<setw(ind)<<"";
+    lhs<<setw(get_width()-2)<<fixed<<setprecision(2)<<100*val<<"% ";
+    lhs<<setfill(fill);
+    return lhs;
+  };
+  size_t can_str::get_width() const
+  {
+    return string::npos;
+  };
 };
+
+
 

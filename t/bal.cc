@@ -29,11 +29,7 @@ public:
 
 using bittrex::xact_limit;
 
-inline money_t abs( money_t rhs )
-{
-  return ( rhs < 0 ) ? -rhs : rhs;
-};
-
+money_t tot_usd=0;
 struct todo_t : public fmt::can_str
 {
   sym_t sym;
@@ -48,15 +44,47 @@ struct todo_t : public fmt::can_str
   {
     return usd_delta()/abs(usd_delta());
   };
+  ostream &header(ostream &xlhs, int ind=0) const
+  {
+    ostringstream lhs;
+    lhs
+      << left << setw(ind) << ""
+      << setw(sym.get_width()) << "SYM" << right
+      << " " << setw(usd_bal.get_width()-2) << "BAL"<< "__"
+      << " " << setw(pct_goal.get_width()-2) << "BAL%"<< "__"
+      << " " << setw(pct_goal.get_width()-2) << "G%"<< "__"
+      << " " << setw(usd_bal.get_width()-2) << "G$"<< "__"
+      << " " << setw(usd_bal.get_width()-2) << "DEL$"<< "__"
+      ;
+    return xlhs << lhs.str();
+  };
   ostream &stream(ostream &lhs, int ind=0) const
   {
-    return lhs
+    lhs
       << setw(ind) << ""
       << sym
       << " " << usd_bal
+      << " ";
+    if(tot_usd) {
+      lhs << pct_t(usd_bal/tot_usd);
+    } else {
+      lhs << string(pct_goal.get_width(),'+');
+    };
+    lhs
       << " " << pct_goal
       << " " << usd_goal
       << " " << usd_delta();
+    return lhs;
+  };
+};
+struct todo_abs {
+  bool operator()( const todo_t &lhs, const todo_t &rhs )
+  {
+    if(abs(lhs.usd_delta()) > abs(rhs.usd_delta()))
+      return true;
+    if(abs(rhs.usd_delta()) < abs(lhs.usd_delta()))
+      return false;
+    return lhs.sym < rhs.sym;
   };
 };
 struct todo_less {
@@ -64,53 +92,44 @@ struct todo_less {
   {
     if(lhs.usd_delta() < rhs.usd_delta())
       return true;
-    if(rhs.usd_delta() < lhs.usd_delta())
+    if(rhs.usd_delta() > lhs.usd_delta())
       return false;
     return lhs.sym < rhs.sym;
   };
 };
-struct todo_more {
-  bool operator()( const todo_t &lhs, const todo_t &rhs )
-  {
-    if(rhs.usd_delta() < lhs.usd_delta())
-      return true;
-    if(lhs.usd_delta() < rhs.usd_delta())
-      return false;
-    return rhs.sym < lhs.sym;
-  };
-};
 typedef std::vector<todo_t> todo_v;
+ostream &operator<<(ostream &lhs, const todo_v &rhs)
+{
+  for( auto todo : rhs )
+  {
+    lhs << "  " << todo << endl;
+  };
+  return lhs;
+};
 typedef std::map< sym_t, todo_t > todo_m;
-static void show_todos( const todo_v &todo, const money_t &tot );
 typedef vector<string> arg_v;
 goals_t const& mk_goals()
 {
   static goals_t res;
-  res[ "BAT" ] = 1;
-  res[ "BCH" ] = 1;
-  res[ "BSV" ] = 1;
-  res[ "BTC" ] = 1;
-  res[ "DASH" ] = 1;
-  res[ "LBC" ] = 1;
-  res[ "RVN" ] = 1;
-  res[ "XLM" ] = 1;
-  res[ "XMR" ] = 1;
-  res[ "ZEN" ] = 1;
-  res[ "SBD" ] = 1;
-  res[ "HIVE" ] = 1;
+  res["BCH"]=200;
+  res["BSV"]=200;
+  res["BTC"]=100;
+  res["DASH"]=100;
+  res["RVN"]=100;
+  res["XLM"]=100;
+  res["XMR"]=95;
+  res["XRP"]=5;
+  res["ZEN"]=100;
 
   pct_t tot = 0;
   for( auto g : res ) {
     tot = tot.get()+g.second.get();
   };
-  res[ "USDT" ] = tot.get()/3*2;
-  tot = tot.get()+tot.get()/3*2;
-  cout << "goals: " << endl;
+  res["USDT"]=tot.get();
+  tot = tot.get()+res["USDT"].get();
   for( auto & g : res ) {
     g.second = pct_t(g.second.get()/tot.get());
-    cout << g.first << " " << g.second << endl;
   };
-  cout << endl;
   return res;
 };
 
@@ -119,9 +138,29 @@ static const todo_v mk_todo( )
   todo_m todo_sym;
   auto const &balances = balance_l::load_balances();
   auto const &goals = mk_goals();
-  money_t tot_usd;
-  for ( auto const &b : balances )
+  {
+    multimap<pct_t, sym_t> rgoals;
+    for ( auto const & goal : goals )
+      rgoals.insert(make_pair(goal.second,goal.first));
+    pct_t last;
+    for ( auto const & rgoal : rgoals )
+    {
+      if(last==rgoal.first) {
+        cout << rgoal.second;
+      } else {
+        last=rgoal.first;
+        cout << endl << rgoal.first << rgoal.second;
+      };
+    };
+    cout << endl;
+  };
+  tot_usd=0;
+  for ( auto const &b : balances ) {
     tot_usd += b.usd;
+    if( b.pend ) {
+      cout << b.sym << " has pending balance " << b.pend << endl;
+    };
+  };
   cout << "tot_usd: " << tot_usd << endl;
   int i=1;
   for ( auto const &g : goals ) 
@@ -148,12 +187,91 @@ static const todo_v mk_todo( )
   };
   todo_v todos;
   for ( auto const &todo : todo_sym )
-  {
     todos.push_back(todo.second);
-  };
   return todos;
 };
 
+void todo_sort_show(const string &name, todo_v &todos)
+{
+  if(name=="ign")
+    sort(todos.begin(),todos.end(),todo_less());
+  else
+    sort(todos.begin(),todos.end(),todo_abs());
+  cout << name << ":" << endl;
+  if(todos.size())
+    cout << todos << endl;
+};
+money_t min_size;
+void split_and_show(const todo_v &todos, todo_v &pos, todo_v &neg, todo_v &ign)
+{
+  cout << "min_size=" << min_size << endl;
+  for( auto todo : todos )
+  {
+    if( abs(todo.usd_delta()) < min_size ) {
+      ign.push_back(todo);
+    } else if ( todo.usd_delta() < 0 ) {
+      neg.push_back(todo);
+    } else if ( todo.usd_delta() > 0 ) {
+      pos.push_back(todo);
+    };
+  };
+  cout << endl;
+  todo_t().header(cout,2) << endl;
+  todo_sort_show("pos",pos);
+  todo_sort_show("neg",neg);
+  todo_sort_show("ign",ign);
+};
+auto find_match( const todo_v &todos )
+{
+  min_size = max(tot_usd*0.0001,money_t(3));
+  todo_v pos, neg, ign;
+  split_and_show(todos,pos,neg,ign);
+
+  sym_t f_sym, t_sym;
+  money_t qty(0);
+  for(auto pbeg(pos.begin()), pend(pos.end());pbeg!=pend;pbeg++)
+  {
+    cout << pbeg->sym;
+    for( auto nbeg(neg.begin()), nend(neg.end());nbeg!=nend;nbeg++)
+    {
+      cout << " " << nbeg->sym;
+      auto tmp=min(abs(pbeg->usd_delta()),abs(nbeg->usd_delta()));
+      auto marks = market_l::get_conv(pbeg->sym,nbeg->sym);
+      if(marks.size()==1){
+        cout << "*" << endl;
+        cout << *pbeg << endl;
+        cout << *nbeg << endl;
+        f_sym=pbeg->sym;
+        t_sym=nbeg->sym;
+        qty=tmp;
+        goto out;
+      };
+    };
+    cout << endl;
+  };
+out:
+  if(qty) {
+  } else {
+    f_sym=t_sym="BTC";
+    if ( pos.size() ) {
+      if( neg.size() && abs(neg[0].usd_delta())>abs(pos[0].usd_delta()) ) {
+        f_sym=neg[0].sym;
+        qty=neg[0].usd_delta();
+      } else {
+        f_sym=pos[0].sym;
+        qty=pos[0].usd_delta();
+      };
+    } else if ( neg.size() ) {
+      t_sym=neg[0].sym;
+      qty=neg[0].usd_delta();
+    };
+  };
+  if( f_sym == "BTC" && t_sym == "BTC" )
+   t_sym="USDT";
+  return make_tuple( f_sym, t_sym, qty, f_sym+"-"+t_sym );
+};
+const static string base_str = "BTC,ETH,USD,USDT";
+const static vector<string> base_syms = split(',',base_str);
 int xmain( const arg_v &args )
 {
   for( auto arg : args ) {
@@ -165,223 +283,42 @@ int xmain( const arg_v &args )
       exit(1);
     };
   };
-  if(!bittrex::fake_buys) {
-    while(bittrex::orders_pending())
+
+
+  cout << endl;
+  auto todos = mk_todo();
+
+  auto trade = find_match( todos );
+  if(!get<2>(trade)) {
+    cout << "Nothing to do!" << endl;
+    return 0;
+  };
+  cout
+    << "trade: " 
+    << get<0>(trade) 
+    << get<1>(trade) 
+    << get<2>(trade) 
+    <<  endl;
+  xact_limit(
+      get<0>(trade),
+      get<1>(trade),
+      get<2>(trade),
+      "USDT"
+      );
+  auto stime=time(0);
+  do {
+    if(!bittrex::dump_orders()) 
+      break;
+    market_l m = bittrex::get_market(get<3>(trade));
+    cout << m << endl;
+    auto ctime=time(0)-stime;
+    if(ctime<15)
+      sleep(3);
+    else
       bittrex::cancel_orders();
-  }
-  sym_l base_syms;
-  base_syms.push_back("BTC");
-  base_syms.push_back("ETC");
-  base_syms.push_back("USD");
-  base_syms.push_back("USDT");
-  string base_str = join(',',base_syms);
-
-
-  todo_v todos;
-  todo_m bases;
-  {
-    auto todo_l = mk_todo();
-    int i =1;
-    for( auto const &todo : todo_l )
-    {
-      if(contains(base_syms,todo.sym))
-      {
-        bases[todo.sym]=todo;
-      } else {
-        todos.push_back(todo);
-      };
-    };
-    sort(todos.begin(),todos.end(),todo_less());
-  };
-  {
-    int i = 0;
-    while( i < todos.size() )
-    {
-      auto todo = todos[i];
-      if(todo.delta_sign()>=0)
-        break;
-      for( auto &base_pair : bases )
-      {
-        auto &base = base_pair.second;
-        if(market_l::get_conv(todo.sym,base.sym).size()!=1)
-          continue;
-        if(base.delta_sign()<=0)
-          continue;
-        money_t qty = min(-todo.usd_delta(),base.usd_delta())/2;
-        qty = min(money_t(100),qty);
-        if(qty >= money_t(5)) {
-          xact_limit(
-              todo.sym,
-              base.sym,
-              qty,
-              "USDT"
-              );
-          todo.usd_bal -= qty;
-          base.usd_bal += qty;
-        };
-      };
-      i++;
-      cout << endl << endl;
-    };
-    while( i < todos.size() )
-    {
-      auto todo = todos[i];
-      if(todo.delta_sign()==0)
-        continue;
-      if(todo.delta_sign()<0)
-        break;
-      for( auto &base_pair : bases )
-      {
-        auto &base = base_pair.second;
-        if(market_l::get_conv(todo.sym,base.sym).size()!=1)
-          continue;
-        if(base.delta_sign()>=0)
-          continue;
-        money_t qty = min(todo.usd_delta(),-base.usd_delta())/2;
-        cout << todo << endl;
-        cout << base << endl;
-        cout << todo.sym << " qty=" << qty << endl;
-        qty = min(money_t(100),qty);
-        cout << todo.sym << " qty=" << qty << endl;
-        if(qty >= money_t(5)) {
-          xact_limit(
-              base.sym,
-              todo.sym,
-              qty,
-              "USDT"
-              );
-          todo.usd_bal -= qty;
-          base.usd_bal += qty;
-        };
-      };
-      i++;
-      cout << endl << endl;
-    };
-  };
-
-#if 0
-  todo_m data;
-  for ( auto g : goals )
-  {
-    data[ g.first ].bal.sym = g.first;
-    data[ g.first ].pct_goal = g.second;
-  };
-  money_t tot = 0.0000001;
-  for ( auto b : balance_l::load_balances() )
-  {
-    if ( 
-        ( goals.find( b.sym ) != goals.end() )
-        ||
-        ( b.usd > 0.0099 )
-       )
-    {
-      data[ b.sym ].bal = b;
-      tot += b.usd;
-    };
-  }
-  cout << "tot: " << tot << "USD" << endl;
-  todo_v todo;
-  for ( auto d : data )
-  {
-    pct_t pct_goal( d.second.pct_goal.get() );
-    d.second.usd_goal = tot * pct_goal.get();
-    d.second.bal.sym = d.first;
-    d.second.delta = d.second.usd_goal - d.second.bal.usd;
-    todo.push_back(d.second);
-  };
-  sort(todo.begin(),todo.end(),coin_less());
-  show_todos(todo, tot);
-
-  auto pivot=data["BTC"].bal;
-  auto b(todo.begin()), e(todo.end());
-  for( ; b!=e && b->delta < 0; b++ )
-  {
-    if( b->bal.sym == pivot.sym ) {
-      cout << "skip: " << b->bal.sym << " sym 1" << endl;
-      continue;
-    };
-    if( b->delta > -5 ) {
-      cout << "skip: " << b->bal.sym << " <$5 1" << endl;
-      continue;
-    };
-    cout 
-      << -b->delta 
-      << " in " 
-      << b->bal.sym 
-      << " to " 
-      << pivot.sym 
-      << endl;
-    xact_limit(
-        pivot.sym,
-        b->bal.sym,
-        b->delta,
-        "USDT"
-        );
-  };
-  for( ; b!=e; b++ ) {
-    if( b->bal.sym == pivot.sym ) {
-      cout << "skip: " << b->bal.sym << " sym 2" << endl;
-      continue;
-    };
-    if( b->delta < 5 ) {
-      cout << "skip: " << b->bal.sym << " <$5 2" << endl;
-      continue;
-    };
-    cout 
-      << b->delta 
-      << " in " 
-      << pivot.sym 
-      << " to " 
-      << b->bal.sym 
-      << endl;
-    xact_limit(
-        pivot.sym,
-        b->bal.sym,
-        b->delta,
-        "USDT"
-        );
-  };
-#endif
+  }while(0);
+  cout << "all orders resolved" << endl;
   return 0;
-};
-void show_todos( const todo_v &todo, const money_t &tot ) {
-  if(!todo.size()) {
-    cerr << "todo is empty" << endl;
-    return;
-  };
-#if 0
-  auto const& temp = todo[0];
-  cout << "|" << setw( temp.bal.sym.get_width() ) << "SYM "
-    << "|" << setw( temp.bal.usd.get_width() ) << "cur$ "
-    << "|" << setw( temp.pct_goal.get_width() ) << "cur% "
-    << "|" << setw( temp.pct_goal.get_width() ) << "goal% "
-    << "|" << setw( temp.bal.usd.get_width() ) << "goal$ "
-    << "|" << setw( temp.bal.usd.get_width() ) << "delta "
-    << "|" << endl;
-  for ( auto t : todo ) {
-    cout
-      << "|" 
-      << t.bal.sym << "|"
-      << t.bal.usd << "|"
-      << pct_t( t.bal.usd / tot ) << "|"
-      << t.pct_goal << "|"
-      << t.usd_goal << "|"
-      << t.delta << "|"
-      << "|" << endl;
-  };
-  for ( auto d : data )
-  {
-    cout
-      << "|" 
-      << d.first << "|"
-      << d.second.bal.usd << "|"
-      << pct_t( d.second.bal.usd / tot ) << "|"
-      << pct_goal << "|"
-      << usd_goal << "|"
-      << delta << "|"
-      << "|" << endl;
-  };
-#endif
 };
 int main( int argc, char** argv )
 {

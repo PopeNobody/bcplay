@@ -1,13 +1,21 @@
 #include <money.hh>
 
-int coin::money_t::get_width() const {
-	return 17;
-};
-std::ostream &coin::operator<<(std::ostream&lhs, coin::money_t const&rhs)
-{
-	char buf[128];
-	snprintf(buf,sizeof(buf),"%16.8f ",rhs.get());
-	return lhs<<buf;
+namespace coin {
+  using std::ostream;
+  size_t money_t::get_width() const {
+    return 12;
+  };
+  ostream &money_t::header(ostream &lhs, int ind) const
+  {
+    return lhs;
+  };
+  ostream &money_t::stream(ostream &lhs, int ind) const
+  {
+    return lhs
+      <<setw(ind)<<""
+      <<setw(get_width())<<setprecision(4)<<get();
+  };
+  money_t::~money_t()
+  {
+  };
 }
-
-
