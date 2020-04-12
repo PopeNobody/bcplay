@@ -87,7 +87,7 @@ all: $(TESTS)
 CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt
 
 clean:
-	rm -f libcoin.a $(TESTS)
+	rm -f libcoin.a{,.lock} $(TESTS)
 	rm -f tags deps.all
 	rm -f */*.[od] */*.ii
 
