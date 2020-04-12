@@ -35,7 +35,6 @@ core
 ftest
 get_order_hist
 log_prices
-order_hist
 out
 tmp
 prices.ooout
