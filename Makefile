@@ -1,9 +1,12 @@
 #    test: test_prices
 #    
 
-test_get_order_hist: all
+test_bal: bal
 
-test_bal: all
+test_get_bals: all
+
+
+test_get_order_hist: get_order_hist bal get_bals
 
 test_ftest: all
 
@@ -12,11 +15,13 @@ test_ppjson: all
 
 all:
 #Make
-MAKEFLAGS:= -Rr --warn-undefined-variable -j6
+MAKEFLAGS:= -Rr --warn-undefined-variable
+MAKEFLAGS+= -j8
 
 #CXX
 CXX:= clang++
-CXXFLAGS += -g
+#CXX:= g++
+CXXFLAGS += -ggdb3 -O0 -Wall
 CXXFLAGS += -fPIC
 #AR
 AR:= ar
@@ -37,6 +42,8 @@ LDLIBS += -lcurl -lcurlpp
 LDLIBS += -lbitcoin-system
 LDLIBS += -lsecp256k1 -lgmp
 LDLIBS += -lboost_system
+LDLIBS += -lboost_date_time
+LDLIBS += -lboost_filesystem
 LDLIBS += -lboost_thread
 LDLIBS += -lboost_regex
 LDLIBS += -lboost_locale
