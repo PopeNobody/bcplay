@@ -5,12 +5,6 @@
 
 namespace coin {
   using namespace std;
-//     ostream &operator<<(ostream &lhs, const sym_t &rhs) {
-//       string tmp(rhs.get_width(),' ');
-//       lhs << tmp;
-//       //		assert(tmp.size()<6);
-//       return lhs;
-//     };
   coin::sym_t::~sym_t()
   {
   };
@@ -20,20 +14,14 @@ namespace coin {
   }
   ostream &sym_t::stream(ostream &lhs, int ind) const
   {
-    auto flags = lhs.flags();
-    auto fill = lhs.fill();
-    lhs
-      << setw(ind) << ""
-      << left
-      << setw(get_width())
-      << c_str();
-    lhs.flags(flags);
-    lhs.fill(fill);
+    string txt(ind+get_width()-size(),' ');
+    txt+=(*this);
+    lhs << txt;
     return lhs;
   };
   size_t sym_t::get_width() const
   {
-    return 6;
+    return 7;
   };
 };
 

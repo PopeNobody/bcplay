@@ -7,25 +7,32 @@
 
 namespace bittrex {
 	using namespace coin;
-	const market_l load_markets();
-	const balance_l &load_balances();
+//   	const market_l load_markets();
+//   	const balance_l &load_balances();
 
 	extern bool fake_buys;
 	extern bool show_urls;
-	bool xact_limit(
+	void xact_limit(
 			sym_t fsym,
 			sym_t tsym,
 			money_t fqty,
 			sym_t qunit
 			);
+
+  order_l get_order_history(const string &mkt);
 	bool dump_orders();	
 	void cancel_order(const string &id);	
-  bool orders_pending();
 	void cancel_orders();	
+  bool orders_pending();
+
 	void show_deposits();
 	void show_withdrawals();
-  market_l get_market(const string &id);
-  order_l get_order_history(const string &mkt);
+
+	const market_l load_markets();
+	const balance_l load_balances();
+
+  money_t ex_rate( sym_t f_sym, sym_t t_sym );
+  bool is_trading_pair( sym_t lhs, sym_t rhs );
 };
 
 #endif // bittrex_hh

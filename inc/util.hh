@@ -43,6 +43,11 @@ namespace util {
       
     return res;
   }
+  template<typename cont_t>
+    inline void sort(cont_t &cont)
+    {
+      sort(begin(cont),end(cont));
+    };
 //   	template<typename cont_t, typename itr_t>
 //   	cont_t split(char sep, itr_t b, itr_t e)
 //   	{

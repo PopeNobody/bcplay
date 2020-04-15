@@ -16,6 +16,7 @@ bool web::verbose =false;
 
 const string web::load_page(const string &url, const list<string> &headers)
 {
+  cerr << "load_page('" << url << "', ...)" << endl;
   // That's all that is needed to do cleanup of used resources (RAII style).
   curlpp::Cleanup myCleanup;
 
@@ -36,7 +37,7 @@ const string web::load_page(const string &url, const list<string> &headers)
   myRequest.setOpt(new curlpp::options::FailOnError(true));
   myRequest.perform();
 
-  return move(os.str());
+  return os.str();
 }
 data_chunk str2chunk(const string &str) {
   return data_chunk(str.begin(),str.end());
@@ -57,7 +58,7 @@ std::list<string> signurl(const string &url, const string &key, const string &se
   string sign=encode_base16(hmac_sha512_hash(urldat,secdat));
   res.push_back(url);
   res.push_back("apisign:"+sign);
-  return move(res);
+  return res;
 };
 string web::pp_json(const string &page) {
   json jpage;
@@ -70,7 +71,7 @@ string web::pp_json(const string &page) {
   };
   ostringstream res;
   res << setw(2) << jpage << endl;
-  return move(res.str());
+  return res.str();
 };
 string web::pp_json_url(const string &url) {
   string page=web::load_page(url);

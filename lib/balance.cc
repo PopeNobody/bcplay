@@ -3,10 +3,12 @@
 #include <fmt.hh>
 #include <bittrex.hh>
 
+#undef checkin
+#define checkin()
+
 using fmt::nl;
 
 namespace coin {
-	balance_l balance_l::list;
 	bool balance_t::operator<(const balance_t &rhs) const {
 		if( usd < rhs.usd )
 			return true;
@@ -14,41 +16,35 @@ namespace coin {
 			return false;
 		return sym < rhs.sym;
 	};
-	const balance_l &balance_l::load_balances()
-	{
-		list=bittrex::load_balances();
-    return list;
-	};
-  const balance_l &balance_l::get_balances() {
-    if(list.size()==0)
-      list=load_balances();
-    return list;
-  };
-	sym_l balance_l::syms() const
-	{
-		sym_l res;
-		for( auto b : *this ) {
-			res.push_back(b.sym);
-		};
-		return res;
-	};
-#define SHOW_POS() do{ \
-  cout << __FILE__ << ":" << __LINE__ << ":" << __PRETTY_FUNCTION__ << endl; \
-}while(0)
-#undef SHOW_POS
-#define SHOW_POS()
+//   	sym_l balance_l::syms() const
+//   	{
+//   		sym_l res;
+//   		for( auto b : *this ) {
+//   			res.push_back(b.sym);
+//   		};
+//   		return res;
+//   	};
 
+	balance_t::balance_t(const balance_t &rhs)
+  {
+    checkin();
+    sym=rhs.sym;
+    bal=rhs.bal;
+    pend=rhs.pend;
+    usd=rhs.usd;
+    btc=rhs.btc;
+	};
 	balance_t::balance_t() {
-    SHOW_POS(); 
+    checkin(); 
 	};
 	balance_t::~balance_t() {
-    SHOW_POS(); 
+    checkin(); 
 	};
 	balance_l::balance_l() {
-    SHOW_POS(); 
+    checkin(); 
 	};
 	balance_l::~balance_l() {
-    SHOW_POS(); 
+    checkin(); 
 	};
 	ostream &balance_t::header(ostream &lhs, int ind) const {
 		return lhs;

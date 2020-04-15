@@ -6,7 +6,7 @@ namespace fmt {
 	struct can_str {
     virtual ostream &header(ostream &lhs, int ind=0) const=0;
 		virtual ostream &stream(ostream &lhs, int ind=0) const=0;
-		virtual size_t get_width() const;
+		virtual size_t get_width() const=0;
 		virtual ~can_str();
 	};
 	class fp_val : public can_str

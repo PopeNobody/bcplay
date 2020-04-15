@@ -3,6 +3,10 @@
 #include <typeinfo>
 #include <util.hh>
 #include <web_api.hh>
+#include <dbg.hh>
+#undef checkin
+#define checkin()
+
 using namespace util;
 using namespace coin;
 using namespace fmt;
@@ -58,6 +62,9 @@ struct todo_t : public fmt::can_str
       ;
     return xlhs << lhs.str();
   };
+  size_t get_width() const {
+    return string::npos;
+  };
   ostream &stream(ostream &lhs, int ind=0) const
   {
     lhs
@@ -97,14 +104,29 @@ struct todo_less {
     return lhs.sym < rhs.sym;
   };
 };
-typedef std::vector<todo_t> todo_v;
-ostream &operator<<(ostream &lhs, const todo_v &rhs)
+class todo_v : public std::vector<todo_t>, public can_str
 {
-  for( auto todo : rhs )
+  public:
+  virtual ostream &header(ostream &lhs, int ind=0) const
   {
-    lhs << "  " << todo << endl;
+    return lhs;
   };
-  return lhs;
+  virtual ostream &stream(ostream &lhs, int ind=0) const
+  {
+    for( auto todo : *this )
+    {
+      lhs << "  " << todo << endl;
+    };
+    return lhs;
+  };
+  virtual size_t get_width() const
+  {
+    return unsigned(-1);
+  }
+  virtual ~todo_v()
+  {
+    checkin();
+  };
 };
 typedef std::map< sym_t, todo_t > todo_m;
 typedef vector<string> arg_v;
@@ -117,15 +139,14 @@ goals_t const& mk_goals()
   res["DASH"]=100;
   res["RVN"]=100;
   res["XLM"]=100;
-  res["XMR"]=95;
-  res["XRP"]=5;
+  res["XMR"]=100;
   res["ZEN"]=100;
 
   pct_t tot = 0;
   for( auto g : res ) {
     tot = tot.get()+g.second.get();
   };
-  res["USDT"]=tot.get();
+  res["USDT"]=tot.get()*1.2;
   tot = tot.get()+res["USDT"].get();
   for( auto & g : res ) {
     g.second = pct_t(g.second.get()/tot.get());
@@ -136,7 +157,7 @@ goals_t const& mk_goals()
 static const todo_v mk_todo( )
 {
   todo_m todo_sym;
-  auto const &balances = balance_l::load_balances();
+  auto const &balances = bittrex::load_balances();
   auto const &goals = mk_goals();
   {
     multimap<pct_t, sym_t> rgoals;
@@ -157,12 +178,10 @@ static const todo_v mk_todo( )
   tot_usd=0;
   for ( auto const &b : balances ) {
     tot_usd += b.usd;
-    if( b.pend ) {
+    if( b.pend )
       cout << b.sym << " has pending balance " << b.pend << endl;
-    };
   };
   cout << "tot_usd: " << tot_usd << endl;
-  int i=1;
   for ( auto const &g : goals ) 
   {
     auto &todo = todo_sym[g.first];
@@ -221,54 +240,48 @@ void split_and_show(const todo_v &todos, todo_v &pos, todo_v &neg, todo_v &ign)
   todo_sort_show("neg",neg);
   todo_sort_show("ign",ign);
 };
+
 auto find_match( const todo_v &todos )
 {
-  min_size = max(tot_usd*0.0001,money_t(3));
+  min_size = max(tot_usd*0.0001,money_t(10));
   todo_v pos, neg, ign;
   split_and_show(todos,pos,neg,ign);
-
-  sym_t f_sym, t_sym;
-  money_t qty(0);
+  
+  sym_t p_sym, n_sym;
   for(auto pbeg(pos.begin()), pend(pos.end());pbeg!=pend;pbeg++)
   {
-    cout << pbeg->sym;
     for( auto nbeg(neg.begin()), nend(neg.end());nbeg!=nend;nbeg++)
     {
-      cout << " " << nbeg->sym;
-      auto tmp=min(abs(pbeg->usd_delta()),abs(nbeg->usd_delta()));
-      auto marks = market_l::get_conv(pbeg->sym,nbeg->sym);
-      if(marks.size()==1){
-        cout << "*" << endl;
-        cout << *pbeg << endl;
-        cout << *nbeg << endl;
-        f_sym=pbeg->sym;
-        t_sym=nbeg->sym;
-        qty=tmp;
-        goto out;
-      };
-    };
-    cout << endl;
-  };
-out:
-  if(qty) {
-  } else {
-    f_sym=t_sym="BTC";
-    if ( pos.size() ) {
-      if( neg.size() && abs(neg[0].usd_delta())>abs(pos[0].usd_delta()) ) {
-        f_sym=neg[0].sym;
-        qty=neg[0].usd_delta();
+      if(min(nbeg->sym,pbeg->sym)=="BTC" && max(nbeg->sym,pbeg->sym)=="ZEN") {
+        cout << "BTC and ZEN don't work." << endl;
+      } else if( bittrex::is_trading_pair(pbeg->sym,nbeg->sym) ) {
+        auto qty=min(pbeg->usd_delta(), -nbeg->usd_delta());
+        return make_tuple(nbeg->sym,pbeg->sym,qty);
       } else {
-        f_sym=pos[0].sym;
-        qty=pos[0].usd_delta();
+        cout << pbeg->sym << " and " << nbeg->sym << " are not a trading pair."
+          << endl;
       };
-    } else if ( neg.size() ) {
-      t_sym=neg[0].sym;
-      qty=neg[0].usd_delta();
     };
   };
-  if( f_sym == "BTC" && t_sym == "BTC" )
-   t_sym="USDT";
-  return make_tuple( f_sym, t_sym, qty, f_sym+"-"+t_sym );
+  if(pos.size() && neg.size() ) {
+    cout << abs(pos[0].usd_delta()) << endl;
+    cout << abs(neg[0].usd_delta()) << endl;
+    if(pos[0].usd_delta() > abs(neg[0].usd_delta()))
+    {
+      cout << "pos is bigger" << endl;
+      cout << pos[0] << endl;
+      cout << neg[0] << endl;
+      return make_tuple( sym_t("BTC"), pos[0].sym, pos[0].usd_delta() );
+    }
+    else
+    {
+      cout << "neg is bigger" << endl;
+      cout << neg[0] << endl;
+      cout << pos[0] << endl;
+      return make_tuple( sym_t("BTC"), neg[0].sym, neg[0].usd_delta() );
+    };
+  };
+  return make_tuple( sym_t(), sym_t(), money_t(0)  );
 };
 const static string base_str = "BTC,ETH,USD,USDT";
 const static vector<string> base_syms = split(',',base_str);
@@ -287,7 +300,6 @@ int xmain( const arg_v &args )
 
   cout << endl;
   auto todos = mk_todo();
-
   auto trade = find_match( todos );
   if(!get<2>(trade)) {
     cout << "Nothing to do!" << endl;
@@ -298,6 +310,7 @@ int xmain( const arg_v &args )
     << get<0>(trade) 
     << get<1>(trade) 
     << get<2>(trade) 
+    << "USDT"
     <<  endl;
   xact_limit(
       get<0>(trade),
@@ -305,19 +318,24 @@ int xmain( const arg_v &args )
       get<2>(trade),
       "USDT"
       );
+  if(bittrex::fake_buys)
+    return 0;
   auto stime=time(0);
   do {
-    if(!bittrex::dump_orders()) 
+    if(!bittrex::dump_orders()) {
+      cout << "no orders pending." << endl;
       break;
-    market_l m = bittrex::get_market(get<3>(trade));
-    cout << m << endl;
+    };
     auto ctime=time(0)-stime;
     if(ctime<15)
       sleep(3);
     else
       bittrex::cancel_orders();
   }while(0);
-  cout << "all orders resolved" << endl;
+  if(get<2>(trade)){
+    todos=mk_todo();
+    find_match(todos);
+  };
   return 0;
 };
 int main( int argc, char** argv )

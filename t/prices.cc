@@ -2,6 +2,7 @@
 #include <json.hh>
 #include <fmt.hh>
 #include <markets.hh>
+#include <bittrex.hh>
 
 #include <balance.hh>
 using namespace coin;
@@ -23,7 +24,6 @@ int xmain(int argc, char**argv) {
   auto stime = time(0);
   stime-=(stime%3600);
   while(true) {
-    market_l markets=market_l::load_markets();
     if(first) {
       cout << setw(10) << "T";
       for( auto m : show_marks ) {
@@ -43,12 +43,12 @@ int xmain(int argc, char**argv) {
         << fixed
         << setprecision(3)
         << setw(10) 
-        << 0.001*int(markets.conv(m,"USD").get()*1000);
+        << 0.001*int(bittrex::ex_rate(m,"USD").get()*1000);
     };
     for ( auto m : div_btc ) {
       cout << 
         fixed << setprecision(8) <<
-        setw(14) << markets.conv("BTC",m).get();
+        setw(14) << bittrex::ex_rate("BTC",m).get();
     };
     cout << endl;
     bool done=false;

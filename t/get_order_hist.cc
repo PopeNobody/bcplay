@@ -1,31 +1,39 @@
 #include <web_api.hh>
 #include <balance.hh>
 #include <bittrex.hh>
-#include <ctime>
 #include <fmt.hh>
-#include <iostream>
 #include <json.hh>
+#include <dbg.hh>
+
+#include <ctime>
+#include <iostream>
 #include <regex>
+#include <boost/date_time/posix_time/ptime.hpp>
 
 using namespace coin;
-using fmt::pct_t;
-using fmt::nl;
-
 using namespace std;
- 
+
+using boost::date_time::Feb;
+using boost::date_time::not_a_date_time;
+using boost::gregorian::date;
+using boost::gregorian::from_simple_string;
+using boost::local_time::local_date_time;
+using boost::posix_time::ptime;
+using boost::posix_time::time_duration;
+using fmt::nl;
+using fmt::pct_t;
+
 int xmain(int argc, char**argv) {
+  checkin();
   auto orders = bittrex::get_order_history("USD-RVN");
   return 0;
 };
-int main(int argc, char**argv) {
+int main(int argc, char**argv)
+{
+  checkin();
   try {
-    std::time_t result = std::time(nullptr);
-    string fmt = "%Y-%m-%d-%H-%M-%S";
-    char buf[4096];
-    auto len=strftime(buf,sizeof(buf)-1,fmt.c_str(),std::localtime(&result));
-    cout << buf << endl;
     return xmain(argc,argv);
-  } catch ( exception &e ) {
+  } catch ( std::exception &e ) {
     cout << endl << endl << e.what() << endl << endl;
   } catch ( ... ) {
     cout << endl;

@@ -7,7 +7,7 @@ namespace fmt {
 	{
 	};
 	size_t pct_t::get_width() const {
-		return 8;
+		return 18;
 	};
   ostream &pct_t::header(ostream &lhs, int ind) const
   {
@@ -15,15 +15,11 @@ namespace fmt {
   };
   ostream &pct_t::stream(ostream &lhs, int ind) const
   {
-    char fill=lhs.fill();
-    lhs<<setw(ind)<<"";
-    lhs<<setw(get_width()-2)<<fixed<<setprecision(2)<<100*val<<"% ";
-    lhs<<setfill(fill);
+    ostringstream str;
+    str << setw(ind) << "";
+    str << right << fixed << setprecision(3) << (100*val) << "%";
+    lhs << setw(get_width()) << str.str();
     return lhs;
-  };
-  size_t can_str::get_width() const
-  {
-    return string::npos;
   };
 };
 
