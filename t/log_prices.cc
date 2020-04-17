@@ -2,7 +2,7 @@
 #include <json.hh>
 #include <fmt.hh>
 #include <bittrex.hh>
-
+#include <util.hh>
 #include <balance.hh>
 using namespace coin;
 using fmt::pct_t;
@@ -12,48 +12,31 @@ using namespace std;
 
 
 int xmain(int argc, char**argv) {
-  vector<sym_t> show_marks = { 
-    "BTC", "BCH", "BSV"
+  using namespace bittrex;
+  auto markets=load_markets();
+  string curr, prod;
+
+  set<string> rows;
+  map<string,map<string,bool>> cols;
+  for( auto m : markets )
+  {
+    auto x=split_name(m.name);
+    cols[x.first][x.second]=true;
+    rows.insert(x.second);
   };
-  vector<sym_t> div_btc = {
-    "BCH", "BSV"
-  };
-  bool first=true;
-  auto stime = time(0);
-  stime-=(stime%3600);
-  while(true) {
-    if(first) {
-      cout << setw(10) << "T";
-      for( auto m : show_marks ) {
-        cout << setw(10) << ""+m;
-      }
-      for ( auto m : div_btc ) {
-        cout << setw(14) << ""+m+"/BTC";
-      };
-      cout << endl;
-      first=false;
-    };
-    cout 
-      << right 
-      << setw(10) << (time(0)-stime);
-    for( auto m : show_marks ) {
-      cout 
-        << fixed
-        << setprecision(3)
-        << setw(10) 
-        << 0.001*int(bittrex::ex_rate(m,"USD").get()*1000);
-    };
-    for ( auto m : div_btc ) {
-      cout << 
-        fixed << setprecision(8) <<
-        setw(14) << bittrex::ex_rate("BTC",m).get();
+  cout << boolalpha << left;
+  cout << "|" << setw(10) << "*" << right;
+  for( auto col : cols )
+    cout << "|" << setw(10) << col.first;
+  cout << "|" << endl;
+  for( auto row : rows )
+  {
+    cout << left << "|" << setw(10) << row << right << "|";
+    for( auto col : cols )
+    {
+      cout << setw(10) << (col.second[row]?"+":" ") << "|";
     };
     cout << endl;
-    bool done=false;
-    while(!done) {
-      done=!(time(0)%3600);
-      sleep(1);
-    };
   }
   return 0;
 };

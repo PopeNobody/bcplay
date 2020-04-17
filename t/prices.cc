@@ -13,50 +13,10 @@ using namespace std;
 
 
 int xmain(int argc, char**argv) {
-  using coin::market_l;
-  vector<sym_t> show_marks = { 
-    "BTC", "BCH", "BSV"
+  auto ml = bittrex::load_markets();
+  for( m: ml ) {
+    cout << m.name << endl;
   };
-  vector<sym_t> div_btc = {
-    "BCH", "BSV"
-  };
-  bool first=true;
-  auto stime = time(0);
-  stime-=(stime%3600);
-  while(true) {
-    if(first) {
-      cout << setw(10) << "T";
-      for( auto m : show_marks ) {
-        cout << setw(10) << ""+m;
-      }
-      for ( auto m : div_btc ) {
-        cout << setw(14) << ""+m+"/BTC";
-      };
-      cout << endl;
-      first=false;
-    };
-    cout 
-      << right 
-      << setw(10) << (time(0)-stime);
-    for( auto m : show_marks ) {
-      cout 
-        << fixed
-        << setprecision(3)
-        << setw(10) 
-        << 0.001*int(bittrex::ex_rate(m,"USD").get()*1000);
-    };
-    for ( auto m : div_btc ) {
-      cout << 
-        fixed << setprecision(8) <<
-        setw(14) << bittrex::ex_rate("BTC",m).get();
-    };
-    cout << endl;
-    bool done=false;
-    while(!done) {
-      done=!(time(0)%3600);
-      sleep(1);
-    };
-  }
   return 0;
 };
 int main(int argc, char**argv) {
