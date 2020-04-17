@@ -91,7 +91,7 @@ test: $(TESTS)
 all: $(TESTS)
 
 
-CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt
+CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt --language-force=c++
 
 clean:
 	rm -f libcoin.a{,.lock} $(TESTS)
@@ -100,6 +100,7 @@ clean:
 
 tags:	deps.all
 	ctags $(CTAGS_FLAGS) -L $^
+
 #    
 DEPS:=$(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
 $(DEPS): ;
