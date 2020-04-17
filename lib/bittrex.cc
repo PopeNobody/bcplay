@@ -3,6 +3,7 @@
 #include <json.hh>
 #include <web_api.hh>
 #include <cmath>
+#include <dbg.hh>
 
 using namespace coin;
 using namespace util;
@@ -10,8 +11,38 @@ using namespace fmt;
 
 bool bittrex::fake_buys=true;
 bool bittrex::show_urls=false;
+const static string api_url = "https://bittrex.com/api/v1.1/";
 
 namespace coin {
+  void from_json( json& j, order_t& o )
+  {
+    checkin();
+    cout << setw(4) << j << endl;
+#define list( item )                                                       \
+  item(  uuid,                 "OrderUuid"          ) \
+  item(  closed,               "Closed"             ) \
+  item(  comission,            "Commission"         ) \
+  item(  condition,            "Condition"          ) \
+  item(  condition_target,     "ConditionTarget"    ) \
+  item(  exchange,             "Exchange"           ) \
+  item(  immediate_or_cancel,  "ImmediateOrCancel"  ) \
+  item(  is_conditional,       "IsConditional"      ) \
+  item(  limit,                "Limit"              ) \
+  item(  order_type,           "OrderType"          ) \
+  item(  price,                "Price"              ) \
+  item(  price_per_unit,       "PricePerUnit"       ) \
+  item(  quantity,             "Quantity"           ) \
+  item(  quantity_remaining,   "QuantityRemaining"  ) \
+  item(  timestamp,            "TimeStamp"          )
+#define extract( x, y ) o.x = j.at( y );
+    list( extract );
+
+
+#define display( x, y )                                                   \
+  cout << left << setw( 20 ) << y << right << setw( 20 ) << "*" << o.x    \
+       << endl;
+    list( display );
+  };
   void from_json(json &j, market_t &m)
   {
     m.name=j.at("MarketName");
@@ -329,3 +360,22 @@ void bittrex::dump_orders() {
   cout << setw(4) << json::parse(page) << endl;
 };
 
+order_l bittrex::get_order_history( const string& msg )
+{
+  const static string url( api_url + "account/getorderhistory?" );
+  if ( show_urls )
+  {
+    cout << "url: " << url << endl;
+  };
+  string page = web::load_hmac_page( url );
+  auto jpage = json::parse( page );
+  jpage = jpage[ "result" ];
+  order_l orders;
+  for ( auto b( begin( jpage ) ), e( end( jpage ) ); b != e; b++ )
+  {
+    order_t order;
+    coin::from_json( *b, order );
+    orders.push_back( order );
+  };
+  return orders;
+};

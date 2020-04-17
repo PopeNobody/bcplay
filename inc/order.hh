@@ -3,70 +3,45 @@
 
 #include <coinfwd.hh>
 #include <money.hh>
+#include <json.hh>
 
 namespace coin {
-
-//     "result" : [{
-//   			"Uuid" : null,
-//   			"OrderUuid" : "09aa5bb6-8232-41aa-9b78-a5a1093e0211",
-//   			"Exchange" : "BTC-LTC",
-//   			"OrderType" : "LIMIT_SELL",
-//   			"Quantity" : 5.00000000,
-//   			"QuantityRemaining" : 5.00000000,
-//   			"Limit" : 2.00000000,
-//   			"CommissionPaid" : 0.00000000,
-//   			"Price" : 0.00000000,
-//   			"PricePerUnit" : null,
-//   			"Opened" : "2014-07-09T03:55:48.77",
-//   			"Closed" : null,
-//   			"CancelInitiated" : false,
-//   			"ImmediateOrCancel" : false,
-//   			"IsConditional" : false,
-//   			"Condition" : null,
-//   			"ConditionTarget" : null
-//   		}, {
-//   			"Uuid" : null,
-//   			"OrderUuid" : "8925d746-bc9f-4684-b1aa-e507467aaa99",
-//   			"Exchange" : "BTC-LTC",
-//   			"OrderType" : "LIMIT_BUY",
-//   			"Quantity" : 100000.00000000,
-//   			"QuantityRemaining" : 100000.00000000,
-//   			"Limit" : 0.00000001,
-//   			"CommissionPaid" : 0.00000000,
-//   			"Price" : 0.00000000,
-//   			"PricePerUnit" : null,
-//   			"Opened" : "2014-07-09T03:55:48.583",
-//   			"Closed" : null,
-//   			"CancelInitiated" : false,
-//   			"ImmediateOrCancel" : false,
-//   			"IsConditional" : false,
-//   			"Condition" : null,
-//   			"ConditionTarget" : null
-//   		}
-//   	]
-
 	class order_t 
 	{
-		string uuid;
-		string order_id;
-		string exchange;
-		string type;
-		money_t quanity;
-		money_t comission;
-		money_t price;
-		money_t price_per;
-		string opened;
-		string closed;
-		bool canceled;
-		bool immediate;
-		bool cond;
-		string condition;
-		string target;
+    bool     canceled;
+    bool     cond;
+    bool     immediate;
+    bool     is_conditional;
+    money_t  comission;
+    money_t  price;
+    money_t  price_per_unit;
+    money_t  quantity;
+    money_t  limit;
+    money_t  quantity_remaining;
+    string   closed;
+    string   order_type;
+    string   condition;
+    string   condition_target;
+    string   immediate_or_cancel;
+    string   exchange;
+    string   opened;
+    string   order_id;
+    string   target;
+    string   type;
+    string   uuid;
+    string   timestamp;
+    friend void from_json( json& j, order_t& o );
 	};
 	class order_l : public std::vector<order_t>
-	{
-		using std::vector<order_t>::vector;
-	};
+  {
+    using std::vector<order_t>::vector;
+
+    template <typename ...Args>
+      void order_t(Args && ...args)
+    {
+      g(std::forward<Args>(args)...);
+    }
+  };
 };
 
 #endif

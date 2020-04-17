@@ -13,13 +13,6 @@
 using namespace coin;
 using namespace std;
 
-using boost::date_time::Feb;
-using boost::date_time::not_a_date_time;
-using boost::gregorian::date;
-using boost::gregorian::from_simple_string;
-using boost::local_time::local_date_time;
-using boost::posix_time::ptime;
-using boost::posix_time::time_duration;
 using fmt::nl;
 using fmt::pct_t;
 
