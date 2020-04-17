@@ -3,7 +3,6 @@
 #include <typeinfo>
 #include <util.hh>
 #include <web_api.hh>
-
 using namespace util;
 using namespace coin;
 using namespace fmt;
@@ -30,12 +29,11 @@ public:
 goals_t const& mk_goals()
 {
   static goals_t res;
-  res["ADA"]=20;   res["BAT"]=20;   res["BCH"]=20;   res["BSV"]=20;
-  res["BTC"]=20;   res["DAI"]=20;   res["DASH"]=20;  res["DCR"]=20;
-  res["DGB"]=20;   res["DOGE"]=20;  res["EOS"]=20;   res["ETH"]=20;
-  res["HBAR"]=20;  res["KMD"]=20;   res["LTC"]=20;   res["PAX"]=20;
-  res["RVN"]=20;   res["SC"]=20;    res["USDT"]=20;  res["XLM"]=20;
-  res["XMR"]=20;   res["ZEC"]=20;   res["ZEN"]=20;   res["WAXP"]=20;
+
+  res[ "BCH" ] = 48;
+  res[ "BSV" ] = 48;
+  res[ "USDT" ] = 4;
+
   double tot = 0;
   for ( auto goal : res )
   {
@@ -45,15 +43,9 @@ goals_t const& mk_goals()
   {
     goal.second = (double)goal.second / tot;
   };
-  int i=0;
-  cout << res.size() << endl;
   for ( auto& goal : res )
   {
-    cout << goal.first << " " << goal.second;
-    if(++i%4)
-      cout << " | ";
-    else
-      cout << endl;
+    cout << goal.first << " " << goal.second << endl;
   };
   return res;
 };
@@ -129,53 +121,19 @@ int xmain( const argv_t &args )
   };
   sort(todo.begin(),todo.end(),coin_less());
   show_todos(todo, tot);
-
-  auto pivot=data["BTC"].bal;
-  auto b(todo.begin()), e(todo.end());
-  for( ; b!=e && b->delta < 0; b++ )
-  {
-    if( b->bal.sym == pivot.sym ) {
-      continue;
-    };
-    if( b->delta > -5 ) {
-      continue;
-    };
-    cout 
-      << -b->delta 
-      << " in " 
-      << b->bal.sym 
-      << " to " 
-      << pivot.sym 
-      << endl;
-    if(bittrex::fake_buys)
-      continue;
+  auto big_neg = todo.front();
+  assert(big_neg.delta < 0);
+  auto big_pos = todo.back();
+  assert(big_pos.delta > 0);
+  money_t delta = abs(big_neg.delta);
+  if( big_pos.delta < delta )
+    delta=big_pos.delta;
+  cout << "delta: " << delta << endl;
+  if( delta >= 5 ) {
     xact_limit(
-        pivot.sym,
-        b->bal.sym,
-        b->delta,
-        "USDT"
-        );
-  };
-  for( ; b!=e; b++ ) {
-    if( b->bal.sym == pivot.sym ) {
-      continue;
-    };
-    if( b->delta < 5 ) {
-      continue;
-    };
-    cout 
-      << b->delta 
-      << " in " 
-      << pivot.sym 
-      << " to " 
-      << b->bal.sym 
-      << endl;
-    if(bittrex::fake_buys)
-      continue;
-    xact_limit(
-        pivot.sym,
-        b->bal.sym,
-        b->delta,
+        big_neg.bal.sym,
+        big_pos.bal.sym,
+        delta,
         "USDT"
         );
   };
@@ -205,6 +163,20 @@ void show_todos( const todo_t &todo, const money_t &tot ) {
       << t.delta << "|"
       << "|" << endl;
   };
+#if 0
+  for ( auto d : data )
+  {
+    cout
+      << "|" 
+      << d.first << "|"
+      << d.second.bal.usd << "|"
+      << pct_t( d.second.bal.usd / tot ) << "|"
+      << pct_goal << "|"
+      << usd_goal << "|"
+      << delta << "|"
+      << "|" << endl;
+  };
+#endif
 };
 int main( int argc, char** argv )
 {

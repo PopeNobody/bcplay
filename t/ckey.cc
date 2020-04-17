@@ -23,7 +23,7 @@ using libbitcoin::system::wallet::hd_private;
 
 int main(int, char**) {
 	try {
-    nlohmann::json vecs;
+		json vecs;
 		{
 			std::ifstream vecs_file;
 			vecs_file.exceptions( std::ifstream::badbit );
@@ -33,7 +33,7 @@ int main(int, char**) {
 		}
 		for( auto vec : vecs ) {
 			{
-				auto b(vec.begin());
+				auto b(vec.begin()), e(vec.end());
 				string s_seed=*b++;
 				string s_list=*b++;
 				string s_data=*b++;

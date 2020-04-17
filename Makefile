@@ -1,34 +1,22 @@
 #    test: test_prices
 #    
 
-test_bal: bal
-
-test_get_bals: all
-
-
-test_get_order_hist: get_order_hist bal get_bals
-
-test_ftest: all
-
-test_ppjson: all
-	./ppjson < balance.json
+test_bal: all
 
 all:
 #Make
-MAKEFLAGS:= -Rr --warn-undefined-variable
-MAKEFLAGS+= -j8
+MAKEFLAGS:= -Rr --warn-undefined-variable -j6
 
 #CXX
 CXX:= clang++
-#CXX:= g++
-CXXFLAGS += -ggdb3 -O0 -Wall
+CXXFLAGS += -g
 CXXFLAGS += -fPIC
 #AR
 AR:= ar
 
 #CPP
 CPPFLAGS :=
-CPPFLAGS += -I inc
+CPPFLAGS += -I inc -MD
 CPPFLAGS += -DWITH_ICU -I$(HOME)/include
 CPPFLAGS += -DSYSCONFDIR="\"/home/rfp/stow/bx/etc\""
 
@@ -42,8 +30,6 @@ LDLIBS += -lcurl -lcurlpp
 LDLIBS += -lbitcoin-system
 LDLIBS += -lsecp256k1 -lgmp
 LDLIBS += -lboost_system
-LDLIBS += -lboost_date_time
-LDLIBS += -lboost_filesystem
 LDLIBS += -lboost_thread
 LDLIBS += -lboost_regex
 LDLIBS += -lboost_locale
@@ -63,7 +49,7 @@ LCOIN:=$(MYLIB_MOD)
 TESTS_SRC:=$(wildcard t/*.cc)
 TESTS_OBJ:=$(patsubst %.cc,%.o,$(TESTS_SRC))
 TESTS_MOD:=$(patsubst t/%.cc,%,$(TESTS_SRC))
-TESTS:=$(filter-out markets,$(TESTS_MOD))
+TESTS:=$(TESTS_MOD)
 
 test_%: %
 	./$<
@@ -80,7 +66,7 @@ libcoin.a: $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
 %.o: %.cc
-	$(CXX) $(CPPFLAGS) -MD -MT $@ -MF $(<:.cc=.d) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
 	$(CXX) $(CXXFLAGS) -c $(<:.cc=.ii) -o $@
 
 $(TESTS): %: t/%.o libcoin.a
@@ -91,16 +77,15 @@ test: $(TESTS)
 all: $(TESTS)
 
 
-CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt --language-force=c++
+CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt
 
 clean:
-	rm -f libcoin.a{,.lock} $(TESTS)
+	rm -f libcoin.a $(TESTS)
 	rm -f tags deps.all
 	rm -f */*.[od] */*.ii
 
 tags:	deps.all
 	ctags $(CTAGS_FLAGS) -L $^
-
 #    
 DEPS:=$(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
 $(DEPS): ;

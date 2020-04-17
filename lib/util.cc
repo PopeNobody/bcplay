@@ -19,7 +19,7 @@ string util::read_file(const char *name)
 	buf << file.rdbuf();
 	string res=buf.str();
 	cout << "read " << res.length() << " bytes" << endl;
-	return res;
+	return move(res);
 };
 bool util::exists(const char *name)
 {

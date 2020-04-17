@@ -50,5 +50,11 @@ using std::setw;
 using std::string;
 using std::vector;
 
+namespace util {
+	typedef std::string &m_str;
+	typedef const string &c_str;
+};
+
+
 #endif // coinfwd_hh
 
