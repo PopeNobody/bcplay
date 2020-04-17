@@ -63,7 +63,7 @@ void fork_less()
 };
 int main(int, char**) {
   fork_less();
-  string text;
+  string_t text;
   for(;;){
     char ch = cin.get();
     if( ch == EOF )

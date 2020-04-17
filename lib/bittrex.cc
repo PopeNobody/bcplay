@@ -26,18 +26,20 @@ using namespace nlohmann::detail;
 
 bool bittrex::fake_buys = true;
 bool bittrex::show_urls = true;
+bool bittrex::keep_all = true;
 const static string api_url = "https://bittrex.com/api/v1.1/";
 
+  //using boost::posix_time::ptime;
 namespace boost
 {
-  namespace gregorian
+  namespace posix_time
   {
     void from_json( const json& j, ptime& val )
     {
       checkin();
       cout << j << endl;
     };
-  }; // namespace gregorian
+  };
 };   // namespace boost
 namespace coin
 {
@@ -77,24 +79,11 @@ namespace coin
        << endl;
     list( display );
   };
-  bool split_name(const string &name, string &f_coin, string &t_coin)
-  {
-    auto words = split('-',name);
-    assert(words.size()==2);
-    const auto b(name.begin()), e(name.end());
-    auto s(find(b,e,'-'));
-    f_coin.assign(b,s);
-    t_coin.assign(++s,e);
-    assert(f_coin.length()>1);
-    assert(t_coin.length()>1);
-    return true;
-  };
   void from_json( json& j, market_t& m )
   {
     checkin();
     m.name = j.at( "MarketName" );
-    if ( !split_name( m.name, m.f_coin, m.t_coin ) )
-      throw runtime_error( "split_name failed" );
+    make_tuple(m.f_coin,m.t_coin)=bittrex::split_name(m.name);
 #define decode( x, y )                                                    \
   if ( j.at( #x ).is_null() )                                             \
   {                                                                       \
@@ -116,7 +105,7 @@ namespace coin
     do_decode( Low, low );
     do_decode( Volume, vol );
   };
-  static vector<string> keep = { "BCH", "BSV", "DASH", "XMR", "ZEN", "XRP", "USDT", "XLM", "RVN","BTC" };
+  static vector<string> keep_list = { "BCH", "BSV", "DASH", "XMR", "ZEN", "XRP", "USDT", "XLM", "RVN","BTC", "USD" };
   void from_json( json& j, market_l& ml )
   {
     checkin();
@@ -124,13 +113,17 @@ namespace coin
     {
       market_t fwd;
       from_json( *it, fwd );
-      if( !contains(keep,fwd.t_coin) )
-        continue;
-      if( !contains(keep,fwd.f_coin) )
-        continue;
+      if( !bittrex::keep_all ) {
+        if( !contains(keep_list,fwd.t_coin) )
+          continue;
+        if( !contains(keep_list,fwd.f_coin) )
+          continue;
+      };
 
-      if ( isinf( fwd.last.get() ) )
+      if ( isinf( fwd.last.get() ) ) {
+        cout << "isinf(" << fwd.name << ")" << endl;
         continue;
+      };
 
       ml.push_back( fwd );
     };
@@ -170,7 +163,32 @@ namespace bittrex
   void sell_limit( const coin::market_t& market,
                    sym_t sym,
                    coin::money_t fqty );
-}; // namespace bittrex
+  pair<string,string> split_name(const string &name) {
+    auto b(begin(name)), e(end(name));
+    while(b!=e && isalnum(*b))
+      ++b;
+    if(b==e)
+      throw runtime_error("bad name: "+name+" missing dash");
+    auto dash=b;
+    if(*b!='-')
+      throw runtime_error("bad name: "+name+" non-alpha,non-numeric,non-dask");
+    while(b!=e && isalnum(*++b))
+      ;
+    if(b!=e)
+      throw runtime_error("bad name: "+name+" bad characters at end" );
+    return make_pair(string(name.begin(),dash),string(dash+1,name.end()));
+  };
+//       
+//       if(pos==name.end())
+//       auto words = split('-',name);
+//       assert(words.size()==2);
+//       const auto b(name.begin()), e(name.end());
+//       auto s(find(b,e,'-'));
+//       f_coin.assign(b,s);
+//       t_coin.assign(++s,e);
+//       assert(f_coin.length()>1);
+//       assert(t_coin.length()>1);
+} // namespace bittrex
 void bittrex::xact_limit( sym_t fsym,
     sym_t tsym,
     money_t qty,
@@ -197,6 +215,7 @@ void bittrex::xact_limit( sym_t fsym,
     abort();
   };
   market_t mark = marks[0];
+  cout << "using market: " << mark.name << endl;
   money_t fqty=qty/ex_rate(qunit,fsym);
   money_t tqty=qty/ex_rate(qunit,tsym);
   if ( isinf( tqty.get() ) ) {

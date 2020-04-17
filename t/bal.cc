@@ -7,6 +7,7 @@
 #undef checkin
 #define checkin()
 
+#if 0
 using namespace util;
 using namespace coin;
 using namespace fmt;
@@ -266,19 +267,21 @@ auto find_match( const todo_v &todos )
   if(pos.size() && neg.size() ) {
     cout << abs(pos[0].usd_delta()) << endl;
     cout << abs(neg[0].usd_delta()) << endl;
-    if(pos[0].usd_delta() > abs(neg[0].usd_delta()))
+    if(pos[0].sym != "BTC" && pos[0].usd_delta() > abs(neg[0].usd_delta()))
     {
       cout << "pos is bigger" << endl;
       cout << pos[0] << endl;
       cout << neg[0] << endl;
       return make_tuple( sym_t("BTC"), pos[0].sym, pos[0].usd_delta() );
     }
-    else
+    else if (neg[0].sym != "BTC")
     {
       cout << "neg is bigger" << endl;
       cout << neg[0] << endl;
       cout << pos[0] << endl;
       return make_tuple( sym_t("BTC"), neg[0].sym, neg[0].usd_delta() );
+    } else {
+      cout << "don't know what to do." << endl;
     };
   };
   return make_tuple( sym_t(), sym_t(), money_t(0)  );
@@ -359,4 +362,10 @@ int main( int argc, char** argv )
     cout << "wtf?" << nl;
   }
   return 1;
+};
+#endif
+int main( int argc, char** argv )
+{
+  string s=web::load_page("http://google.com");
+  return 0;
 };

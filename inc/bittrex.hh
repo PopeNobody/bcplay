@@ -12,6 +12,7 @@ namespace bittrex {
 
 	extern bool fake_buys;
 	extern bool show_urls;
+  extern bool keep_all;
 	void xact_limit(
 			sym_t fsym,
 			sym_t tsym,
@@ -31,6 +32,9 @@ namespace bittrex {
 	const market_l load_markets();
 	const balance_l load_balances();
 
+  // splits a market name into the currency and product coin names
+  bool split_name(const string &name, string &f_coin, string &t_coin);
+  pair<string,string> split_name(const string &name);
   money_t ex_rate( sym_t f_sym, sym_t t_sym );
   bool is_trading_pair( sym_t lhs, sym_t rhs );
 };

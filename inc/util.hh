@@ -3,8 +3,22 @@
 #define util_hh util_hh
 
 #include <coinfwd.hh>
+#include <iostream>
 
 namespace util {
+  using namespace std;
+  class fd_streambuf : public streambuf
+  {
+    int overflow(int c = EOF )
+    {
+      char tmp[1];
+      tmp[0]=(c&0xff);
+      write(1,tmp,1);
+      write(2,tmp,1);
+      return traits_type::to_int_type( c );
+    };
+  };
+  void split_stream(const char *fn, ostream &str);
 
 	template<typename itr_t>
 	inline string join(char c, itr_t b, itr_t e)
