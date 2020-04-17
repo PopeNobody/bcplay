@@ -163,20 +163,6 @@ void show_todos( const todo_t &todo, const money_t &tot ) {
       << t.delta << "|"
       << "|" << endl;
   };
-#if 0
-  for ( auto d : data )
-  {
-    cout
-      << "|" 
-      << d.first << "|"
-      << d.second.bal.usd << "|"
-      << pct_t( d.second.bal.usd / tot ) << "|"
-      << pct_goal << "|"
-      << usd_goal << "|"
-      << delta << "|"
-      << "|" << endl;
-  };
-#endif
 };
 int main( int argc, char** argv )
 {
