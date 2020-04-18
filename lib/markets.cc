@@ -16,6 +16,15 @@ const market_l& market_l::get_markets()
     load_markets();
   return markets;
 };
+const market_l market_l::get_markets(sym_t sym)
+{
+  market_l res;
+  for( auto m : get_markets() ) {
+    if(m.f_coin == sym || m.t_coin == sym)
+      res.push_back(m);
+  };
+  return res;
+};
 const market_l &market_l::load_markets() {
   return markets=bittrex::load_markets();
 };

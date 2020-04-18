@@ -17,7 +17,6 @@ namespace coin {
   void from_json( json& j, order_t& o )
   {
     checkin();
-    cout << setw(4) << j << endl;
 #define list( item )                                                       \
   item(  uuid,                 "OrderUuid"          ) \
   item(  closed,               "Closed"             ) \
@@ -74,8 +73,9 @@ namespace coin {
     };
   };
   void from_json(const json &j, money_t &val) {
-    val=0;
-    if( !j.is_null() )
+    if( j.is_null() )
+      val=0;
+    else
       val=(double)j;
   };
   void from_json(const json &j, balance_t &bal) {
@@ -88,7 +88,6 @@ namespace coin {
     res.ava=j.at("Available");
     res.pend=j.at("Pending");
     res.usd=res.ava*markets.conv(res.sym,"USDT");
-    res.eth=res.ava*markets.conv(res.sym,"ETH");
     res.btc=res.ava*markets.conv(res.sym,"BTC");
     bal=res;
   };
@@ -238,7 +237,7 @@ void bittrex::show_withdrawals() {
   json jpage=json::parse(page);
   if(!jpage.at("success")) {
     throw runtime_error(
-        "no success in getbalances result\n\n"+page
+        "no success in getwithdrawalhistory result\n\n"+page
         );
   };
   cout << endl << endl;
@@ -254,7 +253,7 @@ void bittrex::show_deposits() {
   json jpage=json::parse(page);
   if(!jpage.at("success")) {
     throw runtime_error(
-        "no success in getbalances result\n\n"+page
+        "no success in getdeposithistory result\n\n"+page
         );
   };
   cout << endl << endl;
@@ -268,7 +267,6 @@ namespace {
     if(!ofile) {
       cerr << "unable to save json!";
     } else {
-      cerr << "writing to file" << endl;
       ofile << setw(4) << json << endl;
       if(!ofile) {
         cerr << "unable to save json!";

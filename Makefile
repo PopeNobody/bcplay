@@ -1,25 +1,30 @@
 #    test: test_prices
 #    
 
+test_2db: all test_bals2db test_mkts2db
+	
 test_bal: all
 
 all:
 #Make
-MAKEFLAGS:= -Rr --warn-undefined-variable -j6
+MAKEFLAGS:= -Rr --warn-undefined-variable
+MAKEFLAGS:= -j1
 
 #CXX
 CXX:= clang++
-CXXFLAGS += -g
-CXXFLAGS += -fPIC
+#    CXXFLAGS += -g
+#    CXXFLAGS += -fPIC
+CXXFLAGS=@cxxflags
 #AR
 AR:= ar
 
 #CPP
-CPPFLAGS :=
-CPPFLAGS += -I inc -MD
-CPPFLAGS += -DWITH_ICU -I$(HOME)/include
+CPPFLAGS := -I$(HOME)/include
+CPPFLAGS += -Iinc -MD
+CPPFLAGS += -DWITH_ICU 
 CPPFLAGS += -DSYSCONFDIR="\"/home/rfp/stow/bx/etc\""
-
+$(shell echo $(CPPFLAGS) > cppflags)
+CPPFLAGS:= @cppflags
 #LD
 LDFLAGS += -L$(HOME)/lib
 LDFLAGS += -g -L. 
@@ -29,6 +34,8 @@ LDLIBS += -lcoin
 LDLIBS += -lcurl -lcurlpp
 LDLIBS += -lbitcoin-system
 LDLIBS += -lsecp256k1 -lgmp
+LDLIBS += -lsqlite3
+LDLIBS += -lvsqlitepp
 LDLIBS += -lboost_system
 LDLIBS += -lboost_thread
 LDLIBS += -lboost_regex
@@ -53,6 +60,8 @@ TESTS:=$(TESTS_MOD)
 
 test_%: %
 	./$<
+
+
 
 test_markets: markets
 	./$< BCH BSV

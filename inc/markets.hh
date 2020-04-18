@@ -64,7 +64,8 @@ namespace coin {
     virtual ~market_l();
     static market_l get_conv(const string &from, const string &to);
     static market_l markets;
-    static const market_l &get_markets();
+    static const market_l &get_markets( );
+    static const market_l get_markets( sym_t );
     static const market_l &load_markets();
     static market_l all_conv(const string &from, const string &to);
     static money_t conv(const string &from, const string &to);

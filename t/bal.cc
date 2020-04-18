@@ -30,12 +30,11 @@ public:
 goals_t const& mk_goals()
 {
   static goals_t res;
-  res["ADA"]=20;   res["BAT"]=20;   res["BCH"]=20;   res["BSV"]=20;
-  res["BTC"]=20;   res["DAI"]=20;   res["DASH"]=20;  res["DCR"]=20;
-  res["DGB"]=20;   res["DOGE"]=20;  res["EOS"]=20;   res["ETH"]=20;
-  res["HBAR"]=20;  res["KMD"]=20;   res["LTC"]=20;   res["PAX"]=20;
-  res["RVN"]=20;   res["SC"]=20;    res["USDT"]=20;  res["XLM"]=20;
-  res["XMR"]=20;   res["ZEC"]=20;   res["ZEN"]=20;   res["WAXP"]=20;
+  res["ADA"]=20;  res["BAT"]=20;   res["BCH"]=20;   res["BSV"]=20;   res["BTC"]=20;
+  res["DAI"]=20;  res["DASH"]=20;  res["DCR"]=20;   res["DGB"]=20;   res["DOGE"]=20;
+  res["EOS"]=20;  res["ETH"]=20;   res["HBAR"]=20;  res["KMD"]=20;   res["LTC"]=20;
+  res["PAX"]=20;  res["RVN"]=20;   res["SC"]=20;    res["USDT"]=20;  res["XLM"]=20;
+  res["XMR"]=20;  res["ZEC"]=20;   res["ZEN"]=20;   res["WAXP"]=20;
   double tot = 0;
   for ( auto goal : res )
   {
@@ -155,6 +154,11 @@ int xmain( const argv_t &args )
         b->delta,
         "USDT"
         );
+    time_t dead=time(0)+3;
+    while(bittrex::orders_pending()) {
+      if(time(0)>dead)
+        bittrex::cancel_orders();
+    };
   };
   for( ; b!=e; b++ ) {
     if( b->bal.sym == pivot.sym ) {
@@ -178,6 +182,11 @@ int xmain( const argv_t &args )
         b->delta,
         "USDT"
         );
+    time_t dead=time(0)+3;
+    while(bittrex::orders_pending()) {
+      if(time(0)>dead)
+        bittrex::cancel_orders();
+    };
   };
   return 0;
 };
@@ -194,6 +203,10 @@ void show_todos( const todo_t &todo, const money_t &tot ) {
     << "|" << setw( temp.bal.usd.get_width() ) << "goal$ "
     << "|" << setw( temp.bal.usd.get_width() ) << "delta "
     << "|" << endl;
+
+  pct_t   tot_goal=0;
+  money_t tot_delta=0;
+  money_t tot_bal=0;
   for ( auto t : todo ) {
     cout
       << "|" 
@@ -204,7 +217,17 @@ void show_todos( const todo_t &todo, const money_t &tot ) {
       << t.usd_goal << "|"
       << t.delta << "|"
       << "|" << endl;
+
+    tot_bal=tot_bal+t.bal.usd;
+    tot_goal=tot_goal.get()+t.pct_goal.get();
+    tot_delta+=t.delta;
   };
+  cout << endl
+    << "tot_goal: " << setw(12) << fixed << setprecision(8) << tot_goal
+    << "tot_bal: " << setw(12) << fixed << setprecision(8) << tot_bal
+    << "tot_delta: " << setw(12) << fixed << setprecision(8) << tot_delta
+    << endl
+    << endl;
 };
 int main( int argc, char** argv )
 {

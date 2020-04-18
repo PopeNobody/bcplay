@@ -10,7 +10,6 @@ namespace coin {
 		money_t ava;
 		money_t pend;
 		money_t usd;
-		money_t eth;
 		money_t btc;
 		bool operator<(const balance_t &rhs) const;
 		virtual ostream &stream(ostream &lhs, int ind=0) const;

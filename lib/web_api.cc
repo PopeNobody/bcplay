@@ -3,15 +3,19 @@
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
-#include <bitcoin/explorer.hpp>
 #include <json.hh>
+#include <bitcoin/system/math/hash.hpp>
+#include <bitcoin/system/formats/base_16.hpp>
 
 using namespace curlpp::options;
 using namespace std;
 
 using nlohmann::json;
-using bc::system::data_chunk;
 
+using bc::system::encode_base16;
+using bc::system::hmac_sha512_hash;
+
+typedef std::vector<unsigned char> data_chunk;
 bool web::verbose =false;
 
 const string web::load_page(const string &url, const list<string> &headers)
@@ -41,8 +45,6 @@ const string web::load_page(const string &url, const list<string> &headers)
 data_chunk str2chunk(const string &str) {
   return data_chunk(str.begin(),str.end());
 };
-using bc::system::encode_base16;
-using bc::system::hmac_sha512_hash;
 
 std::list<string> signurl(const string &url, const string &key, const string &sec)
 {

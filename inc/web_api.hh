@@ -3,8 +3,16 @@
 
 
 #include <coinfwd.hh>
+
+#if 0
+typedef vector<unsigned char> data_slice;
+hash_digest hmac_sha256_hash(const data_slice& data, const data_slice& key);
+
+std::string encode_base16(const data_slice& data);
+#endif
 namespace web {
 	using std::list;
+
 	const string load_page(const string &url, const list<string> &headers);
 	inline const string load_page(const string &url )
 	{

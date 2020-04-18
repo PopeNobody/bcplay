@@ -31,3 +31,7 @@ convtest
 markets
 orders
 ppjson
+-s
+get_order_hist
+*.db
+bals2db
