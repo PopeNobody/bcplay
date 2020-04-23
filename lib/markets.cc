@@ -36,6 +36,12 @@ money_t market_l::conv1(const string &from, const string &to) {
     return 0;
   return list.back().last;
 };
+money_t market_t::conv1(const string &from, const string &to) {
+  return market_l::conv1(from,to);
+}
+money_t market_t::conv(const string &from, const string &to) {
+  return market_l::conv(from,to);
+}
 money_t market_l::conv(const string &from, const string &to) {
   money_t c1 = conv1(from,to), c2=0;
   if(c1)

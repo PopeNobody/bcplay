@@ -18,7 +18,8 @@ namespace bittrex {
 			sym_t fsym,
 			sym_t tsym,
 			money_t fqty,
-			sym_t qunit
+			sym_t qunit,
+      bool ioc
 			);
   order_l get_order_history(const string &mkt);
 	void dump_orders();	

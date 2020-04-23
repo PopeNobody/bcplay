@@ -2,43 +2,31 @@
 #include <json.hh>
 #include <fmt.hh>
 #include <markets.hh>
-
+#include <util.hh>
 #include <balance.hh>
 using namespace coin;
 using fmt::pct_t;
 using fmt::nl;
 
 using namespace std;
+using namespace util;
 
 
 int xmain(int argc, char**argv) {
   using coin::market_l;
-//     if( argc != 3 ) {
-//       cerr << "usage: " << argv[0] << " <f-coin> <t-coin>" << endl;
-//       exit(1);
-//     };
-//     sym_t f_coin(argv[1]);
-//     sym_t t_coin(argv[2]);
   cerr << "Loading Markets" << endl;
-  const market_l &markets=market_l::load_markets();
-  map<string,vector<string>> names;
+  const auto &bals=balance_l::get_balances();
+  vector<string> syms;
+  for( auto &b: bals )
+  {
+    syms.push_back(b.sym);
+  };
+  const auto &markets=market_l::get_markets();
   for( auto &m: markets )
   {
-    if(!m.buy)
-      names[m.f_coin].push_back(m.t_coin);
+    if(m.f_coin == "BTC" && contains(syms,m.t_coin))
+      cout << m << endl;
   };
-  for( auto &pair: names )
-  {
-    cout << left << setw(8) << pair.first;
-    sort(begin(pair.second),end(pair.second));
-    for( auto b(begin(pair.second)), e(end(pair.second)); b!=e; b++ )
-      cout << " " << setw(8) << *b;
-    cout << endl;
-  };
-//     marks=market_l::get_conv(f_coin, t_coin);
-//     if( !marks.size() ) {
-//       marks=market_l::get_conv(f_coin,"USD,USDT,BTC,ETC");
-//     }; 
   return 0;
 };
 int main(int argc, char**argv) {

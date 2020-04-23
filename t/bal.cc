@@ -30,11 +30,10 @@ public:
 goals_t const& mk_goals()
 {
   static goals_t res;
-  res["ADA"]=20;  res["BAT"]=20;   res["BCH"]=20;   res["BSV"]=20;   res["BTC"]=20;
-  res["DAI"]=20;  res["DASH"]=20;  res["DCR"]=20;   res["DGB"]=20;   res["DOGE"]=20;
-  res["EOS"]=20;  res["ETH"]=20;   res["HBAR"]=20;  res["KMD"]=20;   res["LTC"]=20;
-  res["PAX"]=20;  res["RVN"]=20;   res["SC"]=20;    res["USDT"]=20;  res["XLM"]=20;
-  res["XMR"]=20;  res["ZEC"]=20;   res["ZEN"]=20;   res["WAXP"]=20;
+  
+  res["BSV"]=100;  res["DASH"]=100;  res["BCH"]=100;  res["ZEC"]=100;  res["XMR"]=100;
+  res["RVN"]=100;  res["ZEN"]=100;   res["BTC"]=100;  res["XLM"]=100;  res["KMD"]=100;
+
   double tot = 0;
   for ( auto goal : res )
   {
@@ -49,11 +48,12 @@ goals_t const& mk_goals()
   for ( auto& goal : res )
   {
     cout << goal.first << " " << goal.second;
-    if(++i%4)
+    if(++i%5)
       cout << " | ";
     else
       cout << endl;
   };
+  cout << endl << endl;
   return res;
 };
 auto const& goals = mk_goals();
@@ -104,7 +104,7 @@ int xmain( const argv_t &args )
     data[ g.first ].pct_goal = g.second;
   };
   money_t tot = 0.0000001;
-  for ( auto b : balance_l::load_balances() )
+  for ( auto b : balance_l::get_balances() )
   {
     if ( 
         ( goals.find( b.sym ) != goals.end() )
@@ -118,22 +118,35 @@ int xmain( const argv_t &args )
   }
   cout << "tot: " << tot << "USD" << endl;
   todo_t todo;
+  money_t tot_delta=0;
+  money_t imm_delta=0;
   for ( auto d : data )
   {
     pct_t pct_goal( d.second.pct_goal.get() );
     d.second.usd_goal = tot * pct_goal.get();
     d.second.bal.sym = d.first;
-    d.second.delta = d.second.usd_goal - d.second.bal.usd;
+    d.second.delta = (d.second.usd_goal - d.second.bal.usd);
+    tot_delta+=d.second.delta;
+    if( abs(d.second.delta) >= 5 ) {
+      imm_delta+=d.second.delta;
+      cout << d.second.bal.sym << d.second.delta << d.second.usd_goal << endl;
+    };
     todo.push_back(d.second);
   };
+  cout << "td: " << tot_delta << endl;
+  cout << "id: " << imm_delta << endl;
   sort(todo.begin(),todo.end(),coin_less());
   show_todos(todo, tot);
 
-  auto pivot=data["BTC"].bal;
+  auto &pivot=data["BTC"];
+  cout << "pivot: " << "{" << endl;
+  cout << "  " << pivot.bal << endl;
+  cout << "  " << pivot.delta << endl;
+  cout << "}" << endl;
   auto b(todo.begin()), e(todo.end());
   for( ; b!=e && b->delta < 0; b++ )
   {
-    if( b->bal.sym == pivot.sym ) {
+    if( b->bal.sym == pivot.bal.sym ) {
       continue;
     };
     if( b->delta > -5 ) {
@@ -144,24 +157,25 @@ int xmain( const argv_t &args )
       << " in " 
       << b->bal.sym 
       << " to " 
-      << pivot.sym 
+      << pivot.bal.sym 
       << endl;
     if(bittrex::fake_buys)
       continue;
     xact_limit(
-        pivot.sym,
+        pivot.bal.sym,
         b->bal.sym,
         b->delta,
-        "USDT"
+        "USDT",
+        true
         );
-    time_t dead=time(0)+3;
+    time_t dead=time(0)+5;
     while(bittrex::orders_pending()) {
       if(time(0)>dead)
         bittrex::cancel_orders();
     };
   };
   for( ; b!=e; b++ ) {
-    if( b->bal.sym == pivot.sym ) {
+    if( b->bal.sym == pivot.bal.sym ) {
       continue;
     };
     if( b->delta < 5 ) {
@@ -170,17 +184,18 @@ int xmain( const argv_t &args )
     cout 
       << b->delta 
       << " in " 
-      << pivot.sym 
+      << pivot.bal.sym 
       << " to " 
       << b->bal.sym 
       << endl;
     if(bittrex::fake_buys)
       continue;
     xact_limit(
-        pivot.sym,
+        pivot.bal.sym,
         b->bal.sym,
         b->delta,
-        "USDT"
+        "USDT",
+        true
         );
     time_t dead=time(0)+3;
     while(bittrex::orders_pending()) {
@@ -222,8 +237,10 @@ void show_todos( const todo_t &todo, const money_t &tot ) {
     tot_goal=tot_goal.get()+t.pct_goal.get();
     tot_delta+=t.delta;
   };
+  money_t tot_btc=tot_bal*market_t::conv("USDT","BTC");
   cout << endl
     << "tot_goal: " << setw(12) << fixed << setprecision(8) << tot_goal
+    << "tot_btc: " << setw(12) << fixed << setprecision(8) << tot_btc
     << "tot_bal: " << setw(12) << fixed << setprecision(8) << tot_bal
     << "tot_delta: " << setw(12) << fixed << setprecision(8) << tot_delta
     << endl

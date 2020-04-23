@@ -1,14 +1,15 @@
 #    test: test_prices
 #    
 
-test_2db: all test_bals2db test_mkts2db
+#test_2db: all test_bals2db test_mkts2db
 	
+all:
+
 test_bal: all
 
-all:
 #Make
 MAKEFLAGS:= -Rr --warn-undefined-variable
-MAKEFLAGS:= -j1
+MAKEFLAGS:= -j8
 
 #CXX
 CXX:= clang++
@@ -19,12 +20,12 @@ CXXFLAGS=@cxxflags
 AR:= ar
 
 #CPP
-CPPFLAGS := -I$(HOME)/include
-CPPFLAGS += -Iinc -MD
+CPPFLAGS = -I$(HOME)/include
+CPPFLAGS += -Iinc
 CPPFLAGS += -DWITH_ICU 
 CPPFLAGS += -DSYSCONFDIR="\"/home/rfp/stow/bx/etc\""
 $(shell echo $(CPPFLAGS) > cppflags)
-CPPFLAGS:= @cppflags
+CPPFLAGS=  -MD -MT $@ @cppflags
 #LD
 LDFLAGS += -L$(HOME)/lib
 LDFLAGS += -g -L. 

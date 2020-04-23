@@ -35,8 +35,7 @@ int xmain(int argc, char**argv) {
   };
   money_t btc_avg=btc_sum/bals.size();
   money_t usd_avg=usd_sum/bals.size();
-  int perBTC;
-#define ROW(lab,val1,val2) lab << setw(16) << val1 << setw(16) << val2 << setw(16) << perBTC << nl;
+#define ROW(lab,val1,val2) lab << setw(16) << val1 << setw(16) << val2 << setw(16) << nl;
 
   cout  <<  ROW("....","BTC","USD")
     cout  <<  ROW("tot:",btc_sum,usd_sum);
@@ -51,7 +50,6 @@ int xmain(int argc, char**argv) {
     << setw(cw[3]) << nm[3] << " "
     << setw(cw[4]) << nm[4] << " "
     << setw(cw[5]) << nm[5] << " "
-    << setw(cw[6]) << nm[6] << " "
     << endl;
   int num=0;
   for( auto bal : bals ) {
@@ -66,7 +64,6 @@ int xmain(int argc, char**argv) {
       << setw(cw[2]) << bal.usd
       << setw(cw[4]) << bal.btc
       << setw(cw[5]) << pct_t(bal.btc,btc_sum)
-      << setw(cw[6]) << perBTC
       << endl;
   };
   return 0;

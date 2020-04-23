@@ -21,8 +21,8 @@ namespace coin {
     string   closed;
     string   order_type;
     string   condition;
-    string   condition_target;
-    string   immediate_or_cancel;
+    money_t   condition_target;
+    bool   immediate_or_cancel;
     string   exchange;
     string   opened;
     string   order_id;
@@ -31,6 +31,8 @@ namespace coin {
     string   uuid;
     string   timestamp;
     friend void from_json( json& j, order_t& o );
+    public:
+    virtual ~order_t();
 	};
 	class order_l : public std::vector<order_t>
   {
