@@ -37,18 +37,17 @@ goals_t const& mk_goals()
   
 
 res["BCH"]    =88;  res["BTC"]   =88;  res["BSV"]  =88;  res["XLM"]    =88;  res["LTC"]   =88;
-res["USDT"]   =40;
+res["USDT"]   =10;
 
 res["DASH"]   =22;   res["ZEC"]   =22;   res["BAT"]  =22;   res["STEEM"]  =22;   res["XRP"]   =22;
 res["ETC"]    =22;   res["RVN"]   =22;   res["LBC"]  =22;   res["ZEN"]    =22;   res["ETH"]   =22;
 
-res["RDD"]    =10;   res["SC"]    =10;   res["SLS"]  =10;   res["SPND"]   =10;   res["UKG"]   =10;
-res["WAXP"]   =10;   res["XMY"]   =10;   res["XST"]  =10;   res["XTZ"]    =10;   res["ZRX"]   =10;
-
-res["ADA"]    =10;   res["AEON"]  =10;   res["ARK"]  =10;   res["ATOM"]   =10;   res["BTM"]   =10;
-res["CURE"]   =10;   res["DAI"]   =10;   res["DGB"]  =10;   res["ENJ"]    =10;   res["EOS"]   =10;
-res["GBYTE"]  =10;   res["GEO"]   =10;   res["HBD"]  =10;   res["HIVE"]   =10;   res["KMD"]   =10;
-res["LINK"]   =10;   res["NMR"]   =10;   res["NXS"]  =10;   res["PAX"]    =10;   res["PINK"]  =10;
+res["RDD"]    =11;   res["SC"]    =11;   res["SLS"]  =11;   res["SPND"]   =11;   res["UKG"]   =11;
+res["WAXP"]   =11;   res["XMY"]   =11;   res["XST"]  =11;   res["XTZ"]    =11;   res["ZRX"]   =11;
+res["ADA"]    =11;   res["AEON"]  =11;   res["ARK"]  =11;   res["ATOM"]   =11;   res["BTM"]   =11;
+res["CURE"]   =11;   res["DAI"]   =11;   res["DGB"]  =11;   res["ENJ"]    =11;   res["EOS"]   =11;
+res["GBYTE"]  =11;   res["GEO"]   =11;   res["HBD"]  =11;   res["HIVE"]   =11;   res["KMD"]   =11;
+res["LINK"]   =11;   res["NMR"]   =11;   res["NXS"]  =11;   res["PAX"]    =11;   res["PINK"]  =11;
 
 
   double tot = 0;
