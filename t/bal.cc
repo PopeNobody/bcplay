@@ -36,18 +36,17 @@ goals_t const& mk_goals()
   static goals_t res;
   
 
-res["BCH"]    =88;  res["BTC"]   =88;  res["BSV"]  =88;  res["XLM"]    =88;  res["LTC"]   =88;
-res["USDT"]   =10;
+res["BCH"]    =900;  res["BTC"]   =900;  res["BSV"]  =900;  res["XLM"]    =900;  res["LTC"]   =896;
 
-res["DASH"]   =22;   res["ZEC"]   =22;   res["BAT"]  =22;   res["STEEM"]  =22;   res["XRP"]   =22;
-res["ETC"]    =22;   res["RVN"]   =22;   res["LBC"]  =22;   res["ZEN"]    =22;   res["ETH"]   =22;
-
-res["RDD"]    =11;   res["SC"]    =11;   res["SLS"]  =11;   res["SPND"]   =11;   res["UKG"]   =11;
-res["WAXP"]   =11;   res["XMY"]   =11;   res["XST"]  =11;   res["XTZ"]    =11;   res["ZRX"]   =11;
-res["ADA"]    =11;   res["AEON"]  =11;   res["ARK"]  =11;   res["ATOM"]   =11;   res["BTM"]   =11;
-res["CURE"]   =11;   res["DAI"]   =11;   res["DGB"]  =11;   res["ENJ"]    =11;   res["EOS"]   =11;
-res["GBYTE"]  =11;   res["GEO"]   =11;   res["HBD"]  =11;   res["HIVE"]   =11;   res["KMD"]   =11;
-res["LINK"]   =11;   res["NMR"]   =11;   res["NXS"]  =11;   res["PAX"]    =11;   res["PINK"]  =11;
+res["DASH"]   =220;   res["ZEC"]   =220;   res["BAT"]  =220;   res["STEEM"]  =220;   res["XRP"]   =220;
+res["ETC"]    =220;   res["RVN"]   =220;   res["LBC"]  =220;   res["ZEN"]    =220;   res["ETH"]   =220;
+res["USDT"]   =4;
+res["RDD"]    =110;   res["SC"]    =110;   res["SLS"]  =110;   res["SPND"]   =110;   res["UKG"]   =110;
+res["WAXP"]   =110;   res["XMY"]   =110;   res["XST"]  =110;   res["XTZ"]    =110;   res["ZRX"]   =110;
+res["ADA"]    =110;   res["AEON"]  =110;   res["ARK"]  =110;   res["ATOM"]   =110;   res["BTM"]   =110;
+res["CURE"]   =110;   res["DAI"]   =110;   res["DGB"]  =110;   res["ENJ"]    =110;   res["EOS"]   =110;
+res["GBYTE"]  =110;   res["GEO"]   =110;   res["HBD"]  =110;   res["HIVE"]   =110;   res["KMD"]   =110;
+res["LINK"]   =110;   res["NMR"]   =110;   res["NXS"]  =110;   res["PAX"]    =110;   res["PINK"]  =110;
 
 
   double tot = 0;
@@ -82,7 +81,7 @@ res["LINK"]   =11;   res["NMR"]   =11;   res["NXS"]  =11;   res["PAX"]    =11;  
     };
   };
   cout << endl << endl;
-  if(tot!=1000)
+  if(tot!=10000)
     exit(0);
   return res;
 };
@@ -244,7 +243,6 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
 todo_v mk_todos()
 {
   auto const& goals = mk_goals();
-  money_t tot_btc = 0.0;
   typedef std::map< sym_t, todo_t > todo_m;
   todo_m todo_map;
   for ( auto &g : goals )
@@ -253,6 +251,7 @@ todo_v mk_todos()
     todo_map[ g.first ].pct_goal = g.second;
   };
   market_l::load_markets();
+  money_t tot_btc = 0.0;
   for ( auto &b : balance_l::load_balances() )
   {
     if ( 
@@ -272,16 +271,23 @@ todo_v mk_todos()
   {
     auto &btc=todo_map["BTC"];
     {
+      btc.pct=btc.btc/tot_btc;
+      btc.btc_goal = tot_btc * btc.pct_goal.get();
+      btc.btc_del = (btc.btc_goal - btc.btc);
+      tot_btc-=btc.btc_del;
+    };
+    {
       todo_v todos;
       for ( auto &item : todo_map ) {
         auto &sym=item.first;
         auto &todo=item.second;
+        if(sym == "BTC")
+          continue;
 
         todo.pct = todo.btc/tot_btc;
         todo.btc_goal = tot_btc * todo.pct_goal.get();
         todo.btc_del = (todo.btc_goal - todo.btc);
-        if(todo.sym != "BTC")
-          todos.push_back(todo);
+        todos.push_back(todo);
       };
       sort(todos.begin(),todos.end(),todo_less());
       cout << " " << header_t(btc,true) << endl;
