@@ -20,6 +20,10 @@ namespace fmt {
 		explicit operator double()const{
 			return get();
 		};
+    bool operator!() const
+    {
+      return !val;
+    };
 	};
 	class pct_t : public fp_val  {
 		public:
@@ -34,10 +38,16 @@ namespace fmt {
 				};
 		virtual int get_width() const;
 		string fmt() const;
+    pct_t &operator+=(const pct_t&rhs)
+    {
+      val+=rhs.val;
+      return *this;
+    };
+
 	};
 	inline ostream &operator<<(ostream &lhs, const fp_val &rhs)
 	{
-		return lhs<<rhs.fmt();
+		return lhs<<setw(rhs.get_width())<<rhs.fmt();
 	};
 	struct nl_t {
 		friend ostream &operator<<(ostream &lhs, nl_t nl)

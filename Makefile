@@ -3,9 +3,9 @@
 
 #test_2db: all test_bals2db test_mkts2db
 	
+test_bal: all
 all:
 
-test_bal: all
 
 #Make
 MAKEFLAGS:= -Rr --warn-undefined-variable
@@ -87,7 +87,7 @@ test: $(TESTS)
 all: $(TESTS)
 
 
-CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt
+CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt --language-force=c++
 
 clean:
 	rm -f libcoin.a $(TESTS)

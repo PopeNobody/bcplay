@@ -16,7 +16,10 @@ class goals_t : public map< sym_t, pct_t >
 public:
   mapped_type& operator[]( const key_type& k )
   {
-    return map< sym_t, pct_t >::operator[]( k );
+    auto &res=map< sym_t, pct_t >::operator[]( k );
+    if(res.get()>0)
+     cerr << "warning: " << k << " set" << endl;
+    return res;
   };
   mapped_type operator[]( const key_type& k ) const
   {
@@ -32,36 +35,58 @@ goals_t const& mk_goals()
 {
   static goals_t res;
   
-  res["BCH"]=98;
-  res["BTC"]=98;
-  res["DGB"]=98;
-  res["HIVE"]=98;
-  res["BSV"]=98;
-  res["GEO"]=10;
+
+res["BCH"]    =88;  res["BTC"]   =88;  res["BSV"]  =88;  res["XLM"]    =88;  res["LTC"]   =88;
+res["USDT"]   =40;
+
+res["DASH"]   =22;   res["ZEC"]   =22;   res["BAT"]  =22;   res["STEEM"]  =22;   res["XRP"]   =22;
+res["ETC"]    =22;   res["RVN"]   =22;   res["LBC"]  =22;   res["ZEN"]    =22;   res["ETH"]   =22;
+
+res["RDD"]    =10;   res["SC"]    =10;   res["SLS"]  =10;   res["SPND"]   =10;   res["UKG"]   =10;
+res["WAXP"]   =10;   res["XMY"]   =10;   res["XST"]  =10;   res["XTZ"]    =10;   res["ZRX"]   =10;
+
+res["ADA"]    =10;   res["AEON"]  =10;   res["ARK"]  =10;   res["ATOM"]   =10;   res["BTM"]   =10;
+res["CURE"]   =10;   res["DAI"]   =10;   res["DGB"]  =10;   res["ENJ"]    =10;   res["EOS"]   =10;
+res["GBYTE"]  =10;   res["GEO"]   =10;   res["HBD"]  =10;   res["HIVE"]   =10;   res["KMD"]   =10;
+res["LINK"]   =10;   res["NMR"]   =10;   res["NXS"]  =10;   res["PAX"]    =10;   res["PINK"]  =10;
+
 
   double tot = 0;
   for ( auto goal : res )
   {
     tot = tot + (double)goal.second;
   };
+  cout << "tot: " << tot << endl;
   for ( auto& goal : res )
   {
     goal.second = (double)goal.second / tot;
   };
-  int i=0;
   cout << res.size() << endl;
+  map<double,vector<string>> ranks;
   for ( auto& goal : res )
   {
-    cout << goal.first << " " << goal.second;
-    if(++i%5)
-      cout << " | ";
-    else
+    ranks[goal.second.get()].push_back(goal.first);
+  };
+  for ( auto &rank : ranks ) { 
+    auto ids=rank.second;
+    sort(ids.begin(),ids.end());
+    auto itr(ids.begin());
+    while(itr!=ids.end()) {
+      cout << setw(8) << pct_t(rank.first);
+      for( int i = 0; i < 10; i++ )
+      {
+        if(itr==ids.end())
+          break;
+        cout << left << setw(10) << *itr++;
+      };
       cout << endl;
+    };
   };
   cout << endl << endl;
+  if(tot!=1000)
+    exit(0);
   return res;
 };
-auto const& goals = mk_goals();
 
 using bittrex::xact_limit;
 
@@ -80,6 +105,17 @@ struct todo_t
   pct_t     pct_goal;
   money_t   btc_goal;
   money_t   btc_del;
+  todo_t(const sym_t &sym=sym_t())
+    :sym(sym)
+  {
+    assert(!bal);
+    assert(!pct);
+    assert(!btc);
+    assert(!usd);
+    assert(!pct_goal);
+    assert(!btc_goal);
+    assert(!btc_del);
+  };
   todo_t &operator+=(const todo_t &rhs)
   {
     if( rhs.sym == sym ) {
@@ -99,9 +135,9 @@ struct todo_t
 struct todo_more {
   bool operator()( const todo_t &lhs, const todo_t &rhs )
   {
-    if((lhs.btc_del) < (rhs.btc_del))
+    if((lhs.btc_del) > (rhs.btc_del))
       return true;
-    if((rhs.btc_del) < (lhs.btc_del))
+    if((rhs.btc_del) > (lhs.btc_del))
       return false;
     return lhs.sym < rhs.sym;
   };
@@ -127,11 +163,88 @@ struct todo_size {
   };
 };
 typedef std::vector<todo_t> todo_v;
-static void show_todos( todo_v todo );
 typedef vector<string> argv_t;
 money_t usd_spot =0;
-todo_v make_todos()
+money_t usd_min_size=15;
+money_t min_size() {
+  return usd_min_size/usd_spot;
+};
+struct header_t {
+  const todo_t &obj;
+  bool dashes;
+  header_t(const todo_t &obj, bool dashes)
+    : obj(obj), dashes(dashes)
+  {
+  };
+};
+
+ostream &operator<<(ostream &lhs, const header_t &head)
 {
+  auto const& temp = head.obj;
+  auto symw=temp.sym.get_width();
+  auto monw=temp.btc.get_width();
+  auto pctw=temp.pct_goal.get_width();
+  ostringstream text;
+  text
+    << left
+    << "|" << setw( symw ) << "SYM "
+    << right
+    << "|" << setw( monw ) << "spot$ "
+    << "|" << setw( monw ) << "spotB$ "
+    << "|" << setw( pctw ) << "cur% "
+    << "|" << setw( monw ) << "cur$ "
+    << "|" << setw( monw ) << "curB$ "
+    << "|" << setw( pctw ) << "goal% "
+    << "|" << setw( monw ) << "goal$ "
+    << "|" << setw( monw ) << "goalB$ "
+    << "|" << setw( monw ) << "delB$"
+    << "|" << setw( monw ) << "del$"
+    << "|" << setw( pctw ) << "del%"
+    << "|";
+  string str=text.str();
+  if(head.dashes) {
+    for(auto &ch : str)
+    {
+      if(ch=='|')
+        ch='+';
+      else
+        ch='-';
+    };
+  };
+  lhs << str;
+  return lhs;
+};
+inline ostream &operator<<(ostream &lhs, todo_t rhs)
+{
+  auto symw=rhs.sym.get_width();
+  auto monw=rhs.btc.get_width();
+  auto pctw=rhs.pct_goal.get_width();
+  money_t spot_btc = market_t::conv(rhs.sym,"BTC");
+  money_t spot_usd = spot_btc*usd_spot;
+  if(rhs.sym=="Total")
+    spot_usd=spot_btc=nan("total");
+  lhs
+    << "|" 
+    << left
+    << setw(symw) << rhs.sym << "|"
+    << right
+    << setw(monw) << spot_usd << "|"
+    << setw(monw) << spot_btc << "|"
+    << setw(pctw) << rhs.pct << "|"
+    << setw(monw) << rhs.usd << "|"
+    << setw(monw) << rhs.btc << "|"
+    << setw(pctw) << rhs.pct_goal << "|"
+    << setw(monw) << rhs.btc_goal*usd_spot << "|"
+    << setw(monw) << rhs.btc_goal << "|"
+    << setw(monw) << rhs.btc_del << "|"
+    << setw(monw) << rhs.btc_del*usd_spot << "|"
+    << setw(pctw) << pct_t(rhs.btc_del/rhs.btc) << "|"
+    ;
+  return lhs;
+};
+todo_v mk_todos()
+{
+  auto const& goals = mk_goals();
   money_t tot_btc = 0.0;
   typedef std::map< sym_t, todo_t > todo_m;
   todo_m todo_map;
@@ -158,47 +271,52 @@ todo_v make_todos()
     };
   }
   {
-    todo_v todos;
-    for ( auto &item : todo_map ) {
-      auto &sym=item.first;
-      auto &todo=item.second;
-
-      todo.pct = todo.btc/tot_btc;
-      todo.btc_goal = tot_btc * todo.pct_goal.get();
-      todo.btc_del = (todo.btc_goal - todo.btc);
-      todos.push_back(todo);
-    };
-    sort(todos.begin(),todos.end(),todo_more());
-    show_todos(todos);
-  };
-  {
-    todo_v todos;
-    for ( auto &item : todo_map ) {
-      auto &sym=item.first;
-      auto &todo=item.second;
-      if(abs(todo.btc_del) > 15/usd_spot)
-        todos.push_back(todo);
-    };
-    if(todos.size())
-      return todos;
-    todo_t &btc_todo=todo_map["BTC"];
-    if( abs(btc_todo.btc_del*usd_spot)>10 ) {
-      money_t bonus = btc_todo.btc_del/2;
+    auto &btc=todo_map["BTC"];
+    {
+      todo_v todos;
       for ( auto &item : todo_map ) {
         auto &sym=item.first;
         auto &todo=item.second;
-        auto combo=bonus+todo.btc_del;
-        cout << setw(8) << sym << setw(18) << combo << endl;
-        if(abs(todo.btc_del+bonus) > 15/usd_spot)
+
+        todo.pct = todo.btc/tot_btc;
+        todo.btc_goal = tot_btc * todo.pct_goal.get();
+        todo.btc_del = (todo.btc_goal - todo.btc);
+        if(todo.sym != "BTC")
           todos.push_back(todo);
-        for( auto b: todos )
-          cout << b << end;
       };
-      if(todos.size())
-        return todos;
-    };
+      sort(todos.begin(),todos.end(),todo_less());
+      cout << " " << header_t(btc,true) << endl;
+      cout << " " << header_t(btc,false) << endl;
+
+      {
+        vector<sym_t> avoid;// = { "USDT", "ETH", "LBC" };
+        todo_v willdo;
+        int i=0;
+        todo_t tot_all("Total");
+        tot_all+=btc;
+        money_t btc_del=btc.btc_del;
+        cout << " " << header_t(btc,true) << endl;
+        cout << " " << btc << endl;
+        while(i<todos.size())
+        {
+          auto &todo=todos[i++];
+          tot_all+=todo;
+          cout << " " << todo << endl;
+          auto pos=find(avoid.begin(), avoid.end(), todo.sym);
+          if(  pos!= avoid.end() )
+            continue;
+          if( abs(todo.btc_del) < min_size() )
+            continue;
+          willdo.push_back(todo);
+        };
+        cout << "%" << tot_all << endl;
+        cout << " " << header_t(btc,true) << endl;
+        if(willdo.size())
+          return willdo;
+      };
+    }
+    return todo_v();
   };
-  return todo_v();
 };
 int xmain( const argv_t &args )
 {
@@ -221,12 +339,22 @@ int xmain( const argv_t &args )
     time_t now=time(0);
     char buffer[1024];
     strftime(buffer,sizeof(buffer),"%F-%H:%M:%S %Z",gmtime(&now));
-    cout << left << "now: " << setw(30) << buffer;
+    cout << left << " now: " << setw(30) << buffer;
     strftime(buffer,sizeof(buffer),"%F-%H:%M:%S %Z",localtime(&now));
     cout << setw(30) << buffer;
     cout << " trades: " << trades << endl;
     usd_spot = market_t::conv("BTC","USDT");
-    auto todos=make_todos();
+    auto todos=mk_todos();
+    for( auto & todo: todos )
+    {
+      if( todo.sym == "BTC" )
+        continue;
+      market_l marks=market_l::get_conv(todo.sym,"BTC");
+      if(marks.size() != 1) {
+        cout << "cannot do " << todo.sym << " no BTC market";
+        return 1;
+      };
+    };
     if(bittrex::orders_pending()) {
       cout << "orders pending!" << endl;
       sleep(5);
@@ -255,11 +383,14 @@ int xmain( const argv_t &args )
         xact_limit(
             pivot,
             b->sym,
-            min(b->btc_del*usd_spot,money_t(50)),
+            min(b->btc_del*usd_spot,money_t(100)),
             "USDT",
             true
             );
         ++trades;
+      };
+      if(!(loop||bittrex::fake_buys)) {
+        mk_todos();
       };
     };
     if(!loop)
@@ -268,57 +399,6 @@ int xmain( const argv_t &args )
     
   };
   return 0;
-};
-void show_todos( todo_v todo ) {
-  if(!todo.size()) {
-    cerr << "todo is empty" << endl;
-    return;
-  };
-  auto const& temp = todo[0];
-  auto symw=temp.sym.get_width();
-  auto monw=temp.btc.get_width();
-  auto pctw=temp.pct_goal.get_width();
-  cout
-    << left
-    << "|" << setw( symw ) << "SYM "
-    << right
-    << "|" << setw( monw ) << "spot "
-    << "|" << setw( pctw ) << "cur% "
-    << "|" << setw( monw ) << "cur$ "
-    << "|" << setw( monw ) << "curB$ "
-    << "|" << setw( pctw ) << "goal% "
-    << "|" << setw( monw ) << "goal$ "
-    << "|" << setw( monw ) << "goalB$ "
-    << "|" << setw( monw ) << "delB$"
-    << "|" << setw( monw ) << "del$"
-    << "|" << setw( pctw ) << "del%"
-    << "|" << endl;
-  todo.push_back(todo_t());
-  todo_t &tot=todo.back();;
-  tot.sym = "Total";
-  money_t tot_spot;
-  for ( auto t : todo ) {
-    tot += t;
-    money_t spot = market_t::conv(t.sym,"USDT");
-    if(t.sym=="Total")
-      spot=nan("total");
-    cout
-      << "|" 
-      << left
-      << setw(symw) << t.sym << "|"
-      << right
-      << setw(monw) << spot << "|"
-      << setw(pctw) << t.pct << "|"
-      << setw(monw) << t.usd << "|"
-      << setw(monw) << t.btc << "|"
-      << setw(pctw) << t.pct_goal << "|"
-      << setw(monw) << t.btc_goal*usd_spot << "|"
-      << setw(monw) << t.btc_goal << "|"
-      << setw(monw) << t.btc_del << "|"
-      << setw(monw) << t.btc_del*usd_spot << "|"
-      << setw(pctw) << pct_t(t.btc_del/t.btc) << "|"
-      << endl;
-  };
 };
 class fd_streambuf : public streambuf
 {
@@ -346,6 +426,16 @@ fd_streambuf::~fd_streambuf()
     cout.rdbuf(0);
   if(cerr.rdbuf()==this)
     cerr.rdbuf(0);
+};
+
+#define xcroak(x) do{ cerr << x << endl; abort(); }while(0)
+
+int xrename(const char *ofn, const char *nfn)
+{
+  int res=rename(ofn,nfn);
+  if(res<0)
+    xcroak("rename("<<ofn<<","<<nfn<<"):" << strerror(errno));
+  return res;
 };
 int xdup2(int fd, int ofd)
 {
@@ -375,6 +465,24 @@ int xclose(int fd)
     assert(!"close failed");
   return res;
 };
+int open_log(const string &fn)
+{
+  struct stat stat_buf;
+  if(!stat(fn.c_str(),&stat_buf))
+  {
+    for(int i=100;i<999;i++)
+    {
+      string bfn=fn+"."+lexical_cast<string>(i);
+      if(!stat(bfn.c_str(),&stat_buf))
+        continue;
+      if(errno!=ENOENT)
+        continue;
+      xrename(fn.c_str(),bfn.c_str());
+      break;
+    };
+  };
+  return xopen(fn.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
+};
 int main( int argc, char** argv )
 {
   try
@@ -384,13 +492,14 @@ int main( int argc, char** argv )
     xopen("/dev/null",O_RDONLY);
     xclose(1);
     mkdir("log",0755);
-    int log=xopen("log/bal.log",O_WRONLY|O_CREAT|O_APPEND,0644);
+    int log=open_log("log/bal.log");
     assert(log==1);
     xdup2(1,2);
     static fd_streambuf obuf(1,tty);
     static fd_streambuf ibuf(2,tty);
     cout.rdbuf(&obuf);
     cerr.rdbuf(&ibuf);
+    cout << "log/bal.log:1:started\n";
     argv_t args( argv+1, argv+argc );
     if ( xmain( args ) )
       return 1;

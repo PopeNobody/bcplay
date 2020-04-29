@@ -16,15 +16,15 @@ const market_l& market_l::get_markets()
     load_markets();
   return markets;
 };
-const market_l market_l::get_markets(sym_t sym)
-{
-  market_l res;
-  for( auto m : get_markets() ) {
-    if(m.f_coin == sym || m.t_coin == sym)
-      res.push_back(m);
-  };
-  return res;
-};
+//   const market_l market_l::get_markets(sym_t sym)
+//   {
+//     market_l res;
+//     for( auto m : get_markets() ) {
+//       if(m.f_coin == sym || m.t_coin == sym)
+//         res.push_back(m);
+//     };
+//     return res;
+//   };
 const market_l &market_l::load_markets() {
   return markets=bittrex::load_markets();
 };
@@ -34,7 +34,8 @@ money_t market_l::conv1(const string &from, const string &to) {
   market_l list=get_conv(from,to);
   if(list.size()==0)
     return 0;
-  return list.back().last;
+  auto &mkt=list.back();
+  return (mkt.bid+mkt.ask)/2;
 };
 money_t market_t::conv1(const string &from, const string &to) {
   return market_l::conv1(from,to);
