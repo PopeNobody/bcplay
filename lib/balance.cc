@@ -50,7 +50,14 @@ namespace coin {
 	balance_t::~balance_t() {
 	};
 	ostream &balance_t::stream(ostream &lhs, int ind) const {
-		lhs << sym << bal << " U$" << usd << " B$" << btc;
+		lhs
+      << " | " 
+      << sym << bal << " | " 
+      << " U$" << usd << " | " 
+      << " B$" << btc << " | " 
+      << " P:" << pend << " | "
+      << " A: " << ava << " | "
+      ;
 		return lhs;
 	};
 };

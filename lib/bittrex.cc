@@ -30,7 +30,7 @@ void coin::from_json(const json &j, order_t& o )
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
 #define list( item )                                  \
   item(  uuid,                 "OrderUuid"          ) \
-  item(  account_id,           "AccountId"          ) \
+//  item(  account_id,           "AccountId"          ) \
   item(  exchange,             "Exchange"           ) \
   item(  type,                 "Type"               ) \
   item(  opened,               "Opened"             ) \

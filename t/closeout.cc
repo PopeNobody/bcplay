@@ -83,6 +83,8 @@ int xmain(int argc, char**argv)
   {
     if( bal.bal == 0 )
       continue;
+    if( bal.ava != bal.bal )
+      continue;
     if( bal.btc > min_bal )
       continue;
     cout << bal << endl; 
@@ -112,6 +114,7 @@ int xmain(int argc, char**argv)
             xexpose(ords);
             break;
           };
+          break;
         } else {
           cout << "we can sell now." << endl;
           res=bittrex::simple_xact (
@@ -119,7 +122,7 @@ int xmain(int argc, char**argv)
               false,
               bal.bal,
               2*mkt.yield(1,mkt.sym(),mkt.cur(),false),
-              true
+              false
               );
           while(res.size())
           {
@@ -128,9 +131,8 @@ int xmain(int argc, char**argv)
             xexpose(ords);
             break;
           };
+          break;
         };
-        // we are ready to sell.
-        break;
       } catch ( exception & ex ) {
         xexpose(ex.what());
         throw;
