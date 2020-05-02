@@ -35,3 +35,15 @@ ppjson
 get_order_hist
 *.db
 bals2db
+.gdb_history
+closeout
+etc/default_target
+etc/fuck.def
+etc/make_jobs_flag
+etc/shit
+etc/shit.def
+log/
+mkts2db
+order.json
+orders.json
+patch
