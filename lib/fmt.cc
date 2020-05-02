@@ -16,5 +16,10 @@ namespace fmt {
 		snprintf(buf,sizeof(buf),"%7.3f",100*val);
 		return buf+sign;
 	};
+  ostream &pct_t::stream(ostream &str, int ind) const
+  {
+    str << fmt();
+    return str;
+  };
 };
 

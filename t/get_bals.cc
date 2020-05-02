@@ -18,8 +18,8 @@ int xmain(int argc, char**argv) {
   cerr << "Loading Balances" << endl;
   balance_l bals = balance_l::load_balances();
   int i = 0;
-  vector<int> cw = { 5, 6, 15, 15, 15, 15, 15 };
-  vector<const char *> nm = { "num", "sym", "bal", "usd", "btc", "pct", "perBTC" };
+  vector<int> cw =          { 25,     25,    25,    25,    25,    25,     25,        25 };
+  vector<const char *> nm = { "num", "sym", "bal", "usd", "btc", "pct", "perBTC", "%ava" };
   money_t btc_sum=0;
   money_t usd_sum=0;
   {
@@ -35,10 +35,12 @@ int xmain(int argc, char**argv) {
   };
   money_t btc_avg=btc_sum/bals.size();
   money_t usd_avg=usd_sum/bals.size();
-#define ROW(lab,val1,val2) lab << setw(16) << val1 << setw(16) << val2 << setw(16) << nl;
+#define ROW(lab,val1,val2) lab << setw(25) << val1 << setw(25) << val2 << nl
 
-  cout  <<  ROW("....","BTC","USD")
-    cout  <<  ROW("tot:",btc_sum,usd_sum);
+    cout
+      << setfill('-');
+  cout  <<  ROW("....","BTC","USD");
+  cout  <<  ROW("tot:",btc_sum,usd_sum);
   cout  <<  ROW("avg:",btc_avg,usd_avg);
   cout  <<  "-----------------------------" << endl;
   cout
@@ -50,21 +52,25 @@ int xmain(int argc, char**argv) {
     << setw(cw[3]) << nm[3] << " "
     << setw(cw[4]) << nm[4] << " "
     << setw(cw[5]) << nm[5] << " "
+    << setw(cw[6]) << nm[6] << " "
     << endl;
   int num=0;
   for( auto bal : bals ) {
     if(!bal.bal)
       continue;
+
     cout
       << left
-      << setw(cw[0]) << ++num
-      << setw(cw[1]) << bal.sym 
+      << setw(cw[0]) << ++num << "|"
+      << setw(cw[1]) << bal.sym  << "|"
       << right << fixed << setprecision(8)
-      << setw(cw[1]) << bal.ava 
-      << setw(cw[2]) << bal.usd
-      << setw(cw[4]) << bal.btc
-      << setw(cw[5]) << pct_t(bal.btc,btc_sum)
+      << setw(cw[1]) << bal.ava  << "|"
+      << setw(cw[2]) << bal.usd << "|"
+      << setw(cw[4]) << bal.btc << "|"
+      << setw(cw[5]) << pct_t(bal.btc,btc_sum) << "|"
+      << setw(cw[6]) << pct_t(bal.ava,bal.bal) << "|"
       << endl;
+#undef setw
   };
   return 0;
 };
