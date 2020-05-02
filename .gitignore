@@ -6,7 +6,6 @@
 -s
 .gdb_history
 bal
-balance.json
 bals2db
 can_orders
 ckey
@@ -32,12 +31,9 @@ libcoin.a.lock
 log/
 make.out
 markets
-markets.json
 mkts2db
 onebal
-order.json
 orders
-orders.json
 output
 patch
 ppjson

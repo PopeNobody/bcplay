@@ -3,6 +3,10 @@
 #define util_hh util_hh
 
 #include <coinfwd.hh>
+#include <iostream>
+#include <fcntl.h>
+#include <string>
+
 
 namespace util {
   using std::streambuf;
@@ -99,6 +103,12 @@ namespace util {
   string strip(const string &str);
   bool exists(const char *path);
   string read_file(const char *path);
+  int xrename(const char *ofn, const char *nfn);
+  int xdup2(int fd, int ofd);
+  int xdup(int fd);
+  int xopen(const char *fn, int flags, int mode=0644);
+  int xclose(int fd);
+  int open_log(const std::string &fn);
 };
 
 #endif

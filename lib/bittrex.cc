@@ -4,6 +4,7 @@
 #include <web_api.hh>
 #include <cmath>
 #include <dbg.hh>
+#include <xcalls.hh>
 
 using namespace coin;
 using namespace util;
@@ -12,8 +13,58 @@ using nlohmann::detail::value_t;
 
 bool bittrex::fake_buys=true;
 bool bittrex::show_urls=true;
+namespace bittrex {
+  extern bool fake_loads;
+};
+bool bittrex::fake_loads=true;
 const static string api_url = "https://bittrex.com/api/v1.1/";
 
+namespace {
+  void save_json(const string &fname, const json &json) {
+    assert(fname.length());
+    ofstream ofile;
+    {
+      int fd=util::open_log(fname);
+      ofile.open(fname,ios::app);
+      xclose(fd);
+    };
+    if(!ofile)
+      xthrowre("open:"+fname+strerror(errno));
+    stringstream str;
+    str << setw(4) << json << endl;
+    string text=str.str();
+    ofile<<text;
+    if(!ofile)
+      xthrowre("error writing "+fname);
+  };
+  const json load_json(const string &url, const string &save_to)
+  {
+    try {
+      xcheckin();
+      xexpose(url);
+      xexpose(save_to);
+      string page;
+      page = web::load_hmac_page(url);
+      json jpage=json::parse(page);
+      save_json(save_to,jpage);
+      cout << setw(4) << jpage << endl;
+      if(!jpage.at("success")) {
+        throw runtime_error(
+            "no success in getbalances result\n\n"+page
+            );
+      };
+      jpage=*jpage.find("result");
+      return jpage;
+    } catch ( exception &ex ) {
+      xtrace(ex.what());
+      xexpose(url);
+      xexpose(save_to);
+      throw;
+    } catch ( ... ) {
+      throw;
+    };
+  };
+}
 namespace coin {
   void from_json(const json &j, balance_t &val);
   void from_json(const json &j, money_t &val);
@@ -23,8 +74,11 @@ namespace coin {
   void from_json(const json &j, string &val);
   void from_json(const json &j, bool &val);
 };
-//#define trace_from_json(x) xtrace(x)
+#if 1
 #define trace_from_json(x)
+#else
+#define trace_from_json(x) xtrace(x)
+#endif
 void coin::from_json(const json &j, order_t& o )
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
@@ -114,8 +168,15 @@ void coin::from_json(const json &j, balance_t &bal) {
     from_json(j.at("Balance"),res.bal);
     from_json(j.at("Available"),res.ava);
     from_json(j.at("Pending"),res.pend);
-    res.btc=market_t::conv(res.bal,res.sym,"BTC");
-    res.usd=market_t::conv(res.btc,"BTC","USD");
+    try {
+      res.btc=market_t::conv(res.bal,res.sym,"BTC");
+      res.usd=market_t::conv(res.btc,"BTC","USD");
+    } catch ( exception &ex ) {
+      xtrace(ex.what());
+      throw;
+    } catch ( ... ) {
+      throw;
+    };
     bal=res;
   } catch(exception &ex) {
     cerr << "while reading json: " << setw(4) << j << endl;
@@ -355,34 +416,11 @@ void bittrex::show_deposits() {
   cout << setw(4) << jpage;
   cout << endl << endl;
 };
-namespace {
-  void save_json(const string &fname, const json &json) {
-    assert(fname.length());
-    ofstream ofile(fname.c_str());
-    if(!ofile)
-      xthrowre("open:"+fname+strerror(errno));
-    stringstream str;
-    str << setw(4) << json << endl;
-    string text=str.str();
-    ofile<<text;
-    if(!ofile)
-      xthrowre("error writing "+fname);
-  };
-}
 const coin::balance_l bittrex::load_balances()
 {
   const static string gb_url=
     "https://bittrex.com/api/v1.1/account/getbalances?";
-  cout  << "about to send request" << endl;
-  string page = web::load_hmac_page(gb_url);
-  json jpage=json::parse(page);
-  if(!jpage.at("success")) {
-    throw runtime_error(
-        "no success in getbalances result\n\n"+page
-        );
-  };
-  jpage=*jpage.find("result");
-  save_json("balance.json",jpage);
+  json jpage=load_json(gb_url, "log/balances.json");
   balance_l temp;
   for( json bal : jpage ) {
     if(bal.at("Currency")=="BTXCRD")
@@ -393,10 +431,11 @@ const coin::balance_l bittrex::load_balances()
   sort(temp.begin(),temp.end());
   return balance_l(temp.rbegin(),temp.rend());
 };
-const market_l bittrex::load_markets() {
+const market_l bittrex::load_markets()
+{
   const static string gms_url=
-    "https://bittrex.com/api/v1.1/public/getmarketsummaries";
-  json jpage = json::parse(web::load_page(gms_url));
+    "https://bittrex.com/api/v1.1/public/getmarketsummaries?";
+  json jpage = load_json(gms_url,"log/markets.json");
   assert(jpage.type() == value_t::object);
   auto it=jpage.find("success");
   if( it != jpage.end() ) {
@@ -409,7 +448,6 @@ const market_l bittrex::load_markets() {
     throw runtime_error("no result in page");
   };
   jpage=*res_it;
-  save_json("markets.json",jpage);
   market_l markets;
   coin::from_json(jpage,markets);
   cout << markets.size() << " markets loaded" << endl;
@@ -426,31 +464,31 @@ void bittrex::cancel_order(const string &id)
 {
   const static string b_url("https://bittrex.com/api/v1.1/market/cancel?");
   string url = b_url+"uuid="+id+"&";
-  string page = web::load_hmac_page(url);
-  cout << "res: " << endl;
+  json page = load_json(b_url,"log/cancel.json");
   cout << page << endl;
-  cout << endl;
 };
 void bittrex::cancel_orders() {
-  const static string url("https://bittrex.com/api/v1.1/market/getopenorders?");
-  string page = web::load_hmac_page(url);
-  auto jpage = json::parse(page);
-  jpage = jpage["result"];
-  int onum=0;
-  for( auto order : jpage )
-    cancel_order(order["OrderUuid"]);
+  auto &ords=load_orders();
+  for( auto ord : ords )
+    cancel_order(ord.uuid());
 }
 bool bittrex::orders_pending() {
-  const static string url("https://bittrex.com/api/v1.1/market/getopenorders?");
-  string page = web::load_hmac_page(url);
-  auto jpage = json::parse(page);
-  jpage = jpage["result"];
-  return jpage.begin() != jpage.end();
+  auto &ords=load_orders();
+  return !!ords.size();
 };
 void bittrex::dump_orders() {
+  auto &ords=load_orders();
+  for( auto &ord : ords )
+  {
+    cout << ord << endl;
+  };
+};
+const order_l bittrex::load_orders() {
+  order_l res;
   const static string url("https://bittrex.com/api/v1.1/market/getopenorders?");
   string page = web::load_hmac_page(url);
-  cout << setw(4) << json::parse(page) << endl;
+  save_json("log/openorders.json",page);
+  return res;
 };
 
 namespace bittrex {
@@ -466,7 +504,7 @@ order_l bittrex::get_order( const string& uuid )
   };
   string page = web::load_hmac_page( my_url );
   auto jpage = json::parse( page );
-  save_json("order.json",jpage);
+  save_json("log/order.json",jpage);
   jpage = jpage[ "result" ];
   order_l orders;
   order_t order;
@@ -483,7 +521,7 @@ order_l bittrex::get_order_history( const string& msg )
   };
   string page = web::load_hmac_page( url );
   auto jpage = json::parse( page );
-  save_json("orders.json",jpage);
+  save_json("log/orders.json",jpage);
   jpage = jpage[ "result" ];
   order_l orders;
   for ( auto b( begin( jpage ) ), e( end( jpage ) ); b != e; b++ )

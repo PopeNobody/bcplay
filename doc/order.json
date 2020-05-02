@@ -1,0 +1,29 @@
+{
+    "message": "",
+    "result": {
+        "AccountId": null,
+        "CancelInitiated": false,
+        "Closed": null,
+        "CommissionPaid": 0.0,
+        "CommissionReserveRemaining": null,
+        "CommissionReserved": null,
+        "Condition": "NONE",
+        "ConditionTarget": null,
+        "Exchange": "BTC-XTZ",
+        "ImmediateOrCancel": false,
+        "IsConditional": false,
+        "IsOpen": true,
+        "Limit": 0.00063832,
+        "Opened": "2020-05-02T10:09:20.47",
+        "OrderUuid": "9861831e-3c36-4031-a0ca-b17c11fd6700",
+        "Price": 0.0,
+        "PricePerUnit": null,
+        "Quantity": 1.83676279,
+        "QuantityRemaining": 1.83676279,
+        "ReserveRemaining": null,
+        "Reserved": null,
+        "Sentinel": null,
+        "Type": "LIMIT_SELL"
+    },
+    "success": true
+}
