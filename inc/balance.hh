@@ -4,6 +4,7 @@
 #include <symbol.hh>
 
 namespace coin {
+  class balance_l;
 	struct balance_t : public fmt::can_str {
 		sym_t sym;
 		money_t bal;
@@ -14,9 +15,12 @@ namespace coin {
 		bool operator<(const balance_t &rhs) const;
 		virtual ostream &stream(ostream &lhs, int ind=0) const;
 		virtual ~balance_t();
+    static const balance_t &get(const sym_t &sym);
+		static const balance_l &get_balances();
+		static const balance_l &load_balances();
+    static balance_l list;
 	};
 	struct balance_l : public std::vector<balance_t> {
-		static balance_l list;
 		balance_l()
 		{
 		};
@@ -32,11 +36,6 @@ namespace coin {
 					return b;
 			};
 			throw runtime_error("no such bal!");
-		};
-		static const balance_l &get_balances() {
-			if(list.size()==0)
-				list=load_balances();
-			return list;
 		};
 		sym_l syms() const;
 	};

@@ -1,18 +1,19 @@
 #include <iostream>
 #include <web_api.hh>
+#include <json.hh>
 
 
 using namespace std;
 
 int main(int, char**) {
-  cout << "Hello, World!" << endl;
-  string text;
-  for(;;){
-    char ch = cin.get();
-    if( ch == EOF )
-      break;
-    text+=ch;
+  ifstream is;
+  is.open("table.json");
+  stringstream text;
+  is >> text.rdbuf();
+  string str=text.str();
+  for( auto &ch : str )
+  {
+    cout.put(ch);
   };
-  cout << web::pp_json(text) << endl;
   return 0;
 };

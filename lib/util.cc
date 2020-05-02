@@ -30,3 +30,10 @@ bool util::exists(const char *name)
 	return true;
 };
 
+util::fd_streambuf::~fd_streambuf()
+{
+  if(cout.rdbuf()==this)
+    cout.rdbuf(0);
+  if(cerr.rdbuf()==this)
+    cerr.rdbuf(0);
+};

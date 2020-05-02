@@ -1,3 +1,6 @@
+#include <assert.h>
+#undef assert
+#include <dbg.hh>
 #ifndef coinfwd_hh
 #define coinfwd_hh coinfwd_hh
 

@@ -7,72 +7,58 @@
 
 namespace coin {
   using namespace std;
+  class market_l;
   struct market_t : public fmt::can_str 
   {
-    string name;
-    sym_t f_coin;
-    sym_t t_coin;
-    bool buy;
-    money_t ask;
-    money_t bid;
-    money_t high;
-    money_t last;
-    money_t low;
-    money_t vol;
+    struct data_t {
+      string name;
+      sym_t cur;
+      sym_t sym;
+      money_t ask;
+      money_t bid;
+      money_t high;
+      money_t last;
+      money_t low;
+      money_t vol;
+    } data;
+    static market_l markets;
     market_t();
-    market_t reverse() const {
-      market_t res(*this);
-      swap(res.f_coin,res.t_coin);
-      res.buy=!res.buy;
-      res.ask=1/res.ask;
-      res.bid=1/res.bid;
-      res.high=1/res.last;
-      res.last=1/res.last;		
-      res.low=1/res.low;
-      res.vol=1/res.vol;
-      return res;
+    market_t(const data_t &);
+    market_t(const market_t &);
+    market_t(const string &name, money_t bid, money_t ask);
+    market_t reverse() const;
+   
+    explicit operator bool() const; 
+    static bool split_name(const string &name, string &cur, string &t_coin);
+    bool operator<(const market_t &rhs) const;
+    sym_t cur()const{
+      return data.cur;
     }
-    static bool split_name(const string &name, string &f_coin, string &t_coin);
-    string price() const;
-    bool operator<(const market_t &rhs) const {
-      if(last<rhs.last)
-        return true;
-      if(last>rhs.last)
-        return false;
-      if(f_coin<rhs.f_coin)
-        return true;
-      if(f_coin>rhs.f_coin)
-        return false;
-      return t_coin<rhs.t_coin;
+    string name()const{
+      return data.name;
     }
-    sym_t from_coin()const{
-      return f_coin;
+    sym_t sym()const{
+      return data.sym;
     }
-    sym_t to_coin()const{
-      return t_coin;
-    }
+    money_t yield(money_t qty, sym_t f, sym_t t, bool neutral=false);
+    money_t ask()const {
+      return data.ask;
+    };
+    money_t bid()const {
+      return data.bid;
+    };
     virtual ~market_t();
     ostream &stream(ostream &lhs, int ind=0) const;
-    static money_t conv(const string &from, const string &to);
-    static money_t conv1(const string &from, const string &to);
-  };
-  struct market_l : public vector<market_t> //, public fmt::can_str
-  {
-    market_l()
-    {
-    }
-    sym_t from_coin()const;
-    sym_t to_coin()const;
-    virtual ~market_l();
-    static market_l get_conv(const string &from, const string &to);
-    static market_l markets;
+    static money_t conv(money_t, const sym_t &from, const sym_t &to, bool neutral=true);
+    static money_t conv2(money_t, const sym_t &from, const sym_t &to, bool neutral=true);
     static const market_l &get_markets( );
-    static const market_l get_markets( sym_t );
     static const market_l &load_markets();
-    static market_l all_conv(const string &from, const string &to);
-    static money_t conv(const string &from, const string &to);
-    static money_t conv1(const string &from, const string &to);
-    //ostream &stream(ostream &lhs, int ind=0) const;
+    static market_l get(const string &from, const string &to, bool exceptions=true);
+  };
+  struct market_l : public vector<market_t>, public fmt::can_str
+  {
+    virtual ~market_l();
+    ostream &stream(ostream &lhs, int ind=0) const;
   };
 }
 #endif

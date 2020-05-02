@@ -4,45 +4,56 @@
 #include <coinfwd.hh>
 #include <money.hh>
 #include <json.hh>
+#include <fmt.hh>
 
 namespace coin {
-	class order_t 
+	class order_t : public fmt::can_str
 	{
-    bool     canceled;
-    bool     cond;
-    bool     immediate;
-    bool     is_conditional;
-    money_t  comission;
-    money_t  price;
-    money_t  price_per_unit;
-    money_t  quantity;
-    money_t  limit;
-    money_t  quantity_remaining;
-    string   closed;
-    string   order_type;
-    string   condition;
-    money_t   condition_target;
-    bool   immediate_or_cancel;
-    string   exchange;
-    string   opened;
-    string   order_id;
-    string   target;
-    string   type;
-    string   uuid;
-    string   timestamp;
-    friend void from_json( json& j, order_t& o );
     public:
+    struct data_t {
+      string   uuid;
+      string   account_id;
+      string   exchange;
+      string   type;
+      string   opened;
+      string   closed;
+      bool     is_open;
+
+      money_t  limit;
+      money_t  quantity;
+      money_t  price;
+      money_t  price_per_unit;
+      money_t  quantity_remaining;
+
+      bool     cancel_initiated;
+
+      money_t  commission_paid;
+      money_t  commission_reserved;
+      money_t  commission_remain;
+
+      bool     is_conditional;
+      string   condition;
+      money_t   condition_target;
+
+      bool   immediate_or_cancel;
+      string   reserved;
+      string   sentinel;
+    };
+    order_t();
+    order_t(const data_t &data);
+    order_t(const order_t &rhs);
+    order_t& operator=(const order_t &rhs);
     virtual ~order_t();
+		virtual ostream &stream(ostream &lhs, int ind=0) const;
+    private:
+    data_t data;
 	};
-	class order_l : public std::vector<order_t>
+	class order_l : public std::vector<order_t>, public fmt::can_str
   {
     using std::vector<order_t>::vector;
-
-    template <typename ...Args>
-      void order_t(Args && ...args)
-    {
-      g(std::forward<Args>(args)...);
-    }
+  public:
+    virtual ~order_l();
+		virtual ostream &stream(ostream &lhs, int ind=0) const;
   };
 };
 

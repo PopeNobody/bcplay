@@ -1,15 +1,26 @@
-#    test: test_prices
+
+default: $(shell cat etc/default_target)
+
+test_bal: all
+	./bal
+
+test_closeout: all
+	./closeout
+
 #    
+#    test: test_prices
 
 #test_2db: all test_bals2db test_mkts2db
 	
-test_bal: all
+test_ppjson: all
+
+
 all:
 
 
 #Make
 MAKEFLAGS:= -Rr --warn-undefined-variable
-MAKEFLAGS:= -j8
+MAKEFLAGS:= $(shell touch etc/make_jobs_flag)
 
 #CXX
 CXX:= clang++
@@ -52,7 +63,6 @@ LDLIBS += -Wl,--end-group
 LCOIN_SRC:=$(wildcard lib/*.cc)
 LCOIN_OBJ:=$(patsubst %.cc,%.o,$(LCOIN_SRC))
 LCOIN_MOD:=$(patsubst lib/%.cc,%,$(LCOIN_SRC))
-LCOIN:=$(MYLIB_MOD)
 
 TESTS_SRC:=$(wildcard t/*.cc)
 TESTS_OBJ:=$(patsubst %.cc,%.o,$(TESTS_SRC))
@@ -78,6 +88,9 @@ libcoin.a: $(LCOIN_OBJ)
 %.o: %.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
 	$(CXX) $(CXXFLAGS) -c $(<:.cc=.ii) -o $@
+
+%.i:
+	make $(@:.i:.o)
 
 $(TESTS): %: t/%.o libcoin.a
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)

@@ -17,13 +17,13 @@ using fmt::nl;
 using fmt::pct_t;
 
 int xmain(int argc, char**argv) {
-  checkin();
+  xcheckin();
   auto orders = bittrex::get_order_history("USD-RVN");
   return 0;
 };
 int main(int argc, char**argv)
 {
-  checkin();
+  xcheckin();
   try {
     return xmain(argc,argv);
   } catch ( std::exception &e ) {

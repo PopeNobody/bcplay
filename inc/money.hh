@@ -73,6 +73,12 @@ namespace coin {
 			};
 			def_op(==); def_op(<); def_op(>); def_op(<=); def_op(>=);
 			def_op(!=);
+      
+      inline money_t abs( money_t rhs )
+      {
+        return ( rhs < 0 ) ? -rhs : rhs;
+      };
+
 };
 
 #endif

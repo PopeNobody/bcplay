@@ -14,7 +14,7 @@ using namespace std;
 int xmain(int argc, char**argv) {
   using coin::market_l;
   cerr << "Loading Markets" << endl;
-  const market_l &markets=market_l::get_markets();
+  const market_l &markets=market_t::get_markets();
   cerr << "Loading Balances" << endl;
   balance_l bals = balance_l::load_balances();
   int i = 0;

@@ -37,6 +37,26 @@ namespace bittrex {
   pair<string,string> split_name(const string &name);
   money_t ex_rate( sym_t f_sym, sym_t t_sym );
   bool is_trading_pair( sym_t lhs, sym_t rhs );
+  bool buy_limit(
+      const coin::market_t &market,
+      sym_t sym,
+      coin::money_t tqty,
+      bool ioc
+      );
+  bool sell_limit(
+      const coin::market_t &market,
+      sym_t sym,
+      coin::money_t fqty,
+      bool ioc
+      );
+  string simple_xact
+    (
+     const market_t &market,
+     bool buy,    // buy or sell
+     money_t qty, // in the symbol to buy or sell
+     money_t rate, // in currency per unit
+     bool ioc
+    );
 };
 
 #endif // bittrex_hh

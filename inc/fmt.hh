@@ -43,8 +43,43 @@ namespace fmt {
       val+=rhs.val;
       return *this;
     };
+    pct_t &operator-=(const pct_t&rhs)
+    {
+      val+=rhs.val;
+      return *this;
+    };
 
 	};
+  template<typename otype_t>
+inline otype_t operator*(const otype_t &lhs, const pct_t &rhs)
+  {
+    return lhs*rhs.get();
+  };
+  template<typename otype_t>
+inline otype_t operator*(const pct_t &lhs, const otype_t &rhs)
+  {
+    return lhs.get()*rhs;
+  };
+  template<typename otype_t>
+  pct_t operator+(const otype_t &lhs, const pct_t &rhs)
+  {
+    return lhs+rhs.get();
+  };
+  template<typename otype_t>
+  inline pct_t operator-(const otype_t &lhs, const pct_t &rhs)
+  {
+    return lhs-rhs.get();
+  };
+  template<>
+  inline pct_t operator-<pct_t>(const pct_t &lhs, const pct_t &rhs)
+  {
+    return lhs.get()-rhs.get();
+  };
+  template<typename otype_t>
+  inline otype_t operator/(const otype_t &lhs, const pct_t &rhs)
+  {
+    return lhs*(1/rhs.get());
+  };
 	inline ostream &operator<<(ostream &lhs, const fp_val &rhs)
 	{
 		return lhs<<setw(rhs.get_width())<<rhs.fmt();

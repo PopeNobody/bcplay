@@ -8,104 +8,183 @@
 using namespace coin;
 using namespace util;
 using namespace fmt;
+using nlohmann::detail::value_t;
 
 bool bittrex::fake_buys=true;
 bool bittrex::show_urls=true;
 const static string api_url = "https://bittrex.com/api/v1.1/";
 
 namespace coin {
-  void from_json( json& j, order_t& o )
-  {
-    checkin();
-    cout << setw(4) << j << endl;
-#define list( item )                                                       \
+  void from_json(const json &j, balance_t &val);
+  void from_json(const json &j, money_t &val);
+  void from_json(const json &j, market_l &ml);
+  void from_json(const json &j, market_t &ml);
+  void from_json(const json &j, order_t& val );
+  void from_json(const json &j, string &val);
+  void from_json(const json &j, bool &val);
+};
+//#define trace_from_json(x) xtrace(x)
+#define trace_from_json(x)
+void coin::from_json(const json &j, order_t& o )
+{
+  trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+#define list( item )                                  \
   item(  uuid,                 "OrderUuid"          ) \
-  item(  closed,               "Closed"             ) \
-  item(  comission,            "Commission"         ) \
-  item(  condition,            "Condition"          ) \
-  item(  condition_target,     "ConditionTarget"    ) \
+  item(  account_id,           "AccountId"          ) \
   item(  exchange,             "Exchange"           ) \
-  item(  immediate_or_cancel,  "ImmediateOrCancel"  ) \
-  item(  is_conditional,       "IsConditional"      ) \
+  item(  type,                 "Type"               ) \
+  item(  opened,               "Opened"             ) \
+  item(  closed,               "Closed"             ) \
+  item(  is_open,              "IsOpen"             ) \
+  \
   item(  limit,                "Limit"              ) \
-  item(  order_type,           "OrderType"          ) \
+  item(  quantity,             "Quantity"           ) \
   item(  price,                "Price"              ) \
   item(  price_per_unit,       "PricePerUnit"       ) \
-  item(  quantity,             "Quantity"           ) \
   item(  quantity_remaining,   "QuantityRemaining"  ) \
-  item(  timestamp,            "TimeStamp"          )
-#define extract( x, y )  cout << y << endl; o.x = j.at( y );
-    list( extract );
+  \
+  item(  cancel_initiated,     "CancelInitiated"    ) \
+  \
+  item(  commission_paid,      "CommissionPaid"     ) \
+  item(  commission_remain,    "CommissionReserveRemaining" ) \
+  item(  commission_reserved,  "CommissionReserved" ) \
+  \
+  item(  is_conditional,       "IsConditional"      ) \
+  item(  condition,            "Condition"          ) \
+  item(  condition_target,     "ConditionTarget"    ) \
+  \
+  item(  immediate_or_cancel,  "ImmediateOrCancel"  ) \
+  item(  reserved,             "QuantityRemaining"  ) \
+  item(  sentinel,             "Sentinel"           ) \
+  nop()
+
+#define extract( x, y )  coin::from_json(j.at(y),tmp.x);
+  order_t::data_t tmp;
+  list( extract );
+  o=order_t(tmp);
+};
+void coin::from_json(const json &j, bool &val)
+{
+  trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  if(j.is_null())
+    val=false;
+  else
+    j.get_to(val);
+};
+void coin::from_json(const json &j, string &val)
+{
+  trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  if(j.is_null())
+    val=string();
+  else if(j.is_number())
+    val=lexical_cast<string>((double)j);
+  else
+    j.get_to(val);
+};
 
 
-#define display( x, y )                                                   \
-  cout << left << setw( 20 ) << y << right << setw( 20 ) << "*" << o.x    \
-       << endl;
-    list( display );
-  };
-  void from_json(json &j, market_t &m)
+//   #define display( x, y )                                                   \
+//     cout << left << setw( 20 ) << y << right << setw( 20 ) << "*" << o.x    \
+//          << endl;
+//       list( display );
+//     ;
+void coin::from_json(const json &j, market_l &ml)
+{
+  trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  for( auto it = j.begin(); it != j.end();it++ ) 
   {
-    m.name=j.at("MarketName");
-    if( !market_t::split_name(m.name,m.t_coin,m.f_coin) )
-      throw runtime_error("split_name failed");
-#define decode(x,y) if(j.at(#x).is_null()){m.y=0;}else{m.y=j.at(#x);}
-#define do_decode(x,y) do{ decode(x,y) }while(0)
-    do_decode(Last,last);
-    do_decode(Bid,bid);
-    do_decode(Ask,ask);
-    do_decode(High,high);
-    do_decode(Low,low);
-    do_decode(Volume,vol);
-    m.buy=false;
-  };
-  void from_json(json &j, market_l &ml)
-  {
-    for( auto it = j.begin(); it != j.end();it++ ) 
-    {
-      market_t fwd;
-      from_json(*it,fwd);
-      market_t rev=fwd.reverse();
-      if(isinf(fwd.last.get()))
-        continue;
-      if(isinf(rev.last.get()))
-        continue;
-      ml.push_back(fwd);
-      ml.push_back(rev);
-    };
-  };
-  void from_json(const json &j, money_t &val) {
-    if( j.is_null() )
-      val=0;
-    else
-      val=(double)j;
-  };
-  void from_json(const json &j, balance_t &bal) {
-    using coin::market_l;
-    auto const &markets=market_l::get_markets();
-
-    balance_t res;
-    res.sym=j.at("Currency");
-    res.bal=j.at("Balance");
-    res.ava=j.at("Available");
-    res.pend=j.at("Pending");
-    res.btc=res.bal*markets.conv(res.sym,"BTC");
-    res.usd=res.btc*markets.conv("BTC","USDT");
-    bal=res;
+    market_t tmp;
+    coin::from_json(*it,tmp);
+    ml.push_back(tmp);
   };
 };
-namespace bittrex {
-  bool buy_limit(
-      const coin::market_t &market,
-      sym_t sym,
-      coin::money_t tqty,
-      bool ioc
-      );
-  bool sell_limit(
-      const coin::market_t &market,
-      sym_t sym,
-      coin::money_t fqty,
-      bool ioc
-      );
+void coin::from_json(const json &j, money_t &val) {
+  trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  if( j.is_null() )
+    val=0;
+  else
+    val=(double)j;
+};
+void coin::from_json(const json &j, balance_t &bal) {
+  trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  using coin::market_l;
+  try {
+    balance_t res;
+    from_json(j.at("Currency"),res.sym);
+    from_json(j.at("Balance"),res.bal);
+    from_json(j.at("Available"),res.ava);
+    from_json(j.at("Pending"),res.pend);
+    res.btc=market_t::conv(res.bal,res.sym,"BTC");
+    res.usd=market_t::conv(res.btc,"BTC","USD");
+    bal=res;
+  } catch(exception &ex) {
+    cerr << "while reading json: " << setw(4) << j << endl;
+    xexpose(ex.what());
+    throw;
+  };
+};
+void coin::from_json(const json &j, market_t &m)
+{
+  trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  string name=j.at("MarketName");
+  money_t bid=j.at("Bid");
+  money_t ask=j.at("Ask");
+  market_t tmp(name,bid,ask);
+  assert(tmp.name()==tmp.cur()+"-"+tmp.sym());
+  coin::from_json(j.at("Last"),tmp.data.last);
+  coin::from_json(j.at("High"),tmp.data.high);
+  coin::from_json(j.at("Low"),tmp.data.low);
+  coin::from_json(j.at("Volume"),tmp.data.vol);
+  m=tmp;
+};
+  string bittrex::simple_xact
+(
+ const market_t &market,
+ bool buy,    // buy or sell
+ money_t qty, // in the symbol to buy or sell
+ money_t rate, // in currency per unit
+ bool ioc
+ )
+{
+  string act=(buy?"buy":"sell");
+  money_t total=qty*rate*1.002;
+  cout 
+    << setw(5) << act
+    << "  " << qty 
+    << "  " << market.sym()
+    << " at " << rate << "BTC/unit"
+    << " on " << market.data.name
+    << " for " << total
+    << " ioc: " << ioc
+    << endl
+    ;
+  const static string sl_url=
+    "https://bittrex.com/api/v1.1/market/";
+  string url=sl_url+act+"limit?";
+  url+="market="+market.data.name;
+  url+="&quantity="+strip(lexical_cast<string>(qty));
+  url+="&rate="+strip(lexical_cast<string>(rate));
+  if(ioc)
+    url+="&timeInForce=IOC";
+  url+="&";
+  if(show_urls)
+    cout << "url: " << url << endl;
+  if(fake_buys){
+    cout << " not gonna do it!" << endl;
+    return string();
+  };
+
+  string page = web::load_hmac_page(url);
+  auto jpage=json::parse(page);
+  cout << setw(4) << jpage << endl;
+  if(!jpage.at("success")) {
+    throw runtime_error( "no success in buylimit result\n\n"+page);
+  };
+  jpage=jpage.at("result");
+  cout << setw(4) << jpage << endl;
+  jpage=jpage.at("uuid");
+  cout << setw(4) << jpage << endl;
+  return jpage;
 };
 bool bittrex::xact_limit(
     sym_t fsym,
@@ -115,7 +194,7 @@ bool bittrex::xact_limit(
     bool ioc
     )
 {
-  assert(qunit=="USDT");
+  assert(qunit=="USD");
   cout << "-- " << fsym << " " << tsym << " " << qty << " " << qunit << endl;
   if( qty < 0 )
     return xact_limit(tsym,fsym,-qty,qunit,ioc);
@@ -123,15 +202,20 @@ bool bittrex::xact_limit(
     cancel_orders();
   };
   assert(qty>0);
-  market_l marks=market_l::get_conv(fsym,tsym);
+  market_l marks=market_t::get(fsym,tsym);
   if(marks.size()==1) {
     market_t market=marks[0];
-    if(market.buy) {
-      money_t tqty=qty*market_l::conv(qunit,tsym);
+    cout << market << endl;
+    if(market.cur()==fsym && market.sym()==tsym) {
+      money_t tqty=market_t::conv2(qty,qunit,tsym);
+      xtrace( xnv(tqty) << " | " << xnv(qty) << " | " << xnv(qunit) << " | " << xnv(tsym) );
+      xexpose(market.yield(qty,qunit,tsym));
       return buy_limit(market,tsym,tqty,ioc);
-    } else {
-      money_t fqty=qty*market_l::conv(qunit,fsym);
+    } else if (market.sym()==fsym && market.cur()==tsym) {
+      money_t fqty=qty*market_t::conv2(qty,qunit,fsym);
       return sell_limit(market,fsym,fqty,ioc);
+    } else {
+      xthrow(runtime_error, "fuck");
     };
   } else {
     cout << "got " << marks.size() << " markets for " << fsym << "-" << tsym << endl;
@@ -146,14 +230,14 @@ bool bittrex::buy_limit(
     bool ioc
     )
 {
-  assert(market.t_coin==sym);
-  money_t rate(1/market.ask);
+  assert(market.data.cur==sym);
+  money_t rate(1/market.data.ask);
   cout << "market: " << market << endl;
   money_t total(qty*rate);
   cout 
     << "buy  " << qty << sym
     << " at " << rate
-    << " on " << market.name
+    << " on " << market.data.name
     << " for " << total
     << " ioc: " << ioc
     << endl
@@ -161,7 +245,7 @@ bool bittrex::buy_limit(
   const static string sl_url=
     "https://bittrex.com/api/v1.1/market/buylimit?";
   string url=sl_url;
-  url+="market="+market.name;
+  url+="market="+market.data.name;
   url+="&quantity="+strip(lexical_cast<string>(qty));
   url+="&rate="+strip(lexical_cast<string>(rate));
   if(ioc)
@@ -191,24 +275,32 @@ bool bittrex::sell_limit(
     bool ioc
     )
 {
-  assert(market.f_coin==sym);
-  money_t rate(market.bid);
+  assert(market.data.sym==sym);
+  money_t rate(market.data.bid);
   cout << "market: " << market << endl;
   money_t total(qty*rate);
+  balance_t const &cur_bal=balance_t::get(market.data.cur);
+  balance_t const &sym_bal=balance_t::get(market.data.sym);
+  cout << "qty; " << qty << endl;
+  cout << "bal: " << sym_bal.bal << endl;
+  qty=min(qty,sym_bal.bal);
   cout 
     << "sell " << money_t(qty) << sym
-    << " at " << money_t(market.bid)
-    << " on " << market.name
+    << " at " << money_t(market.data.bid)
+    << " on " << market.data.name
     << " for " << total
     << " ioc: " << ioc
     << endl
     ;
+
   const static string sl_url=
     "https://bittrex.com/api/v1.1/market/selllimit?";
   string url=sl_url;
-  url+="market="+market.name;
+  url+="market="+market.data.name;
   url+="&quantity="+strip(lexical_cast<string>(qty));
-  url+="&rate="+strip(lexical_cast<string>(money_t(market.bid)));
+  url+="&rate="+strip(lexical_cast<string>(money_t(market.data.bid)));
+
+
   if( ioc )
     url+="&timeInForce=IOC";
   url+="&";
@@ -267,21 +359,21 @@ namespace {
   void save_json(const string &fname, const json &json) {
     assert(fname.length());
     ofstream ofile(fname.c_str());
-    if(!ofile) {
-      cerr << "unable to save json!";
-    } else {
-      ofile << setw(4) << json << endl;
-      if(!ofile) {
-        cerr << "unable to save json!";
-      }
-    }
+    if(!ofile)
+      xthrowre("open:"+fname+strerror(errno));
+    stringstream str;
+    str << setw(4) << json << endl;
+    string text=str.str();
+    ofile<<text;
+    if(!ofile)
+      xthrowre("error writing "+fname);
   };
 }
 const coin::balance_l bittrex::load_balances()
 {
-  balance_l temp;
   const static string gb_url=
     "https://bittrex.com/api/v1.1/account/getbalances?";
+  cout  << "about to send request" << endl;
   string page = web::load_hmac_page(gb_url);
   json jpage=json::parse(page);
   if(!jpage.at("success")) {
@@ -291,11 +383,14 @@ const coin::balance_l bittrex::load_balances()
   };
   jpage=*jpage.find("result");
   save_json("balance.json",jpage);
+  balance_l temp;
   for( json bal : jpage ) {
-    temp.push_back(balance_t(bal));
+    if(bal.at("Currency")=="BTXCRD")
+      continue;
+    balance_t obj(bal);
+    temp.push_back(obj);
   };
   sort(temp.begin(),temp.end());
-  // cout << "read " << temp.size() << " balances" << nl;
   return balance_l(temp.rbegin(),temp.rend());
 };
 const market_l bittrex::load_markets() {
@@ -316,16 +411,16 @@ const market_l bittrex::load_markets() {
   jpage=*res_it;
   save_json("markets.json",jpage);
   market_l markets;
-  from_json(jpage,markets);
-  ofstream ofile("log/markets.log",ofstream::app|ofstream::out);
-  ofile << "new read: " << time(0) << endl;
+  coin::from_json(jpage,markets);
+  cout << markets.size() << " markets loaded" << endl;
+  market_l selected;
   for( auto &market : markets )
   {
-    if( market.t_coin == "BTC" || market.f_coin=="BTC" )
-      ofile << market << endl;
+    if( market.data.cur == "BTC" || market.data.sym=="BTC" )
+      selected.push_back(market);
   };
-  ofile << endl << endl;
-  return markets;
+  cout << selected.size() << " markets selected" << endl;
+  return selected;
 };
 void bittrex::cancel_order(const string &id)
 {
@@ -358,14 +453,33 @@ void bittrex::dump_orders() {
   cout << setw(4) << json::parse(page) << endl;
 };
 
-order_t::~order_t() {
+namespace bittrex {
+  order_l get_order( const string& uuid );
+};
+order_l bittrex::get_order( const string& uuid )
+{
+  const static string url( api_url + "account/getorder?" );
+  string my_url=url+"uuid="+uuid+"&";
+  if ( show_urls )
+  {
+    xexpose(my_url);
+  };
+  string page = web::load_hmac_page( my_url );
+  auto jpage = json::parse( page );
+  save_json("order.json",jpage);
+  jpage = jpage[ "result" ];
+  order_l orders;
+  order_t order;
+  coin::from_json( jpage, order );
+  orders.push_back( order );
+  return orders;
 };
 order_l bittrex::get_order_history( const string& msg )
 {
   const static string url( api_url + "account/getorderhistory?" );
   if ( show_urls )
   {
-    cout << "url: " << url << endl;
+    xexpose(url);
   };
   string page = web::load_hmac_page( url );
   auto jpage = json::parse( page );

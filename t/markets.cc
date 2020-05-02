@@ -13,20 +13,20 @@ using namespace util;
 
 
 int xmain(int argc, char**argv) {
-  using coin::market_l;
-  cerr << "Loading Markets" << endl;
-  const auto &bals=balance_l::get_balances();
-  vector<string> syms;
-  for( auto &b: bals )
-  {
-    syms.push_back(b.sym);
-  };
-  const auto &markets=market_l::get_markets();
-  for( auto &m: markets )
-  {
-    if(m.f_coin == "BTC" && contains(syms,m.t_coin))
-      cout << m << endl;
-  };
+//     using coin::market_l;
+//     cerr << "Loading Markets" << endl;
+//     const auto &bals=balance_t::get_balances();
+//     vector<string> syms;
+//     for( auto &b: bals )
+//     {
+//       syms.push_back(b.sym);
+//     };
+//     const auto &markets=market_t::get_markets();
+//     for( auto &m: markets )
+//     {
+//       if(m.f_coin == "BTC" && contains(syms,m.t_coin))
+//         cout << m << endl;
+//     };
   return 0;
 };
 int main(int argc, char**argv) {
