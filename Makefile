@@ -1,22 +1,4 @@
-
 default: $(shell cat etc/default_target)
-
-test_bal: all
-	./bal
-
-test_closeout: all
-	./closeout
-
-#    
-#    test: test_prices
-
-#test_2db: all test_bals2db test_mkts2db
-	
-test_ppjson: all
-
-
-all:
-
 
 #Make
 MAKEFLAGS:= -Rr --warn-undefined-variable
@@ -30,17 +12,11 @@ CXXFLAGS=@cxxflags
 #AR
 AR:= ar
 
-#CPP
-CPPFLAGS = -I$(HOME)/include
-CPPFLAGS += -Iinc
-CPPFLAGS += -DWITH_ICU 
-CPPFLAGS += -DSYSCONFDIR="\"/home/rfp/stow/bx/etc\""
-$(shell echo $(CPPFLAGS) > cppflags)
 CPPFLAGS=  -MD -MT $@ @cppflags
 #LD
 LDFLAGS += -L$(HOME)/lib
 LDFLAGS += -g -L. 
-
+$(shell echo $(LDFLAGS) > ldflags)
 LDLIBS := -Wl,--start-group
 LDLIBS += -lcoin
 LDLIBS += -lcurl -lcurlpp
@@ -97,7 +73,7 @@ $(TESTS): %: t/%.o libcoin.a
 
 test: $(TESTS)
 
-all: $(TESTS)
+all: tags $(TESTS)
 
 
 CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt --language-force=c++
