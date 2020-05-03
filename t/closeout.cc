@@ -160,7 +160,7 @@ int xmain(int argc, char**argv)
           res=bittrex::simple_xact (
               mkt,
               false,
-              mkt.yield(min_trans*1.02,"BTC",bal.sym,true),
+              mkt.yield(min_trans*1.02,bal.sym,"BTC",true),
               mkt.bid(),
               true
               );
