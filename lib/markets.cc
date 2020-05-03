@@ -64,7 +64,7 @@ money_t market_t::conv(money_t amount, const sym_t &from, const sym_t &to, bool 
 money_t market_t::conv2(money_t amount, const sym_t &from, const sym_t &to, bool neutral) {
   if(from==to)
     return amount;
-  market_l list=market_t::get(from,to);
+  market_l list=market_t::get(from,to,false);
   if(list.size())
     return conv(amount, from, to);
   amount=conv(amount,from,"BTC");

@@ -7,12 +7,12 @@ namespace fmt {
 	{
 	};
 	int pct_t::get_width() const {
-		return 8;
+		return 9;
 	};
 	string pct_t::fmt() const {
 		const static string sign("%");
 		char buf[12];
-		xassert(get_width()==8);
+		xassert(get_width()==9);
 		snprintf(buf,sizeof(buf),"%7.3f",100*val);
 		return buf+sign;
 	};

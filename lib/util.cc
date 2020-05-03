@@ -6,6 +6,7 @@
 #include <string.h>
 #include <assert.h>
 #include <sys/stat.h>
+#include <sstream>
 #include <boost/lexical_cast.hpp>
 #include <dbg.hh>
 
@@ -23,7 +24,11 @@ string util::strip(const string &str)
 };
 string util::read_file(const char *name)
 {
+  xtrace("reading: " << name << endl);
 	ifstream file(name);
+  if(!file)
+    xthrowre("failed to read file " << name << ":" << strerror(errno));
+  xexpose((bool)file);
 	std::stringstream buf;
 	buf << file.rdbuf();
 	string res=buf.str();
@@ -56,11 +61,13 @@ int util::open_log(const string &in_fn)
   string fn(in_fn);
   for(int i=100;i<1000;i++)
   {
-    if(stat(fn.c_str(),&stat_buf)<0 && errno==ENOENT)
-      return xopen(fn.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
-    
+    int res=stat(fn.c_str(),&stat_buf);
+    if( res && errno==ENOENT ) {
+      if(in_fn != fn )
+        xrename(in_fn.c_str(),fn.c_str());
+      return xopen(in_fn.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
+    };
     fn=in_fn+"."+lexical_cast<string>(i);
-    xrename(in_fn.c_str(),fn.c_str());
   };
   xthrowre("clean your log dir, you have 1000 of them!");
 };
@@ -98,4 +105,11 @@ int util::xclose(int fd)
   if(res<0)
     assert(!"close failed");
   return res;
+};
+void util::split_stream(const string &logname) {
+  int fd=open_log(logname);
+  static util::fd_streambuf obuf(1,fd);
+  static util::fd_streambuf ibuf(2,fd);
+  cout.rdbuf(&obuf);
+  cerr.rdbuf(&ibuf);
 };

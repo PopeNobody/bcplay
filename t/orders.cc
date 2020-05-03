@@ -23,6 +23,19 @@ int main( int argc, char** argv )
 {
   try
   {
+    int tty=xdup(1);
+    xclose(0);
+    xopen("/dev/null",O_RDONLY);
+    xclose(1);
+    mkdir("log",0755);
+    int log=open_log("log/orders.log");
+    assert(log==1);
+    xdup2(1,2);
+    static fd_streambuf obuf(1,tty);
+    static fd_streambuf ibuf(2,tty);
+    cout.rdbuf(&obuf);
+    cerr.rdbuf(&ibuf);
+    cout << "log/orders.log:1:started\n";
     argv_t args( argv+1, argv+argc );
     if ( xmain( args ) )
       return 1;
@@ -41,3 +54,13 @@ int main( int argc, char** argv )
   }
   return 1;
 }
+#if 0
+  {
+    order_l ords;
+    string jtxt=util::read_file("log/openorders.json");
+    json jpage=json::parse(jtxt);
+    cout << setw(4) << jpage << endl;
+    coin::from_json(jpage,ords);
+    return 0;
+  }
+#endif

@@ -1,5 +1,7 @@
 #include <order.hh>
+#include <bittrex.hh>
 
+using bittrex::json_str;
 coin::order_t::order_t()
 {
 };
@@ -30,7 +32,7 @@ coin::order_t::~order_t()
 };
 ostream& coin::order_t::stream( ostream& lhs, int ind ) const
 {
-  lhs << setw(ind) << "" << "order: " << data.uuid << endl;
+  lhs << json_str(*this) << endl;
   return lhs;
 };
 coin::order_t &coin::order_t::operator=(const coin::order_t &rhs)

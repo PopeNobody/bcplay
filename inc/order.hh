@@ -3,7 +3,6 @@
 
 #include <coinfwd.hh>
 #include <money.hh>
-#include <json.hh>
 #include <fmt.hh>
 
 namespace coin {
@@ -43,12 +42,18 @@ namespace coin {
     order_t(const data_t &data);
     order_t(const order_t &rhs);
     order_t& operator=(const order_t &rhs);
-    const string &uuid()
+    const string &uuid() const
     {
       return data.uuid;
     };
+    bool is_open() const {
+      return data.is_open;
+    };
     virtual ~order_t();
 		virtual ostream &stream(ostream &lhs, int ind=0) const;
+    const data_t &get_data() const {
+      return data;
+    };
     private:
     data_t data;
 	};

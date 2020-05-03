@@ -45,6 +45,7 @@ using std::ofstream;
 using std::ifstream;
 using std::ostream;
 using std::ostringstream;
+using std::stringstream;
 using std::pair;
 using std::right;
 using std::runtime_error;

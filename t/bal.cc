@@ -36,17 +36,21 @@ goals_t const& mk_goals()
 {
   static goals_t res;
   
+  res["ADA"]   =  2250;
+  res["BAT"]   =  2250;
+  res["DASH"]  =  2250;
+  res["ETC"]   =  2250;
+  res["ETH"]   =  2250;
+  res["LBC"]   =  2250;
+  res["ZEC"]   =  2250;
+  res["ZEN"]   =  2250;
+  
+  res["LTC"]   =  8000;
+  res["XLM"]   =  8000;
 
-res["ADA"]  =  1000;
-
-res["BAT"]  =  2000;   res["DASH"]  =  2000;  res["ETC"]  =  2000;  res["ETH"]  =  2000;
-res["ZEC"]  =  2000;   res["ZEN"]   =  2000;  res["LBC"]  =  2000;
-
-res["LTC"]  =  7500;
-res["XLM"]  =  7500;
-res["BSV"]  =  20000; 
-res["BCH"]  =  10000;
-res["BTC"]  =  40000; 
+  res["BCH"]   =  22000;
+  res["BSV"]   =  22000;
+  res["BTC"]   =  22000;
 
   double tot = 0;
   for ( auto goal : res )
@@ -85,7 +89,7 @@ res["BTC"]  =  40000;
   return res;
 };
 
-using bittrex::xact_limit;
+using bittrex::simple_xact;
 
 struct todo_t
 {
@@ -100,13 +104,13 @@ struct todo_t
   todo_t(const sym_t &sym=sym_t())
     :sym(sym)
   {
-    assert(!bal);
-    assert(!pct);
-    assert(!btc);
-    assert(!usd);
-    assert(!pct_goal);
-    assert(!btc_goal);
-    assert(!btc_del);
+    xassert(!bal);
+    xassert(!pct);
+    xassert(!btc);
+    xassert(!usd);
+    xassert(!pct_goal);
+    xassert(!btc_goal);
+    xassert(!btc_del);
   };
   todo_t &operator+=(const todo_t &rhs)
   {
@@ -124,12 +128,13 @@ struct todo_t
     return *this;
   };
 };
+typedef std::map< sym_t, todo_t > todo_m;
 struct todo_more {
   bool operator()( const todo_t &lhs, const todo_t &rhs )
   {
     if((lhs.btc_del) > (rhs.btc_del))
       return true;
-    if((rhs.btc_del) > (lhs.btc_del))
+    if((lhs.btc_del) < (rhs.btc_del))
       return false;
     return lhs.sym < rhs.sym;
   };
@@ -139,7 +144,7 @@ struct todo_less {
   {
     if((lhs.btc_del) < (rhs.btc_del))
       return true;
-    if((rhs.btc_del) < (lhs.btc_del))
+    if((lhs.btc_del) > (rhs.btc_del))
       return false;
     return lhs.sym < rhs.sym;
   };
@@ -149,9 +154,9 @@ struct todo_size {
   {
     if(abs(lhs.btc_del) > abs(rhs.btc_del))
       return true;
-    if(abs(rhs.btc_del) > abs(lhs.btc_del))
+    if(abs(lhs.btc_del) < abs(rhs.btc_del))
       return false;
-    return lhs.sym < rhs.sym;
+    return lhs.sym > rhs.sym;
   };
 };
 typedef std::vector<todo_t> todo_v;
@@ -183,15 +188,18 @@ ostream &operator<<(ostream &lhs, const header_t &head)
     << right
     << "|" << setw( monw ) << "spot$ "
     << "|" << setw( monw ) << "spotB$ "
+    << "|"
     << "|" << setw( pctw ) << "cur% "
-    << "|" << setw( monw ) << "cur$ "
-    << "|" << setw( monw ) << "curB$ "
     << "|" << setw( pctw ) << "goal% "
+    << "|" << setw( pctw ) << "del%"
+    << "|"
+    << "|" << setw( monw ) << "cur$ "
     << "|" << setw( monw ) << "goal$ "
+    << "|" << setw( monw ) << "del$"
+    << "|"
+    << "|" << setw( monw ) << "curB$ "
     << "|" << setw( monw ) << "goalB$ "
     << "|" << setw( monw ) << "delB$"
-    << "|" << setw( monw ) << "del$"
-    << "|" << setw( pctw ) << "del%"
     << "|";
   string str=text.str();
   if(head.dashes) {
@@ -228,23 +236,39 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
     << right
     << setw(monw) << spot_usd << "|"
     << setw(monw) << spot_btc << "|"
+    << "|"
     << setw(pctw) << rhs.pct << "|"
-    << setw(monw) << rhs.usd << "|"
-    << setw(monw) << rhs.btc << "|"
     << setw(pctw) << rhs.pct_goal << "|"
+    << setw(pctw) << (rhs.pct_goal-rhs.pct) << "|"
+    << "|"
+    << setw(monw) << rhs.usd << "|"
     << setw(monw) << rhs.btc_goal*usd_spot << "|"
+    << setw(monw) << rhs.btc_del*usd_spot << "|"
+    << "|"
+    << setw(monw) << rhs.btc << "|"
     << setw(monw) << rhs.btc_goal << "|"
     << setw(monw) << rhs.btc_del << "|"
-    << setw(monw) << rhs.btc_del*usd_spot << "|"
-    << setw(pctw) << pct_t(rhs.btc_del/rhs.btc) << "|"
     ;
   return lhs;
 };
+void show_todos(const todo_t &btc, todo_v &todos, const todo_t &tot_all)
+{
+  cout << " " << header_t(btc,true) << endl;
+  cout << " " << header_t(btc,false) << endl;
+  cout << " " << header_t(btc,true) << endl;
+  if(btc.sym.size())
+    cout << " " << btc << endl;
+  for( auto &todo : todos ) {
+    cout << " " << todo << endl;
+  };
+  cout << "%" << tot_all << endl;
+  cout << " " << header_t(btc,true) << endl;
+};
+todo_m todo_map;
 todo_v mk_todos()
 {
+  todo_map.clear();
   static auto const& goals = mk_goals();
-  typedef std::map< sym_t, todo_t > todo_m;
-  todo_m todo_map;
   for ( auto &g : goals )
   {
     todo_map[ g.first ].sym = g.first;
@@ -252,6 +276,7 @@ todo_v mk_todos()
   };
   market_t::load_markets();
   money_t tot_btc = 0.0;
+  auto &btc=todo_map["BTC"];
   for ( auto &b : balance_l::load_balances() )
   {
     if ( 
@@ -269,7 +294,6 @@ todo_v mk_todos()
     };
   }
   {
-    auto &btc=todo_map["BTC"];
     {
       todo_v todos;
       for ( auto &item : todo_map ) {
@@ -282,59 +306,37 @@ todo_v mk_todos()
         if(todo.sym != "BTC")
           todos.push_back(todo);
       };
-      sort(todos.begin(),todos.end(),todo_less());
-
       {
         vector<sym_t> avoid;
-        todo_v willdo, maydo;
         int i=0;
-        todo_t tot_all("Total");
-        tot_all+=btc;
-        cout << " " << header_t(btc,true) << endl;
-        cout << " " << header_t(btc,false) << endl;
-        cout << " " << header_t(btc,true) << endl;
-        cout << " " << btc << endl;
-        money_t min_pos=min_size();
-        money_t max_neg=-min_size();
-        if( abs(btc.btc_del)>=2*min_size() ) {
-          if(btc.btc_del<0) {
-            min_pos-=5/usd_spot;
-            max_neg-=5/usd_spot;
-          } else {
-            min_pos+=5/usd_spot;
-            max_neg+=5/usd_spot;
-          };
-        };
-        while(i<todos.size())
         {
-          auto &todo=todos[i++];
-          tot_all+=todo;
-          cout << " " << todo << endl;
-          auto pos=find(avoid.begin(), avoid.end(), todo.sym);
-          if(  pos!= avoid.end() )
-            continue;
-          if( (todo.btc_del < max_neg) || (todo.btc_del > min_pos) )
-            willdo.push_back(todo);
-          if( (
-                (todo.btc_del < max_neg+8/usd_spot)
-                && 
-                ( btc.btc_del > min_size() )
-              )
-              ||
-              (
-               (todo.btc_del > min_pos-8/usd_spot)
-               &&
-               ( btc.btc_del < -min_size() )
-               )
-            )
-            maydo.push_back(todo);
+          todo_t tot_all("Total");
+          if(btc.btc_del<0) {
+            cout << "sort with more" << endl;
+            sort(todos.begin(),todos.end(),todo_more());
+          } else {
+            cout << "sort with less" << endl;
+            sort(todos.begin(),todos.end(),todo_less());
+          };
+          for( auto &todo : todos  )
+            tot_all+=todo;
+          tot_all+=btc;
+          show_todos(btc, todos, tot_all);
         };
-        cout << "%" << tot_all << endl;
-        cout << " " << header_t(btc,true) << endl;
-        xexpose(willdo.size());
-        xexpose(maydo.size());
-        if(willdo.size())
+        {
+          todo_t tot_all("Total");
+          todo_v willdo;
+          while(i<todos.size())
+          {
+            auto &todo=todos[i++];
+            if( abs(todo.btc_del) >= min_size() ) {
+              tot_all+=todo;
+              willdo.push_back(todo);
+            };
+          };
+          show_todos(todo_t(),willdo,tot_all);
           return willdo;
+        }
       };
     }
     return todo_v();
@@ -342,84 +344,74 @@ todo_v mk_todos()
 };
 int xmain( const argv_t &args )
 {
-  bool loop=false;
   for( auto arg : args ) {
     if( arg == "-y" ) {
       bittrex::fake_buys=false;
       cout << "really gonna do it!" << endl;
-    } else if ( arg == "-l" ) {
-      loop=true;
-      cout << "gonna loop" << endl;
     } else {
       cerr << "bad arg: " << arg << endl;
       exit(1);
     };
   };
-  sym_t pivot="BTC";
   int trades=0;
-  while(true) {
-    time_t now=time(0);
-    char buffer[1024];
-    usd_spot = market_t::conv(1, "BTC","USD");
-    auto todos=mk_todos();
-    for( auto & todo: todos )
-    {
-      if( todo.sym == "BTC" )
-        continue;
-      market_l marks=market_t::get(todo.sym,"BTC");
-      if(marks.size() != 1) {
-        cout << "cannot do " << todo.sym << " no BTC market";
-        return 1;
-      };
-    };
-    if(todos.size() ) {
-      for( auto b(todos.begin()), e(todos.end()); b!=e ; b++ )
-      {
-        if( b->sym == pivot )
-          continue;
-        
-        pct_t change=abs(b->btc/b->btc_del);
-        money_t qty=(b->bal/change.get());
-        bool buy=(b->btc_del>0);
-        if(buy)
-          continue;
-        if(b->sym == "BSV")
-          continue;
-        cout
-          << (buy?"buy  ":"sell ")
-          << b->sym
-          << abs(qty)
-          << " for BTC."
-          << endl;
-        auto mkts=market_t::get(b->sym,"BTC");
-        cout << mkts << endl;
-        if( abs(b->btc_del) < (5/usd_spot) ) {
-          cout << "too small" << endl;
-          continue;
-        };
-
-//           if(bittrex::fake_buys)
-//             continue;
-        xact_limit(
-            pivot,
-            b->sym,
-            min(b->btc_del*usd_spot,money_t(100)),
-            "USD",
-            true
-            );
-        ++trades;
-        break;
-      };
-      if(!(loop||bittrex::fake_buys))
-      {
-        mk_todos();
-      };
-    };
-    if(!loop)
-      break;
-    sleep(15-(time(0)%15));
-    
+  time_t now=time(0);
+  char buffer[1024];
+  usd_spot = market_t::conv(1, "BTC","USD");
+  auto todos=mk_todos();
+  if(!todos.size() ) {
+    cout << "nothing to do!" << endl;
+    return 0;
   };
+
+  xassert(todo_map.find("BTC")!=todo_map.end());
+  auto btc=todo_map["BTC"];
+  sort(todos.begin(),todos.end(),todo_more());
+  auto itr=todos.begin();
+  if(btc.btc_del < 0 ) {
+    cout << " " << todos.front() << endl;
+    xassert(todos.front().btc_del>0);
+    xassert(itr->sym==todos.front().sym);
+  } else {
+    cout << " " << todos.back()  << endl;
+    itr=todos.end()-1;
+    xassert(todos.back().btc_del<0);
+    xassert(itr->sym==todos.back().sym);
+  };
+
+  auto &todo=*itr; 
+  auto mkts=market_t::get("BTC",todo.sym);
+  auto &mkt=mkts[0];
+  cout << endl << mkt << endl << endl;
+  xassert(mkt.cur()=="BTC");
+  money_t btc_qty=(todo.btc_goal-todo.btc);
+  money_t usd_qty=btc_qty*usd_spot;
+  if(usd_qty > 100) {
+    usd_qty=100;
+    btc_qty=usd_qty/usd_spot;
+  };
+  money_t price=mkt.yield(1,todo.sym,"BTC",false);
+  money_t ots_qty=btc_qty/price;
+  xexpose(btc_qty);
+  xexpose(usd_qty);
+  xexpose(ots_qty);
+  xexpose(price);
+
+  string uuid=simple_xact( mkt, true, ots_qty, price, true);
+  if(!uuid.size()) {
+    xcarp("empty uuid returned.  faking buys?");
+    return 0;
+  };
+  order_l ords;
+  while(true)
+  {
+    ords=bittrex::get_order(uuid);
+    if(ords.size())
+      break;
+    xcarp("no order returned!");
+    sleep(1);
+  };
+  auto &ord=ords[0];
+
   return 0;
 };
 

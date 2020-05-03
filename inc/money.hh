@@ -25,6 +25,10 @@ namespace coin {
 			{
 				return !!*this;
 			};
+      explicit operator double() const
+      {
+        return get();
+      };
 			money_t operator-() const
 			{
 				return -val;

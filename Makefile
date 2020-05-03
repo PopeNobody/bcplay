@@ -1,8 +1,13 @@
 
 default: $(shell cat etc/default_target)
 
+test_orders: all
+	./orders
 test_bal: all
 	./bal
+
+test_get_open_orders: all
+	./get_open_orders
 
 test_closeout: all
 	./closeout

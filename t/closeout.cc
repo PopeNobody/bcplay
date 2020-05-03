@@ -100,11 +100,16 @@ int xmain(int argc, char**argv)
       try {
         if( bal.btc < min_trans*0.9 ) {
           cout << "we must buy first." << endl;
+          xexpose(mkt.name());
+          xexpose(mkt.cur());
+          xexpose(mkt.sym());
+          xexpose(mkt.bid());
+          xexpose(mkt.ask());
           res=bittrex::simple_xact (
-              mkts[0],
+              mkt,
               true,
-              2*mkt.yield(min_trans*1.02,"BTC",bal.sym,true),
-              0.5*mkt.yield(1,mkt.sym(),mkt.cur(),false),
+              mkt.yield(min_trans*1.02,"BTC",bal.sym,true),
+              mkt.ask(),
               true
               );
           while(res.size())
@@ -112,16 +117,23 @@ int xmain(int argc, char**argv)
             order_l ords=bittrex::get_order(res);
             xexpose(ords.size());
             xexpose(ords);
+            if( !ords[0].is_open() )
+              break;
             break;
           };
           break;
         } else {
           cout << "we can sell now." << endl;
+          xexpose(mkt.name());
+          xexpose(mkt.cur());
+          xexpose(mkt.sym());
+          xexpose(mkt.bid());
+          xexpose(mkt.ask());
           res=bittrex::simple_xact (
-              mkts[0],
+              mkt,
               false,
-              bal.bal,
-              2*mkt.yield(1,mkt.sym(),mkt.cur(),false),
+              bal.btc,
+              mkt.bid(),
               false
               );
           while(res.size())
@@ -129,7 +141,9 @@ int xmain(int argc, char**argv)
             order_l ords=bittrex::get_order(res);
             xexpose(ords.size());
             xexpose(ords);
-            break;
+            if( !ords[0].is_open() ) {
+              break;
+            };
           };
           break;
         };
@@ -138,23 +152,54 @@ int xmain(int argc, char**argv)
         throw;
       };
     } else if( bal.sym == mkt.cur() && mkt.sym() == "BTC" ) {
-#if 0
-      // Buy to reduce bal, sell to increase it.
+      // Sell to increase bal, buy to reduce it.
       string res;
-      try { 
-        // we are ready to buy.
-        res=bittrex::simple_xact (
-            mkts[0],
-            true,
-            0.0005,
-            1/mkt.data.bid,
-            true
-            );
+      try {
+        if( bal.btc < min_trans*0.9 ) {
+          cout << "we must buy first." << endl;
+          res=bittrex::simple_xact (
+              mkt,
+              false,
+              mkt.yield(min_trans*1.02,"BTC",bal.sym,true),
+              mkt.bid(),
+              true
+              );
+          while(res.size())
+          {
+            order_l ords=bittrex::get_order(res);
+            xexpose(ords.size());
+            xexpose(ords);
+            if( !ords[0].is_open() ) {
+              break;
+            };
+            break;
+          };
+          break;
+        } else {
+          cout << "we can sell now." << endl;
+          xexpose(mkt.bid());
+          xexpose(mkt.ask());
+          res=bittrex::simple_xact (
+              mkt,
+              true,
+              mkt.yield(bal.bal,bal.sym,"BTC",false)*0.997,
+              mkt.ask(),
+              true
+              );
+          while(res.size())
+          {
+            order_l ords=bittrex::get_order(res);
+            xexpose(ords.size());
+            if( !ords[0].is_open() ) {
+              break;
+            };
+          };
+          break;
+        };
       } catch ( exception & ex ) {
         xexpose(ex.what());
         throw;
       };
-#endif
     } else {
       xthrowre("WTF?");
     };

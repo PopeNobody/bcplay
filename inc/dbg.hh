@@ -28,7 +28,7 @@ namespace dbg
 #define dbg() __FILE__ << ":" << __LINE__ << ":"
 #define  xthrow(x,y) do{ \
   stringstream msg; \
-  msg << "xthrow:" << endl << dbg() << y << endl; \
+  msg << "xthrow:" << endl << dbg() << y; \
   throw x(msg.str()); \
 }while(false)
 #define  xthrowre(y) xthrow(runtime_error,y)
