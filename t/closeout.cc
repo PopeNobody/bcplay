@@ -99,7 +99,7 @@ int xmain(int argc, char**argv)
       string res;
       try {
         if( bal.btc < min_trans*0.9 ) {
-          cout << "we must get more " << bal.sym << " first." << endl;
+          xtrace( "we must buy more " << bal.sym << " before we can sell it!" );
           xexpose(mkt.name());
           xexpose(mkt.cur());
           xexpose(mkt.sym());
@@ -123,7 +123,7 @@ int xmain(int argc, char**argv)
           };
           break;
         } else {
-          cout << "we can sell now." << endl;
+          xtrace( "we have enough " << bal.sym << " to trade out" );
           xexpose(mkt.name());
           xexpose(mkt.cur());
           xexpose(mkt.sym());
@@ -156,7 +156,7 @@ int xmain(int argc, char**argv)
       string res;
       try {
         if( bal.btc < min_trans*0.9 ) {
-          cout << "we must buy first." << endl;
+          xtrace( "we must trade some BTC for " << bal.sym << " first" );
           res=bittrex::simple_xact (
               mkt,
               false,
@@ -176,7 +176,7 @@ int xmain(int argc, char**argv)
           };
           break;
         } else {
-          cout << "we can sell now." << endl;
+          xtrace( "we have enough " << bal.sym << " to trade out" );
           xexpose(mkt.bid());
           xexpose(mkt.ask());
           res=bittrex::simple_xact (
