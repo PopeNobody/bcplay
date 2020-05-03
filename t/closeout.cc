@@ -99,7 +99,7 @@ int xmain(int argc, char**argv)
       string res;
       try {
         if( bal.btc < min_trans*0.9 ) {
-          cout << "we must buy first." << endl;
+          cout << "we must get more " << bal.sym << " first." << endl;
           xexpose(mkt.name());
           xexpose(mkt.cur());
           xexpose(mkt.sym());

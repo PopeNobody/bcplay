@@ -1,4 +1,3 @@
-
 default: $(shell cat etc/default_target)
 
 test_orders: all
