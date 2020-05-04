@@ -105,7 +105,7 @@ struct todo_size {
 typedef std::vector<todo_t> todo_v;
 typedef vector<string> argv_t;
 money_t usd_spot =0;
-money_t usd_min_size=10;
+money_t usd_min_size=20;
 money_t min_size() {
   return usd_min_size/usd_spot;
 };
