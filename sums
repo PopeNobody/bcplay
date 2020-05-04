@@ -1,6 +1,6 @@
 6009bd2f066247f5c1f3d1be4f3aeec0  .gitignore
 f644328b0070d83878c420cfd2be65ec  GNUmakefile
-b9766ab16ebd7ec1a0196e9ed1917da2  Makefile
+a41b4c2085a878868b7379c6545d6a38  Makefile
 650be678fd28db6001ec1c5c9e2fbd97  all_deps.pl
 d41d8cd98f00b204e9800998ecf8427e  ar_flags
 288075a4e9ea1f1f58a73fc7063f736a  branch
@@ -41,6 +41,7 @@ e1892f7133cd862a956d1d74741ee557  lib/money.cc
 eb56a9098d1f2e8ab92f7070f8cbbe10  lib/util.cc
 4e0447ea4b1223bcea608813f783517b  lib/web_api.cc
 b0ba10d737630ea4fe3137ab3cca1585  setup.sh
+8d16c8cb756a02a4ad76f4859d917b62  sums
 936be55eaaa05e5572b2a4a6f079f10f  t/.cvsignore
 fd8158b93717af6b17f33a2ca17f8b39  t/bal.cc
 2acea07eeb46c597e7ec9e9d26184c55  t/can_orders.cc
