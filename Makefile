@@ -1,24 +1,5 @@
 default: $(shell cat etc/default_target)
 
-test_orders: all
-	./orders
-test_bal: all
-	./bal
-
-test_get_open_orders: all
-	./get_open_orders
-
-test_closeout: all
-	./closeout
-
-#    
-#    test: test_prices
-
-#test_2db: all test_bals2db test_mkts2db
-	
-test_ppjson: all
-
-
 all:
 
 

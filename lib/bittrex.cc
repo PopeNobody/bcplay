@@ -142,6 +142,7 @@ string bittrex::json_str(order_t const &ord)
 void coin::from_json(const json &j, order_t& o )
 {
   xtrace(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  xassert( !j.is_null() );
   order_t::data_t tmp;
 #define extract( t, x, y )  if(j.find(y)!=j.end()) { coin::from_json(j.at(y),tmp.x); }
   list( extract );
@@ -241,6 +242,7 @@ void coin::from_json(const json &j, money_t &val) {
 };
 void coin::from_json(const json &j, balance_t &bal) {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  xassert(!j.is_null());
   using coin::market_l;
   try {
     balance_t res;
@@ -267,6 +269,7 @@ void coin::from_json(const json &j, balance_t &bal) {
 void coin::from_json(const json &j, market_t &m)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  xassert(!j.is_null());
   string name=j.at("MarketName");
   money_t bid=j.at("Bid");
   money_t ask=j.at("Ask");
@@ -288,6 +291,7 @@ string bittrex::simple_xact (
  )
 {
   string act=(buy?"buy":"sell");
+  xassert(qty>=0);
   money_t total=qty*rate*1.002;
   cout 
     << setw(5) << act
@@ -310,10 +314,8 @@ string bittrex::simple_xact (
   url+="&";
   if(show_urls)
     cout << "url: " << url << endl;
-  if(fake_buys || fake_loads){
-    cout << " not gonna do it!" << endl;
-    return string();
-  };
+  if(fake_buys || fake_loads)
+    return "faked";
 
   string page = web::load_hmac_page(url);
   auto jpage=json::parse(page);

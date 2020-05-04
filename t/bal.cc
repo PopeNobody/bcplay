@@ -386,19 +386,26 @@ int xmain( const argv_t &args )
   money_t btc_qty=(todo.btc_goal-todo.btc);
   money_t usd_qty=btc_qty*usd_spot;
   if(usd_qty > 100) {
+    xtrace("*** limiting purchase to $100");
     usd_qty=100;
     btc_qty=usd_qty/usd_spot;
   };
   money_t price=mkt.yield(1,todo.sym,"BTC",false);
   money_t ots_qty=btc_qty/price;
-  xexpose(btc_qty);
-  xexpose(usd_qty);
-  xexpose(ots_qty);
-  xexpose(price);
-
-  string uuid=simple_xact( mkt, true, ots_qty, price, true);
-  if(!uuid.size()) {
-    xcarp("empty uuid returned.  faking buys?");
+  xtrace( ""
+      << "qty: " << ots_qty << todo.sym
+      << " | " << btc_qty << "B$ " 
+      << usd_qty << "$"
+      << " | " << "price: " << price 
+      << todo.sym << "/BTC"
+      );
+  string uuid;
+  if( ots_qty>0 ) {
+    uuid=simple_xact( mkt, true, ots_qty, price, true);
+  } else {
+    uuid=simple_xact( mkt, false, -ots_qty, price, true);
+  };
+  if(uuid=="faked") {
     return 0;
   };
   order_l ords;

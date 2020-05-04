@@ -158,7 +158,7 @@ money_t market_t::yield(money_t qty, sym_t f, sym_t t, bool neutral)
     return qty*rate;
   } else {
     xthrow(runtime_error,
-        "market " << mkt.name() << " cannot conver from " << f << " to " << t);
+        "market " << mkt.name() << " cannot convert from " << f << " to " << t);
   };
 };
 bool market_t::split_name(const string &name, string &cur, string &sym)
