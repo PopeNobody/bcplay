@@ -1,5 +1,6 @@
 #include <bittrex.hh>
 #include <fmt.hh>
+#include <json.hh>
 #include <typeinfo>
 #include <util.hh>
 #include <web_api.hh>
@@ -12,80 +13,22 @@ using namespace fmt;
 
 using namespace std;
 
-class goals_t : public map< sym_t, pct_t >
+typedef map<sym_t,double> goals_t;
+goals_t mk_goals()
 {
-public:
-  mapped_type& operator[]( const key_type& k )
+  goals_t res;
+  string text=util::read_file("etc/goals.json"); 
+  json data=json::parse(text);
+  double sum=0;
+  for( auto b(data.begin()), e(data.end()); b!=e; b++ )
   {
-    auto &res=map< sym_t, pct_t >::operator[]( k );
-    if(res.get()>0)
-     cerr << "warning: " << k << " set" << endl;
-    return res;
+    double&val=res[sym_t(b.key())];
+    val=(double)b.value();
+    sum+=val;
   };
-  mapped_type operator[]( const key_type& k ) const
-  {
-    auto pos = find( k );
-    if ( pos != end() )
-      return pos->second;
-    else
-      return 0;
+  for( auto &pair : res ) {
+    pair.second/=sum;
   };
-};
-
-goals_t const& mk_goals()
-{
-  static goals_t res;
-  
-  res["ADA"]   =  2250;
-  res["BAT"]   =  2250;
-  res["DASH"]  =  2250;
-  res["ETC"]   =  2250;
-  res["ETH"]   =  2250;
-  res["LBC"]   =  2250;
-  res["ZEC"]   =  2250;
-  res["ZEN"]   =  2250;
-  
-  res["LTC"]   =  8000;
-  res["XLM"]   =  8000;
-
-  res["BCH"]   =  22000;
-  res["BSV"]   =  22000;
-  res["BTC"]   =  22000;
-
-  double tot = 0;
-  for ( auto goal : res )
-  {
-    tot = tot + (double)goal.second;
-  };
-  cout << "tot: " << tot << endl;
-  for ( auto& goal : res )
-  {
-    goal.second = (double)goal.second / tot;
-  };
-  map<double,vector<string>> ranks;
-  for ( auto& goal : res )
-  {
-    ranks[goal.second.get()].push_back(goal.first);
-  };
-  int i=0;
-  for ( auto &item : ranks ) 
-  { 
-    auto &rank=item.first;
-    auto &ids=item.second;
-    sort(ids.begin(),ids.end());
-    auto itr(ids.begin());
-    while(itr!=ids.end()) {
-      cout << setw(8) << pct_t(item.first);
-      for( int i = 0; i < 10; i++ )
-      {
-        if(itr==ids.end())
-          break;
-        cout << left << setw(10) << *itr++;
-      };
-      cout << endl;
-    };
-  };
-  cout << endl << endl;
   return res;
 };
 
