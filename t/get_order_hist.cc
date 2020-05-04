@@ -19,6 +19,9 @@ using fmt::pct_t;
 int xmain(int argc, char**argv) {
   xcheckin();
   auto orders = bittrex::get_order_history("USD-RVN");
+  for( auto &order : orders ) {
+    cout << order << endl;
+  };
   return 0;
 };
 int main(int argc, char**argv)

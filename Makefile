@@ -1,5 +1,27 @@
 default: $(shell cat etc/default_target)
 
+test_orders: all
+	./orders
+test_bal: all
+	./bal
+
+test_get_open_orders: all
+	./get_open_orders
+
+test_closeout: all
+	./closeout
+
+#    
+#    test: test_prices
+
+#test_2db: all test_bals2db test_mkts2db
+	
+test_ppjson: all
+
+
+all:
+
+
 #Make
 MAKEFLAGS:= -Rr --warn-undefined-variable
 MAKEFLAGS:= $(shell touch etc/make_jobs_flag)
@@ -12,11 +34,17 @@ CXXFLAGS=@cxxflags
 #AR
 AR:= ar
 
+#CPP
+CPPFLAGS = -I$(HOME)/include
+CPPFLAGS += -Iinc
+CPPFLAGS += -DWITH_ICU 
+CPPFLAGS += -DSYSCONFDIR="\"/home/rfp/stow/bx/etc\""
+$(shell echo $(CPPFLAGS) > cppflags)
 CPPFLAGS=  -MD -MT $@ @cppflags
 #LD
 LDFLAGS += -L$(HOME)/lib
 LDFLAGS += -g -L. 
-$(shell echo $(LDFLAGS) > ldflags)
+
 LDLIBS := -Wl,--start-group
 LDLIBS += -lcoin
 LDLIBS += -lcurl -lcurlpp

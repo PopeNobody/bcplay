@@ -3,6 +3,11 @@
 #define util_hh util_hh
 
 #include <coinfwd.hh>
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string>
+
 
 namespace util {
   using std::streambuf;
@@ -64,26 +69,7 @@ namespace util {
 
     return res;
   }
-  //   	template<typename cont_t, typename itr_t>
-  //   	cont_t split(char sep, itr_t b, itr_t e)
-  //   	{
-  //   		cont_t res;
-  //   		if(b!=e) {
-  //   			do {
-  //   				auto s=find(b,e,sep);
-  //   				res.push_back(string(b,s));
-  //   				b=s;
-  //   				if(b!=e)
-  //   					++b;
-  //   			} while(b!=e);
-  //   		};
-  //   		return res;
-  //   	};
-  //   	template<typename cont_t>
-  //   	cont_t split(char sep, c_str str)
-  //   	{
-  //   		return split<cont_t>(sep,str.begin(),str.end());
-  //   	};
+  void split_stream(const string &logname);
   template<typename itr_t, typename val_t>
     bool contains(itr_t b, itr_t e, const val_t &val){
       while(b!=e) {
@@ -97,8 +83,17 @@ namespace util {
       return contains(begin(con),end(con),val);
     };
   string strip(const string &str);
+  bool exists(const string &fn);
   bool exists(const char *path);
   string read_file(const char *path);
+  ssize_t write_file(const char *name, const string &text);
+  string quote(const string &str);
+  int open_log(const string &in_fn);
+  int xrename(const char *ofn, const char *nfn);
+  int xdup2(int fd, int ofd);
+  int xdup(int fd);
+  int xopen(const char *fn, int flags, int mode=0644);
+  int xclose(int fd);
 };
 
 #endif

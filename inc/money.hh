@@ -4,9 +4,9 @@
 #include <fmt.hh>
 
 namespace coin {
-	class money_t;
-	ostream &operator<<(ostream &lhs,const money_t &);
-	class money_t {
+  using fmt::can_str;
+	class money_t : public can_str
+  {
 		double val;
 		public:
 			money_t(double val=0)
@@ -25,6 +25,10 @@ namespace coin {
 			{
 				return !!*this;
 			};
+      explicit operator double() const
+      {
+        return get();
+      };
 			money_t operator-() const
 			{
 				return -val;
@@ -49,7 +53,7 @@ namespace coin {
 				return val-lhs.val;
 			};
 			int get_width() const;
-			friend ostream &operator<<(ostream &lhs,const money_t &);
+			virtual ostream &stream(ostream &lhs,int ind=0) const;
 	};
 #define def_op(op) \
 			inline money_t operator op(double lhs, const money_t &rhs) \
