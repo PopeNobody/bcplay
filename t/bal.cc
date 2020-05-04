@@ -1,5 +1,6 @@
 #include <bittrex.hh>
 #include <fmt.hh>
+#include <json.hh>
 #include <typeinfo>
 #include <util.hh>
 #include <web_api.hh>
@@ -12,80 +13,22 @@ using namespace fmt;
 
 using namespace std;
 
-class goals_t : public map< sym_t, pct_t >
+typedef map<sym_t,double> goals_t;
+goals_t mk_goals()
 {
-public:
-  mapped_type& operator[]( const key_type& k )
+  goals_t res;
+  string text=util::read_file("etc/goals.json"); 
+  json data=json::parse(text);
+  double sum=0;
+  for( auto b(data.begin()), e(data.end()); b!=e; b++ )
   {
-    auto &res=map< sym_t, pct_t >::operator[]( k );
-    if(res.get()>0)
-     cerr << "warning: " << k << " set" << endl;
-    return res;
+    double&val=res[sym_t(b.key())];
+    val=(double)b.value();
+    sum+=val;
   };
-  mapped_type operator[]( const key_type& k ) const
-  {
-    auto pos = find( k );
-    if ( pos != end() )
-      return pos->second;
-    else
-      return 0;
+  for( auto &pair : res ) {
+    pair.second/=sum;
   };
-};
-
-goals_t const& mk_goals()
-{
-  static goals_t res;
-  
-  res["ADA"]   =  2250;
-  res["BAT"]   =  2250;
-  res["DASH"]  =  2250;
-  res["ETC"]   =  2250;
-  res["ETH"]   =  2250;
-  res["LBC"]   =  2250;
-  res["ZEC"]   =  2250;
-  res["ZEN"]   =  2250;
-  
-  res["LTC"]   =  8000;
-  res["XLM"]   =  8000;
-
-  res["BCH"]   =  22000;
-  res["BSV"]   =  22000;
-  res["BTC"]   =  22000;
-
-  double tot = 0;
-  for ( auto goal : res )
-  {
-    tot = tot + (double)goal.second;
-  };
-  cout << "tot: " << tot << endl;
-  for ( auto& goal : res )
-  {
-    goal.second = (double)goal.second / tot;
-  };
-  map<double,vector<string>> ranks;
-  for ( auto& goal : res )
-  {
-    ranks[goal.second.get()].push_back(goal.first);
-  };
-  int i=0;
-  for ( auto &item : ranks ) 
-  { 
-    auto &rank=item.first;
-    auto &ids=item.second;
-    sort(ids.begin(),ids.end());
-    auto itr(ids.begin());
-    while(itr!=ids.end()) {
-      cout << setw(8) << pct_t(item.first);
-      for( int i = 0; i < 10; i++ )
-      {
-        if(itr==ids.end())
-          break;
-        cout << left << setw(10) << *itr++;
-      };
-      cout << endl;
-    };
-  };
-  cout << endl << endl;
   return res;
 };
 
@@ -162,7 +105,7 @@ struct todo_size {
 typedef std::vector<todo_t> todo_v;
 typedef vector<string> argv_t;
 money_t usd_spot =0;
-money_t usd_min_size=10;
+money_t usd_min_size=20;
 money_t min_size() {
   return usd_min_size/usd_spot;
 };
@@ -383,34 +326,52 @@ int xmain( const argv_t &args )
   auto &mkt=mkts[0];
   cout << endl << mkt << endl << endl;
   xassert(mkt.cur()=="BTC");
-  money_t btc_qty=(todo.btc_goal-todo.btc);
-  money_t usd_qty=btc_qty*usd_spot;
-  if(usd_qty > 100) {
-    usd_qty=100;
-    btc_qty=usd_qty/usd_spot;
+  money_t btc_price=(todo.btc_goal-todo.btc);
+  money_t usd_price=btc_price*usd_spot;
+  if(usd_price > 100) {
+    usd_price=100;
+    btc_price=usd_price/usd_spot;
   };
-  money_t price=mkt.yield(1,todo.sym,"BTC",false);
-  money_t ots_qty=btc_qty/price;
-  xexpose(btc_qty);
-  xexpose(usd_qty);
-  xexpose(ots_qty);
-  xexpose(price);
+  money_t btc_price_per_unit=mkt.yield(1,todo.sym,"BTC",false);
+  money_t quantity=btc_price/btc_price_per_unit;
+  xexpose(btc_price);
+  xexpose(usd_price);
+  xexpose(quantity);
+  xexpose(btc_price_per_unit);
 
-  string uuid=simple_xact( mkt, true, ots_qty, price, true);
-  if(!uuid.size()) {
-    xcarp("empty uuid returned.  faking buys?");
-    return 0;
+  auto ords=simple_xact( mkt, true, quantity, btc_price_per_unit, true);
+  if(bittrex::fake_buys) {
+    xtrace( " trades turned off" );
+  } else if(!ords.size()) {
+    xcarp("no order returned.  Somethign went wrong.");
+  } else if ( ords.size()>1 ) {
+    xcarp(">1 order returned.  Somethign went REALLY wrong.");
+  } else {
+    auto &ord=ords[0];
+#define show(x) \
+    cout \
+    << left << setw(50) << #x << " : " \
+    << right << setw(25) << x << endl;
+
+
+    show(ord.data.exchange);
+    show(ord.data.opened);
+    show(ord.data.closed);
+    cout << endl;
+    show(ord.data.limit);
+    cout << endl;
+    show(ord.data.quantity);
+    show(quantity);
+    show(ord.data.price);
+    show(btc_price);
+    show(ord.data.price_per_unit);
+    show(btc_price_per_unit);
+    show(ord.data.quantity*ord.data.price_per_unit);
+    show(btc_price_per_unit*quantity);
+    show(ord.data.commission_paid);
+    show(ord.data.commission_paid / 0.002);
+    show(ord.data.quantity_remaining);
   };
-  order_l ords;
-  while(true)
-  {
-    ords=bittrex::get_order(uuid);
-    if(ords.size())
-      break;
-    xcarp("no order returned!");
-    sleep(1);
-  };
-  auto &ord=ords[0];
 
   return 0;
 };
