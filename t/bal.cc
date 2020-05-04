@@ -26,6 +26,7 @@ goals_t mk_goals()
     val=(double)b.value();
     sum+=val;
   };
+  xexpose(sum);
   for( auto &pair : res ) {
     pair.second/=sum;
   };
@@ -333,20 +334,21 @@ int xmain( const argv_t &args )
     usd_qty=100;
     btc_qty=usd_qty/usd_spot;
   };
-  money_t price=mkt.yield(1,todo.sym,"BTC",false);
-  money_t ots_qty=btc_qty/price;
+  money_t price_per_unit=mkt.yield(1,todo.sym,"BTC",false);
+  money_t quantity=btc_qty/price_per_unit;
+  money_t price=quantity*price_per_unit;
   xtrace( ""
-      << "qty: " << ots_qty << todo.sym
+      << "qty: " << quantity << todo.sym
       << " | " << btc_qty << "B$ " 
       << usd_qty << "$"
-      << " | " << "price: " << price 
+      << " | " << "price_per_unit: " << price_per_unit 
       << todo.sym << "/BTC"
       );
   string uuid;
-  if( ots_qty>0 ) {
-    uuid=simple_xact( mkt, true, ots_qty, price, true);
+  if( quantity>0 ) {
+    uuid=simple_xact( mkt, true, quantity, price_per_unit, true);
   } else {
-    uuid=simple_xact( mkt, false, -ots_qty, price, true);
+    uuid=simple_xact( mkt, false, -quantity, price_per_unit, true);
   };
   if(uuid=="faked") {
     return 0;
@@ -361,6 +363,29 @@ int xmain( const argv_t &args )
     sleep(1);
   };
   auto &ord=ords[0];
+#define show(x) \
+    cout \
+    << left << setw(50) << #x << " : " \
+    << right << setw(25) << x << endl;
+
+
+    show(ord.data.exchange);
+    show(ord.data.opened);
+    show(ord.data.closed);
+    cout << endl;
+    show(ord.data.limit);
+    cout << endl;
+    show(ord.data.quantity);
+    show(quantity);
+    show(ord.data.price);
+    show(price);
+    show(ord.data.price_per_unit);
+    show(price_per_unit);
+    show(ord.data.quantity*ord.data.price_per_unit);
+    show(price_per_unit*quantity);
+    show(ord.data.commission_paid);
+    show(ord.data.commission_paid / 0.002);
+    show(ord.data.quantity_remaining);
 
   return 0;
 };

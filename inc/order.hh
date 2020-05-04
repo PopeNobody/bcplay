@@ -54,7 +54,6 @@ namespace coin {
     const data_t &get_data() const {
       return data;
     };
-    private:
     data_t data;
 	};
 	class order_l : public std::vector<order_t>, public fmt::can_str

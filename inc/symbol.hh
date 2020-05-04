@@ -13,6 +13,10 @@ namespace coin {
 		static int get_width() {
 			return 8;
 		};
+    sym_t(const string &str)
+    : string(str)
+    {
+    };
 	};
 	class sym_l : public vector<sym_t>
  	{
