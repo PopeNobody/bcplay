@@ -99,7 +99,7 @@ deps.all: $(DEPS)
 	rm -f $@ tags
 	vi_perl all_deps.pl  $@ $^
 
-.PHONY: deps.all sums
+.PHONY: sums
 
 sums:
 	git ls-files | xargs md5sum | tee sums
