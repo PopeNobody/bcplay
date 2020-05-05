@@ -33,8 +33,7 @@ coin::market_t::market_t(const string &name, money_t bid, money_t ask)
   split_name(tmp.name,tmp.cur,tmp.sym);
   tmp.bid=bid;
   tmp.ask=ask;
-  if(bid>=ask)
-    xthrow(runtime_error,"bid(" << bid << ")>=ask(" << ask << ")");
+  xassert(bid>0 && bid<ask);
   data=tmp;
 };
 const market_l& market_t::get_markets()
@@ -158,7 +157,7 @@ money_t market_t::yield(money_t qty, sym_t f, sym_t t, bool neutral)
     return qty*rate;
   } else {
     xthrow(runtime_error,
-        "market " << mkt.name() << " cannot conver from " << f << " to " << t);
+        "market " << mkt.name() << " cannot convert from " << f << " to " << t);
   };
 };
 bool market_t::split_name(const string &name, string &cur, string &sym)

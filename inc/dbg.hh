@@ -17,6 +17,7 @@ namespace dbg
     dbg::show_dbg_msg(__FILE__,__LINE__) << x << endl, \
     y)
 #define xtrace(x) xtrace2(x,nop())
+#define xcomment(x) xtrace2(x,nop())
 #define  xexpose(x)    xtrace2(  #x << " => " <<  x,  nop()  )
 #define  xcarp(x)     xtrace2(  "warning:             "      <<  x,  nop()        )
 #define  xcroak(x)    xtrace2(  "error:               "      <<  x,  abort()      )

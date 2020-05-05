@@ -85,8 +85,8 @@ namespace util {
   string strip(const string &str);
   bool exists(const string &fn);
   bool exists(const char *path);
-  string read_file(const char *path);
-  ssize_t write_file(const char *name, const string &text);
+  string read_file(const string &path);
+  ssize_t write_file(const string &name, const string &text);
   string quote(const string &str);
   int open_log(const string &in_fn);
   int xrename(const char *ofn, const char *nfn);
