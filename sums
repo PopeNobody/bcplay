@@ -46,7 +46,6 @@ b0ba10d737630ea4fe3137ab3cca1585  setup.sh
 936be55eaaa05e5572b2a4a6f079f10f  t/.cvsignore
 bc9b4f18ce54dc6ee5be11dd28c91661  t/bal.cc
 2acea07eeb46c597e7ec9e9d26184c55  t/can_orders.cc
-f76d6a67b7b71cdb6bfb3e34753b4c16  t/ckey.vectors.json
 9c21700d0feae0ab1b661c8c508a3800  t/closeout.cc
 95d617a3410d8d7ed23e2dc492b0c0ff  t/get_bals.cc
 a419f3ca1e2b9e3e608e9a75ca080a65  t/get_order_hist.cc
