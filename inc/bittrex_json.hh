@@ -6,7 +6,6 @@
 #include <bittrex.hh>
 
 namespace bittrex {
-  extern bool fake_loads;
   void save_json(const string &fname, const json &json);
   const json load_json(const string &url, const string &save_to);
 };

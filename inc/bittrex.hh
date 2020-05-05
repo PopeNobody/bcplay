@@ -14,6 +14,7 @@ namespace bittrex {
 	extern bool fake_buys;
 	extern bool show_urls;
   extern bool keep_all;
+  extern bool fake_loads;
 
   order_l get_order_history(const string &mkt);
   order_l get_order( const string& uuid );
