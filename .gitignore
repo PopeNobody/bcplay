@@ -3,7 +3,6 @@
 **.ii
 **.o
 *.db
--s
 .gdb_history
 bal
 bals2db
@@ -16,6 +15,8 @@ deps.all
 doit
 etc/default_target
 etc/fuck.def
+etc/goals.json
+etc/goals.json.new
 etc/make_jobs_flag
 etc/shit
 etc/shit.def
