@@ -380,11 +380,11 @@ int xmain( const argv_t &args )
       );
   string uuid;
   if( quantity>0 ) {
-    uuid=simple_xact( mkt, true, quantity, price_per_unit, false);
+    uuid=simple_xact( mkt, true, quantity, price_per_unit, true);
   } else {
     quantity=-quantity;
     price=-price;
-    uuid=simple_xact( mkt, false, quantity, price_per_unit, false);
+    uuid=simple_xact( mkt, false, quantity, price_per_unit, true);
   };
   if(uuid=="faked") {
     return 0;
