@@ -1,4 +1,4 @@
-#include <bittrex.hh>
+#include <bittrex_json.hh>
 #include <fmt.hh>
 #include <json.hh>
 #include <typeinfo>
@@ -14,23 +14,46 @@ using namespace fmt;
 using namespace std;
 
 typedef map<sym_t,double> goals_t;
-goals_t mk_goals()
+goals_t goals;
+money_t usd_spot =0;
+money_t usd_min_size=20;
+money_t min_size() {
+  return usd_min_size/usd_spot;
+};
+void load_config()
 {
   goals_t res;
   string text=util::read_file("etc/goals.json"); 
   json data=json::parse(text);
+  json jgoals;
+  if(data.find("goals")==data.end())
+  {
+    jgoals=data;
+  } else {
+    jgoals=data.at("goals");
+    usd_min_size=(double)data.at("usd_min_size");
+  };
   double sum=0;
-  for( auto b(data.begin()), e(data.end()); b!=e; b++ )
+  for( auto b(jgoals.begin()), e(jgoals.end()); b!=e; b++ )
   {
     double&val=res[sym_t(b.key())];
     val=(double)b.value();
     sum+=val;
   };
-  xexpose(sum);
+  cout << "sum of goals is " << sum << endl;
   for( auto &pair : res ) {
     pair.second/=sum;
   };
-  return res;
+  goals=res;
+  for( auto &goal : res ) {
+    goal.second*=100000;
+  };
+  json ndata;
+  ndata["goals"]=res;
+  ndata["usd_min_size"]=usd_min_size.get();
+  stringstream str;
+  str << setw(4) << ndata;
+  write_file("etc/goals.json.new",str.str());
 };
 
 using bittrex::simple_xact;
@@ -105,11 +128,6 @@ struct todo_size {
 };
 typedef std::vector<todo_t> todo_v;
 typedef vector<string> argv_t;
-money_t usd_spot =0;
-money_t usd_min_size=20;
-money_t min_size() {
-  return usd_min_size/usd_spot;
-};
 struct header_t {
   const todo_t &obj;
   bool dashes;
@@ -212,13 +230,16 @@ todo_m todo_map;
 todo_v mk_todos()
 {
   todo_map.clear();
-  static auto const& goals = mk_goals();
+  if( !goals.size() ) {
+    xcarp("you have no goals!");
+    return todo_v();
+  };
   for ( auto &g : goals )
   {
     todo_map[ g.first ].sym = g.first;
     todo_map[ g.first ].pct_goal = g.second;
   };
-  market_t::load_markets();
+  market_t::get_markets();
   money_t tot_btc = 0.0;
   auto &btc=todo_map["BTC"];
   for ( auto &b : balance_l::load_balances() )
@@ -268,8 +289,8 @@ todo_v mk_todos()
           show_todos(btc, todos, tot_all);
         };
         {
-          todo_t tot_all("Total");
           todo_v willdo;
+          todo_t tot_all("Total");
           while(i<todos.size())
           {
             auto &todo=todos[i++];
@@ -278,7 +299,8 @@ todo_v mk_todos()
               willdo.push_back(todo);
             };
           };
-          show_todos(todo_t(),willdo,tot_all);
+          if(willdo.size())
+            show_todos(todo_t(),willdo,tot_all);
           return willdo;
         }
       };
@@ -297,6 +319,7 @@ int xmain( const argv_t &args )
       exit(1);
     };
   };
+  load_config();
   int trades=0;
   time_t now=time(0);
   char buffer[1024];
@@ -310,16 +333,22 @@ int xmain( const argv_t &args )
   xassert(todo_map.find("BTC")!=todo_map.end());
   auto btc=todo_map["BTC"];
   sort(todos.begin(),todos.end(),todo_more());
+  xassert(todos.back().btc_del<=todos.front().btc_del);
   auto itr=todos.begin();
   if(btc.btc_del < 0 ) {
     cout << " " << todos.front() << endl;
-    xassert(todos.front().btc_del>0);
     xassert(itr->sym==todos.front().sym);
   } else {
     cout << " " << todos.back()  << endl;
     itr=todos.end()-1;
-    xassert(todos.back().btc_del<0);
     xassert(itr->sym==todos.back().sym);
+  };
+  if( (itr->btc_del<=0) == (btc.btc_del<0) ) {
+    cout
+      << "BTC and "  << itr->sym
+      << " are unbalanced in the same direction"
+      << endl;
+    return 0;
   };
 
   auto &todo=*itr; 
@@ -334,7 +363,12 @@ int xmain( const argv_t &args )
     usd_qty=100;
     btc_qty=usd_qty/usd_spot;
   };
-  money_t price_per_unit=mkt.yield(1,todo.sym,"BTC",false);
+  money_t price_per_unit;
+  if(btc_qty>0) {
+    price_per_unit=mkt.yield(1,todo.sym,"BTC",false);
+  } else {
+    price_per_unit=1/mkt.yield(1,"BTC",todo.sym,false);
+  };
   money_t quantity=btc_qty/price_per_unit;
   money_t price=quantity*price_per_unit;
   xtrace( ""
@@ -346,9 +380,11 @@ int xmain( const argv_t &args )
       );
   string uuid;
   if( quantity>0 ) {
-    uuid=simple_xact( mkt, true, quantity, price_per_unit, true);
+    uuid=simple_xact( mkt, true, quantity, price_per_unit, false);
   } else {
-    uuid=simple_xact( mkt, false, -quantity, price_per_unit, true);
+    quantity=-quantity;
+    price=-price;
+    uuid=simple_xact( mkt, false, quantity, price_per_unit, false);
   };
   if(uuid=="faked") {
     return 0;
@@ -367,7 +403,10 @@ int xmain( const argv_t &args )
     cout \
     << left << setw(50) << #x << " : " \
     << right << setw(25) << x << endl;
-
+    show(mkt.ask());
+    show(mkt.bid());
+    show(price_per_unit);
+    cout << endl;
 
     show(ord.data.exchange);
     show(ord.data.opened);

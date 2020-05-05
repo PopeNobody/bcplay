@@ -22,18 +22,29 @@ string util::strip(const string &str)
 		++b;
 	return string(b,++e);
 };
-string util::read_file(const char *name)
+string util::read_file(const string &name)
 {
-  xtrace("reading: " << name << endl);
+  xtrace("reading: " << name);
 	ifstream file(name);
   if(!file)
     xthrowre("failed to read file " << name << ":" << strerror(errno));
-  xexpose((bool)file);
 	std::stringstream buf;
 	buf << file.rdbuf();
 	string res=buf.str();
 	cout << "read " << res.length() << " bytes" << endl;
-	return move(res);
+	return res;
+};
+ssize_t util::write_file(const string &name, const string &text)
+{
+  xtrace("writing: " << name);
+  ofstream ofile;
+  ofile.open(name,ios::app);
+  if(!ofile)
+    xthrowre("open:"<<name<<": "<<strerror(errno));
+  ofile<<text;
+  if(!ofile)
+    xthrowre("error writing "<<name);
+  return text.length();
 };
 bool util::exists(const char *name)
 {

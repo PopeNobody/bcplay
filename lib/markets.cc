@@ -33,8 +33,7 @@ coin::market_t::market_t(const string &name, money_t bid, money_t ask)
   split_name(tmp.name,tmp.cur,tmp.sym);
   tmp.bid=bid;
   tmp.ask=ask;
-  if(bid>=ask)
-    xthrow(runtime_error,"bid(" << bid << ")>=ask(" << ask << ")");
+  xassert(bid>0 && bid<ask);
   data=tmp;
 };
 const market_l& market_t::get_markets()

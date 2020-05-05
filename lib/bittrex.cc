@@ -23,64 +23,64 @@ using nlohmann::detail::value_t;
 #endif
 namespace bittrex {
   extern bool fake_loads;
+  void save_json(const string &fname, const json &json);
+  const json load_json(const string &url, const string &save_to);
 };
 bool bittrex::fake_loads=false;
 bool bittrex::fake_buys=true;
 bool bittrex::show_urls=true;
 const static string api_url = "https://bittrex.com/api/v1.1/";
 
-namespace {
-  void save_json(const string &fname, const json &json)
+void bittrex::save_json(const string &fname, const json &json)
+{
+  trace_from_json(__PRETTY_FUNCTION__ << ": fname=" << fname);
+  assert(fname.length());
+  ofstream ofile;
   {
-    trace_from_json(__PRETTY_FUNCTION__ << ": fname=" << fname);
-    assert(fname.length());
-    ofstream ofile;
-    {
-      int fd=util::open_log(fname);
-      ofile.open(fname,ios::app);
-      xclose(fd);
-    };
-    if(!ofile)
-      xthrowre("open:"+fname+strerror(errno));
-    ofile<<setw(4)<<json<<endl;
-    if(!ofile)
-      xthrowre("error writing "+fname);
+    int fd=util::open_log(fname);
+    ofile.open(fname,ios::app);
+    xclose(fd);
   };
-  const json load_json(const string &url, const string &save_to)
-  {
-    trace_from_json(__PRETTY_FUNCTION__ << ": url=" << url << " save_to+" << save_to);
-    try {
-      string page;
-      if( bittrex::fake_loads ) {
-        xtrace("using cached page at: " << save_to);
-        ifstream str(save_to);
-        if(!str)
-          xthrowre("open:"+save_to+":"+strerror(errno));
-        string line;
-        while(getline(str,line))
-          page+=line;
-      } else {
-        page = web::load_hmac_page(url);
-      };
-      json jpage=json::parse(page);
-      save_json(save_to,jpage);
-      if(!jpage.at("success")) {
-        throw runtime_error(
-            "no success in result\n\n"+page
-            );
-      };
-      jpage=*jpage.find("result");
-      return jpage;
-    } catch ( exception &ex ) {
-      xtrace(ex.what());
-      xexpose(url);
-      xexpose(save_to);
-      throw;
-    } catch ( ... ) {
-      throw;
+  if(!ofile)
+    xthrowre("open:"+fname+strerror(errno));
+  ofile<<setw(4)<<json<<endl;
+  if(!ofile)
+    xthrowre("error writing "+fname);
+};
+const json bittrex::load_json(const string &url, const string &save_to)
+{
+  trace_from_json(__PRETTY_FUNCTION__ << ": url=" << url << " save_to+" << save_to);
+  try {
+    string page;
+    if( bittrex::fake_loads ) {
+      xtrace("using cached page at: " << save_to);
+      ifstream str(save_to);
+      if(!str)
+        xthrowre("open:"+save_to+":"+strerror(errno));
+      string line;
+      while(getline(str,line))
+        page+=line;
+    } else {
+      page = web::load_hmac_page(url);
     };
+    json jpage=json::parse(page);
+    save_json(save_to,jpage);
+    if(!jpage.at("success")) {
+      throw runtime_error(
+          "no success in result\n\n"+page
+          );
+    };
+    jpage=*jpage.find("result");
+    return jpage;
+  } catch ( exception &ex ) {
+    xtrace(ex.what());
+    xexpose(url);
+    xexpose(save_to);
+    throw;
+  } catch ( ... ) {
+    throw;
   };
-}
+};
 namespace coin {
   void from_json(const json &j,       balance_t &val);
   void from_json(const json &j,       money_t &val);
@@ -228,9 +228,14 @@ void coin::from_json(const json &j, market_l &ml)
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
   for( auto it = j.begin(); it != j.end();it++ ) 
   {
-    market_t tmp;
-    coin::from_json(*it,tmp);
-    ml.push_back(tmp);
+    try {
+      market_t tmp;
+      coin::from_json(*it,tmp);
+      ml.push_back(tmp);
+    } catch ( exception &ex ) {
+      xcarp(ex.what());
+      xcomment("in json: " << setw(4) << *it);
+    };
   };
 };
 void coin::from_json(const json &j, money_t &val) {
@@ -243,7 +248,6 @@ void coin::from_json(const json &j, money_t &val) {
 void coin::from_json(const json &j, balance_t &bal) {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
   xassert(!j.is_null());
-  using coin::market_l;
   try {
     balance_t res;
     from_json(j.at("Currency"),res.sym);
@@ -269,17 +273,27 @@ void coin::from_json(const json &j, balance_t &bal) {
 void coin::from_json(const json &j, market_t &m)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
-  xassert(!j.is_null());
-  string name=j.at("MarketName");
-  money_t bid=j.at("Bid");
-  money_t ask=j.at("Ask");
-  market_t tmp(name,bid,ask);
-  assert(tmp.name()==tmp.cur()+"-"+tmp.sym());
-  coin::from_json(j.at("Last"),tmp.data.last);
-  coin::from_json(j.at("High"),tmp.data.high);
-  coin::from_json(j.at("Low"),tmp.data.low);
-  coin::from_json(j.at("Volume"),tmp.data.vol);
-  m=tmp;
+  try {
+    xassert(!j.is_null());
+    string name=j.at("MarketName");
+    if(j.at("Bid").is_null() || j.at("Ask").is_null()) {
+      xcarp("Bid or Ask is not usable for market "<<name);
+      return;
+    };
+    money_t bid=j.at("Bid");
+    money_t ask=j.at("Ask");
+    market_t tmp(name,bid,ask);
+    xassert(tmp.name()==tmp.cur()+"-"+tmp.sym());
+    coin::from_json(j.at("Last"),tmp.data.last);
+    coin::from_json(j.at("High"),tmp.data.high);
+    coin::from_json(j.at("Low"),tmp.data.low);
+    coin::from_json(j.at("Volume"),tmp.data.vol);
+    m=tmp;
+    return;
+  } catch ( const exception &ex ) {
+    xcomment(ex.what());
+    throw;
+  }
 };
 
 string bittrex::simple_xact (
