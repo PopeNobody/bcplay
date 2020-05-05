@@ -120,7 +120,10 @@ deps.all: $(DEPS)
 	rm -f $@ tags
 	vi_perl all_deps.pl  $@ $^
 
-.PHONY: deps.all
+.PHONY: deps.all sums
+
+sums:
+	git ls-files | xargs md5sum | tee sums
 
 include $(wildcard /dev/null */*.d)
 #-L/usr/lib/x86_64-linux-gnu/mit-krb5 -lcurl -lnghttp2 -lidn2 -lrtmp -lpsl -lssl -lcrypto -lssl -lcrypto -Wl,-Bsymbolic-functions -Wl,-z,relro -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err -llber -lldap -llber -lz
