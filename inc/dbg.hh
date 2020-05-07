@@ -5,16 +5,20 @@
 #define debug_hh debug_hh
 
 #include <iostream>
+#include <exception>
+#include <typeinfo>
 
-namespace dbg 
-{
-  using std::ostream;
-  ostream &show_dbg_msg(const char *file, unsigned line, const char *msg=0 );
-}
+using std::ostream;
+using std::exception;
+using std::type_info;
+ostream &operator<<(ostream &lhs, const exception &rhs);
+ostream &operator<<(ostream &lhs, const type_info &rhs);
+
 #define nop()
 #define macwrap(x,y)  do{ x; y; }while(0)
+#define xsrcpos() __FILE__ << ":" << __LINE__ << ":"
 #define xtrace2(x,y)  macwrap( \
-    dbg::show_dbg_msg(__FILE__,__LINE__) << x << endl, \
+    cout <<xsrcpos() << x << endl, \
     y)
 #define xtrace(x) xtrace2(x,nop())
 #define xcomment(x) xtrace2(x,nop())
