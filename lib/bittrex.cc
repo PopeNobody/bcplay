@@ -1,10 +1,9 @@
-#include <bittrex.hh>
+#include <bittrex_json.hh>
 #include <util.hh>
 #include <json.hh>
 #include <web_api.hh>
 #include <cmath>
 #include <dbg.hh>
-#include <xcalls.hh>
 
 using namespace coin;
 using namespace util;
@@ -23,15 +22,13 @@ using nlohmann::detail::value_t;
 #endif
 namespace bittrex {
   extern bool fake_loads;
-  void save_json(const string &fname, const json &json);
-  const json load_json(const string &url, const string &save_to);
 };
 bool bittrex::fake_loads=false;
 bool bittrex::fake_buys=true;
 bool bittrex::show_urls=true;
 const static string api_url = "https://bittrex.com/api/v1.1/";
 
-void bittrex::save_json(const string &fname, const json &json)
+void bittrex::save_json(const string &fname, const json &json, bool backup)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ": fname=" << fname);
   assert(fname.length());
@@ -47,7 +44,7 @@ void bittrex::save_json(const string &fname, const json &json)
   if(!ofile)
     xthrowre("error writing "+fname);
 };
-const json bittrex::load_json(const string &url, const string &save_to)
+const json bittrex::load_json(const string &url, const string &save_to, bool backup)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ": url=" << url << " save_to+" << save_to);
   try {
@@ -64,7 +61,7 @@ const json bittrex::load_json(const string &url, const string &save_to)
       page = web::load_hmac_page(url);
     };
     json jpage=json::parse(page);
-    save_json(save_to,jpage);
+    save_json(save_to,jpage,backup);
     if(!jpage.at("success")) {
       throw runtime_error(
           "no success in result\n\n"+page
@@ -80,26 +77,6 @@ const json bittrex::load_json(const string &url, const string &save_to)
   } catch ( ... ) {
     throw;
   };
-};
-namespace coin {
-  void from_json(const json &j,       balance_t &val);
-  void from_json(const json &j,       money_t &val);
-  void from_json(const json &j,       market_l &ml);
-  void from_json(const json &j,       market_t &ml);
-  void from_json(const json &j,       order_t& val );
-  void from_json(const json &j,       order_l& val );
-  void from_json(const json &j,       string &val);
-  void from_json(const json &j,       bool &val);
-};
-namespace coin {
-  void to_json  (      json &j, const balance_t &val);
-  void to_json  (      json &j, const money_t &val);
-  void to_json  (      json &j, const market_l &ml);
-  void to_json  (      json &j, const market_t &ml);
-  void to_json  (      json &j, const order_t& val );
-  void to_json  (      json &j, const order_l& val );
-  void to_json  (      json &j, const string &val);
-  void to_json  (      json &j, const bool &val);
 };
 string bittrex::json_str(order_t const &ord)
 {
@@ -159,10 +136,19 @@ list(export);
   j=res;
 };
 //   void coin::to_json  (      json &j, const balance_t &val);
+void fmt::to_json  (      json &j, const pct_t &val)
+{
+  trace_from_json(__PRETTY_FUNCTION__<<":"<<val);
+  ostringstream str;
+  str << setprecision(8) << fixed << val.get();
+  j=lexical_cast<double>(str.str());
+};
 void coin::to_json  (      json &j, const money_t &val)
 {
   trace_from_json(__PRETTY_FUNCTION__<<":"<<val);
-  j=double(val);
+  ostringstream str;
+  str << setprecision(8) << fixed << val.get();
+  j=lexical_cast<double>(str.str());
 };
 //   void coin::to_json  (      json &j, const market_l &ml);
 //   void coin::to_json  (      json &j, const market_t &ml);
@@ -242,7 +228,7 @@ void coin::from_json(const json &j, money_t &val) {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
   if( j.is_null() )
     val=0;
-  else
+  else 
     val=(double)j;
 };
 void coin::from_json(const json &j, balance_t &bal) {
