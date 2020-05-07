@@ -1,4 +1,4 @@
-default: $(shell cat etc/default_target)
+include etc/default_target.mk
 
 all:
 
