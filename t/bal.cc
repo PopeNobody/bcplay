@@ -5,7 +5,7 @@
 #include <util.hh>
 #include <web_api.hh>
 #include <fcntl.h>
-#include <xcalls.hh>
+#include <util.hh>
 
 using namespace util;
 using namespace coin;
@@ -13,6 +13,17 @@ using namespace fmt;
 
 using namespace std;
 
+using std::ostream;
+using std::exception;
+using std::type_info;
+ostream &operator<<(ostream &lhs, const exception &rhs)
+{
+  return lhs<<rhs.what();
+};
+ostream &operator<<(ostream &lhs, const type_info &rhs)
+{
+  return lhs<<demangle(typeid(rhs).name());
+};
 typedef map<sym_t,double> goals_t;
 goals_t goals;
 money_t usd_spot =0;
@@ -23,7 +34,7 @@ money_t min_size() {
 void load_config()
 {
   goals_t res;
-  string text=util::read_file("etc/goals.json"); 
+  string text=util::read_file("etc/goals.json");
   json data=json::parse(text);
   json jgoals;
   if(data.find("goals")==data.end())
@@ -58,44 +69,69 @@ void load_config()
 
 using bittrex::simple_xact;
 
-struct todo_t
-{
-  sym_t     sym;
-  money_t   bal;
-  money_t   btc;
-  pct_t     pct;
-  money_t   usd;
-  pct_t     pct_goal;
-  money_t   btc_goal;
-  money_t   btc_del;
-  todo_t(const sym_t &sym=sym_t())
-    :sym(sym)
+namespace coin {
+  struct todo_t
   {
-    xassert(!bal);
-    xassert(!pct);
-    xassert(!btc);
-    xassert(!usd);
-    xassert(!pct_goal);
-    xassert(!btc_goal);
-    xassert(!btc_del);
-  };
-  todo_t &operator+=(const todo_t &rhs)
-  {
-    if( rhs.sym == sym ) {
-      bal+=rhs.bal;
-    } else {
-      bal=nan("mixed");
+    sym_t     sym;
+    money_t   bal;
+    money_t   btc;
+    pct_t     pct;
+    money_t   usd;
+    pct_t     pct_goal;
+    money_t   btc_goal;
+    money_t   btc_del;
+    todo_t(const sym_t &sym=sym_t())
+      :sym(sym)
+    {
+      xassert(!bal);
+      xassert(!pct);
+      xassert(!btc);
+      xassert(!usd);
+      xassert(!pct_goal);
+      xassert(!btc_goal);
+      xassert(!btc_del);
     };
-    pct += rhs.pct;
-    usd += rhs.usd;
-    btc += rhs.btc;
-    pct_goal += rhs.pct_goal;
-    btc_goal += rhs.btc_goal;
-    btc_del  += rhs.btc_del;
-    return *this;
+    todo_t &operator+=(const todo_t &rhs)
+    {
+      if( rhs.sym == sym ) {
+        bal+=rhs.bal;
+      } else {
+        bal=nan("mixed");
+      };
+      pct += rhs.pct;
+      usd += rhs.usd;
+      btc += rhs.btc;
+      pct_goal += rhs.pct_goal;
+      btc_goal += rhs.btc_goal;
+      btc_del  += rhs.btc_del;
+      return *this;
+    };
+  };
+  typedef std::vector<todo_t> todo_v;
+  typedef std::map< sym_t, todo_t > todo_m;
+  void to_json(json &dst, const todo_t &src);
+};
+void coin::to_json(json &dst, const todo_t &src)
+{
+  try {
+    json res;
+    res["sym"]=src.sym;
+    res["bal"]=src.bal;
+    res["btc"]=src.btc;
+    res["pct"]=src.pct;
+    res["usd"]=src.usd;
+    res["pct_goal"]=src.pct_goal;
+    res["btc_goal"]=src.btc_goal;
+    res["btc_del"]=src.btc_del;
+    dst=res;
+  } catch ( const exception &ex ) {
+    xtrace(ex.what());
+    throw;
   };
 };
-typedef std::map< sym_t, todo_t > todo_m;
+using coin::todo_t;
+using coin::todo_m;
+using coin::todo_v;
 struct todo_more {
   bool operator()( const todo_t &lhs, const todo_t &rhs )
   {
@@ -126,7 +162,6 @@ struct todo_size {
     return lhs.sym > rhs.sym;
   };
 };
-typedef std::vector<todo_t> todo_v;
 typedef vector<string> argv_t;
 struct header_t {
   const todo_t &obj;
@@ -192,7 +227,7 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
     spot_usd= market_t::conv(spot_btc,   "BTC",  "USD");
   };
   lhs
-    << "|" 
+    << "|"
     << left
     << setw(symw) << rhs.sym << "|"
     << right
@@ -213,7 +248,7 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
     ;
   return lhs;
 };
-void show_todos(const todo_t &btc, todo_v &todos, const todo_t &tot_all)
+void show_todos(const todo_t &btc, todo_v &todos, const todo_t &tot_all, const string &fname=string())
 {
   cout << " " << header_t(btc,true) << endl;
   cout << " " << header_t(btc,false) << endl;
@@ -225,6 +260,12 @@ void show_todos(const todo_t &btc, todo_v &todos, const todo_t &tot_all)
   };
   cout << "%" << tot_all << endl;
   cout << " " << header_t(btc,true) << endl;
+  if(fname.size())
+  {
+    json fmt=json::parse("[]");
+    fmt=todos;
+    bittrex::save_json(fname,fmt,false);
+  };
 };
 todo_m todo_map;
 todo_v mk_todos()
@@ -244,7 +285,7 @@ todo_v mk_todos()
   auto &btc=todo_map["BTC"];
   for ( auto &b : balance_l::load_balances() )
   {
-    if ( 
+    if (
         ( goals.find( b.sym ) != goals.end() )
         ||
         ( b.usd > 5 )
@@ -286,7 +327,7 @@ todo_v mk_todos()
           for( auto &todo : todos  )
             tot_all+=todo;
           tot_all+=btc;
-          show_todos(btc, todos, tot_all);
+          show_todos(btc, todos, tot_all,"etc/todos.json");
         };
         {
           todo_v willdo;
@@ -351,7 +392,7 @@ int xmain( const argv_t &args )
     return 0;
   };
 
-  auto &todo=*itr; 
+  auto &todo=*itr;
   auto mkts=market_t::get("BTC",todo.sym);
   auto &mkt=mkts[0];
   cout << endl << mkt << endl << endl;
@@ -373,9 +414,9 @@ int xmain( const argv_t &args )
   money_t price=quantity*price_per_unit;
   xtrace( ""
       << "qty: " << quantity << todo.sym
-      << " | " << btc_qty << "B$ " 
+      << " | " << btc_qty << "B$ "
       << usd_qty << "$"
-      << " | " << "price_per_unit: " << price_per_unit 
+      << " | " << "price_per_unit: " << price_per_unit
       << todo.sym << "/BTC"
       );
   string uuid;
