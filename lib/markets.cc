@@ -113,10 +113,11 @@ ostream &coin::market_t::stream( ostream &res, int ind ) const
   money_t unit(1);
   res << setw(ind+2) << "" <<"bid:  " << data.bid << " + " << (data.bid*0.002) << endl;
   res << setw(ind+2) << "" <<"ask:  " << data.ask << " - " << (data.ask*0.002) << endl;
-  money_t val=abs((data.bid+data.ask)/2);
+  money_t val=(data.bid+data.ask)/2;
   res << setw(ind+2) << "" <<"val:  " << val << endl;
   pct_t spread=(data.ask-data.bid)/val;
   res << setw(ind+2) << "" <<"spr:  " << spread << endl;
+  res << setw(ind+2) << "" <<"day:  " << data.prev << endl;
   {
     money_t rate=(data.ask*1.0020);
     if( rate < 1 ) {

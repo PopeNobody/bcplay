@@ -3,7 +3,6 @@
 #include <fmt.hh>
 #include <markets.hh>
 #include <bittrex.hh>
-#include <xcalls.hh>
 #include <balance.hh>
 #include <util.hh>
 #include <order.hh>

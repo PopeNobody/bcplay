@@ -34,7 +34,12 @@ void bittrex::save_json(const string &fname, const json &json, bool backup)
   assert(fname.length());
   ofstream ofile;
   {
-    int fd=util::open_log(fname);
+    int fd=-1;
+    if(  backup ) {
+      fd=util::open_log(fname);
+    } else {
+      fd=util::xopen(fname.c_str(),O_WRONLY|O_CREAT);
+    };
     ofile.open(fname,ios::app);
     xclose(fd);
   };
@@ -274,6 +279,9 @@ void coin::from_json(const json &j, market_t &m)
     coin::from_json(j.at("High"),tmp.data.high);
     coin::from_json(j.at("Low"),tmp.data.low);
     coin::from_json(j.at("Volume"),tmp.data.vol);
+    double prev=0;
+    j.at("PrevDay").get_to(prev);
+    tmp.data.prev=prev;
     m=tmp;
     return;
   } catch ( const exception &ex ) {

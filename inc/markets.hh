@@ -18,6 +18,7 @@ namespace coin {
       money_t bid;
       money_t high;
       money_t last;
+      fmt::pct_t prev;
       money_t low;
       money_t vol;
     } data;

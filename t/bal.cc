@@ -24,8 +24,10 @@ ostream &operator<<(ostream &lhs, const type_info &rhs)
 {
   return lhs<<demangle(typeid(rhs).name());
 };
+
 typedef map<sym_t,double> goals_t;
 goals_t goals;
+
 money_t usd_spot =0;
 money_t usd_min_size=20;
 money_t min_size() {
@@ -36,14 +38,8 @@ void load_config()
   goals_t res;
   string text=util::read_file("etc/goals.json");
   json data=json::parse(text);
-  json jgoals;
-  if(data.find("goals")==data.end())
-  {
-    jgoals=data;
-  } else {
-    jgoals=data.at("goals");
-    usd_min_size=(double)data.at("usd_min_size");
-  };
+  json jgoals=data.at("goals");;
+  usd_min_size=(double)data.at("usd_min_size");
   double sum=0;
   for( auto b(jgoals.begin()), e(jgoals.end()); b!=e; b++ )
   {
@@ -300,6 +296,15 @@ todo_v mk_todos()
     };
   }
   {
+    for( auto const &mkt : market_t::get_markets())
+    {
+      for(auto b(todo_map.begin()), e(todo_map.end()); b!=e; b++){
+        if( b->first == mkt.sym() )
+        {
+          cout << mkt << endl;
+        };
+      };
+    };
     {
       todo_v todos;
       for ( auto &item : todo_map ) {
