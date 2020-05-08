@@ -13,6 +13,7 @@ convtest
 delta
 deps.all
 doit
+etc/*.mk
 etc/default_target
 etc/fuck.def
 etc/goals.json
