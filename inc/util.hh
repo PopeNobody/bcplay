@@ -88,7 +88,7 @@ namespace util {
   string read_file(const string &path);
   ssize_t write_file(const string &name, const string &text);
   string quote(const string &str);
-  int open_log(const string &in_fn);
+  int open_log(const string &in_fn, bool save=false);
   int xrename(const char *ofn, const char *nfn);
   int xdup2(int fd, int ofd);
   int xdup(int fd);
