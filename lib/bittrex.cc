@@ -38,6 +38,7 @@ void bittrex::save_json(const string &fname, const json &json, bool backup)
     if(  backup ) {
       fd=util::open_log(fname);
     } else {
+      unlink(fname.c_str());
       fd=util::xopen(fname.c_str(),O_WRONLY|O_CREAT);
     };
     ofile.open(fname,ios::app);

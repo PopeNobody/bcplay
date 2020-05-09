@@ -53,7 +53,7 @@ TESTS_MOD:=$(patsubst t/%.cc,%,$(TESTS_SRC))
 TESTS:=$(TESTS_MOD)
 
 test_%: %
-	./$<
+	report ./$<
 
 
 

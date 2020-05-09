@@ -65,21 +65,25 @@ util::fd_streambuf::~fd_streambuf()
 using namespace boost;
 using namespace std;
 using namespace util;
-int util::open_log(const string &in_fn)
+int util::open_log(const string &in_fn, bool save)
 {
-  struct stat stat_buf;
   string fn(in_fn);
-  for(int i=100;i<1000;i++)
-  {
-    int res=stat(fn.c_str(),&stat_buf);
-    if( res && errno==ENOENT ) {
-      if(in_fn != fn )
-        xrename(in_fn.c_str(),fn.c_str());
-      return xopen(in_fn.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
+  if( save ) {
+    struct stat stat_buf;
+    for(int i=100;i<1000;i++)
+    {
+      int res=stat(fn.c_str(),&stat_buf);
+      if( res && errno==ENOENT ) {
+        if(in_fn != fn )
+          xrename(in_fn.c_str(),fn.c_str());
+        return xopen(in_fn.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
+      };
+      fn=in_fn+"."+lexical_cast<string>(i);
     };
-    fn=in_fn+"."+lexical_cast<string>(i);
+    xthrowre("clean your log dir, you have 1000 of them!");
+  } else {
+    return xopen(in_fn.c_str(),O_WRONLY|O_CREAT|O_APPEND,0644);
   };
-  xthrowre("clean your log dir, you have 1000 of them!");
 };
 int util::xrename(const char *ofn, const char *nfn)
 {
@@ -92,28 +96,28 @@ int util::xdup2(int fd, int ofd)
 {
   int res=dup2(fd,ofd);
   if(res<0)
-    assert(!"dup2 failed");
+    xthrowre("xdup2:" << fd << "," << ofd << ":" << strerror(errno));
   return res;
 };
 int util::xdup(int fd)
 {
   int res=dup(fd);
   if(res<0)
-    assert(!"dup failed");
+    xthrowre("xdup2:" << fd << ":" << strerror(errno));
   return res;
 };
 int util::xopen(const char *fn, int flags, int mode)
 {
   int res=open(fn,flags,mode);
   if(res<0)
-    assert(!"open failed");
+    xthrowre("open:" << (fn?fn:"<null>") << ":" << strerror(errno));
   return res;
 };
 int util::xclose(int fd)
 {
   auto res=close(fd);
   if(res<0)
-    assert(!"close failed");
+    xthrowre("xclose:" << fd << ":" << strerror(errno));
   return res;
 };
 void util::split_stream(const string &logname) {

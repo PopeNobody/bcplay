@@ -296,26 +296,25 @@ todo_v mk_todos()
     };
   }
   {
-    for( auto const &mkt : market_t::get_markets())
-    {
-      for(auto b(todo_map.begin()), e(todo_map.end()); b!=e; b++){
-        if( b->first == mkt.sym() )
-        {
-          cout << mkt << endl;
-        };
-      };
-    };
     {
       todo_v todos;
+      goals_t fake;
       for ( auto &item : todo_map ) {
         auto &sym=item.first;
         auto &todo=item.second;
 
         todo.pct = todo.btc/tot_btc;
+        fake[todo.sym]=round(round(todo.pct.get()*500)/500);
         todo.btc_goal = tot_btc * todo.pct_goal.get();
         todo.btc_del = (todo.btc_goal - todo.btc);
         if(todo.sym != "BTC")
           todos.push_back(todo);
+      };
+      {
+        json tmp;
+        tmp["usd_min_size"]=usd_min_size.get();
+        tmp["goals"]=fake;
+        bittrex::save_json("etc/goals.json.cur",tmp,false);
       };
       {
         vector<sym_t> avoid;
