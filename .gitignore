@@ -27,6 +27,7 @@ fuckme
 get_bals
 get_order_hist
 get_trans
+guard
 ham
 hd_addrs
 include
