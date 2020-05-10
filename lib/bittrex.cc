@@ -141,7 +141,15 @@ list(export);
 #undef export
   j=res;
 };
-//   void coin::to_json  (      json &j, const balance_t &val);
+void coin::to_json  (      json &j, const balance_t &val)
+{
+  json temp;
+  temp["Currency"]=val.sym;
+  temp["Balance"]=val.bal;
+  temp["Available"]=val.ava;
+  temp["Pending"]=val.pend;
+  j=temp;
+};
 void fmt::to_json  (      json &j, const pct_t &val)
 {
   trace_from_json(__PRETTY_FUNCTION__<<":"<<val);
@@ -156,7 +164,6 @@ void coin::to_json  (      json &j, const money_t &val)
   str << setprecision(8) << fixed << val.get();
   j=lexical_cast<double>(str.str());
 };
-//   void coin::to_json  (      json &j, const market_l &ml);
 //   void coin::to_json  (      json &j, const market_t &ml);
 void coin::to_json  (      json &j, const order_l& orders )
 {
@@ -261,6 +268,22 @@ void coin::from_json(const json &j, balance_t &bal) {
     xexpose(ex.what());
     throw;
   };
+};
+void coin::to_json  (      json &j, const market_t &m)
+{
+  try {
+    json tmp;
+    tmp["MarketName"]=m.name();
+    tmp["Bid"]=m.bid();
+    tmp["Ask"]=m.ask();
+    tmp["Last"]=m.data.last;
+    j=tmp;
+    return;
+  } catch ( const exception &ex ) {
+    xcomment(ex.what());
+    throw;
+  }
+
 };
 void coin::from_json(const json &j, market_t &m)
 {
