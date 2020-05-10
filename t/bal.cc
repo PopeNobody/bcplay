@@ -28,18 +28,41 @@ ostream &operator<<(ostream &lhs, const type_info &rhs)
 typedef map<sym_t,double> goals_t;
 goals_t goals;
 
-money_t usd_spot =0;
-money_t usd_min_size=20;
-money_t min_size() {
-  return usd_min_size/usd_spot;
+static money_t _usd_min_size=10;
+static money_t _usd_max_size=200;
+static money_t _usd_spot;
+
+money_t usd_spot()
+{
+  return _usd_spot;
 };
+money_t usd_spot(money_t new_spot)
+{
+  money_t res=_usd_spot;
+  _usd_spot=new_spot;
+  return _usd_spot;
+};
+money_t usd_min_size() {
+  return _usd_min_size;
+};
+money_t usd_max_size() {
+  return _usd_max_size;
+};
+money_t max_size() {
+  return usd_max_size()/usd_spot();
+};
+money_t min_size() {
+  return usd_min_size()/usd_spot();
+};
+
 void load_config()
 {
   goals_t res;
   string text=util::read_file("etc/goals.json");
   json data=json::parse(text);
   json jgoals=data.at("goals");;
-  usd_min_size=(double)data.at("usd_min_size");
+  _usd_min_size=(double)data.at("usd_min_size");
+  _usd_max_size=(double)data.at("usd_max_size");
   double sum=0;
   for( auto b(jgoals.begin()), e(jgoals.end()); b!=e; b++ )
   {
@@ -57,7 +80,10 @@ void load_config()
   };
   json ndata;
   ndata["goals"]=res;
-  ndata["usd_min_size"]=usd_min_size.get();
+  json ldata;
+  ldata["usd_min_size"]=usd_min_size().get();
+  ldata["usd_max_size"]=usd_max_size().get();
+  ndata["limits"]=ldata;
   stringstream str;
   str << setw(4) << ndata;
   write_file("etc/goals.json.new",str.str());
@@ -235,8 +261,8 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
     << setw(pctw) << (rhs.pct_goal-rhs.pct) << "|"
     << "|"
     << setw(monw) << rhs.usd << "|"
-    << setw(monw) << rhs.btc_goal*usd_spot << "|"
-    << setw(monw) << rhs.btc_del*usd_spot << "|"
+    << setw(monw) << rhs.btc_goal*usd_spot() << "|"
+    << setw(monw) << rhs.btc_del*usd_spot() << "|"
     << "|"
     << setw(monw) << rhs.btc << "|"
     << setw(monw) << rhs.btc_goal << "|"
@@ -290,7 +316,7 @@ todo_v mk_todos()
       auto &todo=todo_map[ b.sym ];
       todo.sym = b.sym;
       todo.btc = b.btc;
-      todo.usd = b.btc*usd_spot;
+      todo.usd = b.btc*usd_spot();
       todo.bal = b.bal;
       tot_btc += b.btc;
     };
@@ -312,7 +338,8 @@ todo_v mk_todos()
       };
       {
         json tmp;
-        tmp["usd_min_size"]=usd_min_size.get();
+        tmp["usd_min_size"]=usd_min_size().get();
+        tmp["usd_max_size"]=usd_max_size().get();
         tmp["goals"]=fake;
         bittrex::save_json("etc/goals.json.cur",tmp,false);
       };
@@ -368,7 +395,7 @@ int xmain( const argv_t &args )
   int trades=0;
   time_t now=time(0);
   char buffer[1024];
-  usd_spot = market_t::conv(1, "BTC","USD");
+  usd_spot(market_t::conv(1, "BTC","USD"));
   auto todos=mk_todos();
   if(!todos.size() ) {
     cout << "nothing to do!" << endl;
@@ -402,11 +429,11 @@ int xmain( const argv_t &args )
   cout << endl << mkt << endl << endl;
   xassert(mkt.cur()=="BTC");
   money_t btc_qty=(todo.btc_goal-todo.btc);
-  money_t usd_qty=btc_qty*usd_spot;
-  if(usd_qty > 100) {
-    xtrace("*** limiting purchase to $100");
-    usd_qty=100;
-    btc_qty=usd_qty/usd_spot;
+  money_t usd_qty=btc_qty*usd_spot();
+  if(usd_qty > usd_max_size()) {
+    xtrace("*** limiting purchase to " << usd_max_size());
+    btc_qty=max_size();
+    usd_qty=max_size()/usd_spot();
   };
   money_t price_per_unit;
   if(btc_qty>0) {
