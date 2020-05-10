@@ -62,14 +62,17 @@ namespace coin {
 			};
 			def_op(+); def_op(-); def_op(*);
 #undef def_op
-			inline money_t operator/(money_t lhs, double rhs)
+			
+      inline money_t operator/(money_t lhs, double rhs)
 			{
 				return money_t(lhs)/=rhs;
 			};
+
 			inline double operator/(money_t lhs, money_t rhs)
 			{
 				return lhs.get()/rhs.get();
 			};
+
 #define def_op(op) \
 			inline bool operator op(money_t lhs, money_t rhs) \
 			{ \
