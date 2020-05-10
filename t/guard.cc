@@ -59,6 +59,8 @@ int main( int argc, char** argv )
 {
   try
   {
+    util::split_stream("log/guard.log");
+    cout << "log/guard.log:1:started\n";
     int tty=xdup(1);
     xclose(0);
     xopen("/dev/null",O_RDONLY);
@@ -73,7 +75,6 @@ int main( int argc, char** argv )
     static fd_streambuf ibuf(2,tty);
     cout.rdbuf(&obuf);
     cerr.rdbuf(&ibuf);
-    cout << "log/guard.log:1:started\n";
     argv_t args( argv+1, argv+argc );
     if ( xmain( args ) )
       return 1;
