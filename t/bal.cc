@@ -24,20 +24,20 @@ static money_t _usd_min_size=10;
 static money_t _usd_max_size=200;
 static money_t _usd_spot;
 
-money_t usd_spot()
+const money_t & usd_spot()
 {
   return _usd_spot;
 };
-money_t usd_spot(money_t new_spot)
+const money_t & usd_spot(money_t new_spot)
 {
   money_t res=_usd_spot;
   _usd_spot=new_spot;
   return _usd_spot;
 };
-money_t usd_min_size() {
+const money_t & usd_min_size() {
   return _usd_min_size;
 };
-money_t usd_max_size() {
+const money_t & usd_max_size() {
   return _usd_max_size;
 };
 money_t max_size() {
@@ -163,16 +163,6 @@ struct todo_less {
     if((lhs.btc_del) > (rhs.btc_del))
       return false;
     return lhs.sym < rhs.sym;
-  };
-};
-struct todo_size {
-  bool operator()( const todo_t &lhs, const todo_t &rhs )
-  {
-    if(abs(lhs.btc_del) > abs(rhs.btc_del))
-      return true;
-    if(abs(lhs.btc_del) < abs(rhs.btc_del))
-      return false;
-    return lhs.sym > rhs.sym;
   };
 };
 typedef vector<string> argv_t;
@@ -353,6 +343,84 @@ todo_v mk_todos()
   }
   return todo_v();
 };
+
+#define xverbose(x)
+void adjust(const todo_t &todo)
+{
+  const auto &mkt=market_t::get("BTC",todo.sym)[0];
+  const auto &btc=todo_map["BTC"];
+
+  sym_t qty_unit=mkt.sym();
+  sym_t pri_unit=mkt.cur();
+
+  money_t qty, tot, unitp; 
+  bool is_buy;
+  money_t btc_del=todo.btc_del;
+  if(btc_del > max_size()) {
+    btc_del=max_size();
+  };
+  if(qty_unit == todo.sym && pri_unit=="BTC") 
+  {
+    xtrace("product: " << qty_unit);
+    xtrace("currency: " << pri_unit);
+
+    tot=btc_del;
+    if(tot<0)
+      tot=-tot;
+    unitp=mkt.ask();
+    qty=tot/unitp;
+    if(btc_del>=0) {
+      xverbose(
+          "AAAA buy " << qty << qty_unit << " for " << unitp << pri_unit
+          << " per "  << qty_unit
+          << "  Total: " << tot << pri_unit
+          );
+      is_buy=true;
+    } else {
+      unitp=mkt.bid();
+      xverbose(
+          "BBBB sell " << qty << qty_unit << " for " << unitp << pri_unit
+          << " per " << qty_unit
+          << " total: " << tot << pri_unit
+          );
+      is_buy=false;
+    }
+  } else if(qty_unit=="BTC" && pri_unit==todo.sym) {
+    xtrace("product: " << qty_unit);
+    xtrace("currency: " << pri_unit);
+
+    if(btc_del<=0) {
+      unitp=mkt.ask();
+      tot=btc_del;
+      qty=tot/unitp;
+      xverbose(
+          "CCCC buy " << qty << qty_unit << " for " << unitp
+          << "each.  total: " << tot << pri_unit
+          );
+      is_buy=true;
+    } else {
+      unitp=mkt.bid();
+      qty=btc_del;
+      tot=qty*unitp;
+      xverbose(
+          "DDDD sell " << qty << qty_unit << " for " << unitp
+          << "each.  total " << tot << pri_unit
+          );
+      is_buy=false;
+    };
+  } else {
+    xthrowre(
+        "WTF? mkt symbols: cur="<<mkt.cur()<<" and prod=" << mkt.sym()
+        );
+  };;
+  string uuid=simple_xact(mkt, is_buy, qty, unitp, true );
+  if(uuid.size() && uuid!="faked")
+  {
+    order_l ords=bittrex::get_order(uuid);
+    cout << setw(4) << ords[0] << endl;
+  };
+  cout << endl << endl;
+};
 int xmain( const argv_t &args )
 {
   for( auto arg : args ) {
@@ -370,28 +438,9 @@ int xmain( const argv_t &args )
   if(!todos.size() )
     return 0;
 
-  auto btc=todo_map["BTC"];
   sort(todos.begin(),todos.end(),todo_more());
-  for(int i=0;i<todos.size();i++)
-  {
-    auto &todo=todos[i];
-    auto mkt=market_t::get("BTC",todo.sym)[0];
-
-    sym_t qty_unit=mkt.sym();
-    sym_t pri_unit=mkt.cur();
-
-    money_t qty, tot, u_price; 
-    if( qty_unit == btc.sym ) {
-      qty=todo.btc_del;
-      u_price=(mkt.bid()+mkt.ask())/2;
-      tot=qty*u_price;
-    } else if ( qty_unit == todo.sym ) {
-      tot=todo.btc_del;
-      u_price=(mkt.bid()+mkt.ask())/2;
-      qty=tot/u_price;
-    };
-    assert(qty>=0);
-  }
+  for(auto &todo:todos) 
+    adjust(todo);
   return 0;
 };
 int main( int argc, char** argv )
