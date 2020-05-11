@@ -16,14 +16,6 @@ using namespace std;
 using std::ostream;
 using std::exception;
 using std::type_info;
-ostream &operator<<(ostream &lhs, const exception &rhs)
-{
-  return lhs<<rhs.what();
-};
-ostream &operator<<(ostream &lhs, const type_info &rhs)
-{
-  return lhs<<demangle(typeid(rhs).name());
-};
 
 typedef map<sym_t,double> goals_t;
 goals_t goals;
