@@ -1,3 +1,5 @@
+include etc/default_target.mk
+
 all:
 
 

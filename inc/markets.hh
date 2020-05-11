@@ -48,6 +48,9 @@ namespace coin {
     money_t bid()const {
       return data.bid;
     };
+    money_t avg()const {
+      return (data.bid+data.ask)/2;
+    };
     virtual ~market_t();
     ostream &stream(ostream &lhs, int ind=0) const;
     static money_t conv(money_t, const sym_t &from, const sym_t &to, bool neutral=true);

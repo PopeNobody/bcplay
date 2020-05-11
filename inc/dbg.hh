@@ -16,7 +16,7 @@ ostream &operator<<(ostream &lhs, const type_info &rhs);
 
 #define nop()
 #define macwrap(x,y)  do{ x; y; }while(0)
-#define xsrcpos() __FILE__ << ":" << __LINE__ << ":"
+#define xsrcpos() __FILE__ << ":" << __LINE__ << ":  "
 #define xtrace2(x,y)  macwrap( \
     cout <<xsrcpos() << x << endl, \
     y)
