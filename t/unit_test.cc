@@ -117,13 +117,14 @@ struct conversion_helper< quantity<s1::time,X>,quantity<s2::time,Y> >
 } // namespace units
 
 } // namespace boost
-
+using namespace std;
 int main(void)
 {
     using namespace boost::units;
 
-//       quantity<s1::length,float>  l1(1.0*s1::length1);
-//       quantity<s2::length,double> l2(1.5*l1);
+    quantity<s1::length,float>  l1(1.0*s1::length1);
+    cout << l1 << endl;
+//    quantity<s2::length,double> l2(1.5*l1);
 //       quantity<s1::length,float>  l3(2.0*l2/3.0);
 //   
 //       quantity<s1::time,float>    t1(1.0*s1::time1);
