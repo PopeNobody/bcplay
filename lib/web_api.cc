@@ -88,8 +88,6 @@ const string web::load_hmac_page(
   setenv("KEY","",true);
   const static string sec=getenv("SEC");
   setenv("SEC","",true);
-  xexpose(getenv("KEY"));
-  xexpose(getenv("SEC"));
   // Set the URL.
   string fixurl=url;
   std::list<string> headers=signurl(fixurl,key,sec);

@@ -121,9 +121,17 @@ int util::xclose(int fd)
   return res;
 };
 void util::split_stream(const string &logname) {
-  int fd=open_log(logname);
+  int fd=xopen(logname.c_str(), O_WRONLY|O_CREAT,0777);
   static util::fd_streambuf obuf(1,fd);
   static util::fd_streambuf ibuf(2,fd);
   cout.rdbuf(&obuf);
   cerr.rdbuf(&ibuf);
+};
+ostream &operator<<(ostream &lhs, const std::exception &rhs)
+{
+  return lhs<<rhs.what();
+};
+ostream &operator<<(ostream &lhs, const type_info &rhs)
+{
+  return lhs<<demangle(typeid(rhs).name());
 };

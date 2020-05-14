@@ -21,6 +21,7 @@ namespace coin {
       money_t prev;
       money_t low;
       money_t vol;
+      money_t avg;
     } data;
     static market_l markets;
     market_t();
@@ -32,21 +33,24 @@ namespace coin {
     explicit operator bool() const; 
     static bool split_name(const string &name, string &cur, string &t_coin);
     bool operator<(const market_t &rhs) const;
-    sym_t cur()const{
+    const sym_t &cur()const{
       return data.cur;
     }
-    string name()const{
+    const string &name()const{
       return data.name;
     }
-    sym_t sym()const{
+    const sym_t sym()const{
       return data.sym;
     }
     money_t yield(money_t qty, sym_t f, sym_t t, bool neutral=false);
-    money_t ask()const {
+    const money_t & ask()const {
       return data.ask;
     };
-    money_t bid()const {
+    const money_t & bid()const {
       return data.bid;
+    };
+    money_t avg()const {
+      return (bid()+ask())/2;
     };
     virtual ~market_t();
     ostream &stream(ostream &lhs, int ind=0) const;
