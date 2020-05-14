@@ -50,26 +50,30 @@ money_t min_size() {
 void load_config()
 {
   goals_t res;
-  string text=util::read_file("etc/goals.json");
-  json data=json::parse(text);
-  json jgoals=data.at("goals");;
-  json jlims=data.at("limits");
-  _usd_min_size=(double)jlims.at("usd_min_size");
-  _usd_max_size=(double)jlims.at("usd_max_size");
-  double sum=0;
-  for( auto b(jgoals.begin()), e(jgoals.end()); b!=e; b++ )
-  {
-    double&val=res[sym_t(b.key())];
-    val=(double)b.value();
-    sum+=val;
-  };
-  cout << "sum of goals is " << sum << endl;
-  for( auto &pair : res ) {
-    pair.second/=sum;
-  };
-  goals=res;
-  for( auto &goal : res ) {
-    goal.second*=100000;
+  try {
+    string text=util::read_file("etc/goals.json");
+    json data=json::parse(text);
+    json jgoals=data.at("goals");;
+    json jlims=data.at("limits");
+    _usd_min_size=(double)jlims.at("usd_min_size");
+    _usd_max_size=(double)jlims.at("usd_max_size");
+    double sum=0;
+    for( auto b(jgoals.begin()), e(jgoals.end()); b!=e; b++ )
+    {
+      double&val=res[sym_t(b.key())];
+      val=(double)b.value();
+      sum+=val;
+    };
+    cout << "sum of goals is " << sum << endl;
+    for( auto &pair : res ) {
+      pair.second/=sum;
+    };
+    goals=res;
+    for( auto &goal : res ) {
+      goal.second*=100000;
+    };
+  } catch ( exception &e ) {
+    cout << e << endl;
   };
   json ndata;
   ndata["goals"]=res;

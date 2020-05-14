@@ -282,7 +282,8 @@ void coin::to_json  (      json &j, const market_t &m)
     throw;
   }
 
-};
+}
+std::vector<string> skips = { "BTC-DNA", "USDT-DNA" };
 void coin::from_json(const json &j, market_t &m)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
@@ -290,7 +291,9 @@ void coin::from_json(const json &j, market_t &m)
     xassert(!j.is_null());
     string name=j.at("MarketName");
     if(j.at("Bid").is_null() || j.at("Ask").is_null()) {
-      xcarp("Bid or Ask is not usable for market "<<name);
+      if(find(skips.begin(),skips.end(),name)==skips.end()) {
+        xcarp("Bid or Ask is not usable for market "<<name);
+      };
       return;
     };
     money_t bid=j.at("Bid");
