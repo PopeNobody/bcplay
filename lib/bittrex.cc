@@ -25,7 +25,7 @@ namespace bittrex {
 };
 bool bittrex::fake_loads=false;
 bool bittrex::fake_buys=true;
-bool bittrex::show_urls=true;
+bool bittrex::show_urls=false;
 const static string api_url = "https://bittrex.com/api/v1.1/";
 
 void bittrex::save_json(const string &fname, const json &json, bool backup)
@@ -124,8 +124,6 @@ string bittrex::json_str(order_t const &ord)
 
 void coin::from_json(const json &j, order_t& o )
 {
-  xtrace(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
-  xassert( !j.is_null() );
   order_t::data_t tmp;
 #define extract( t, x, y )  if(j.find(y)!=j.end()) { coin::from_json(j.at(y),tmp.x); }
   list( extract );
@@ -135,7 +133,7 @@ void coin::from_json(const json &j, order_t& o )
 void coin::to_json  (      json &j, const order_t &o )
 {
   trace_from_json(__PRETTY_FUNCTION__);
-  json res=json::parse("{}");
+  json res;
 #define export( t, x, y )  res[y]=o.get_data().x;
 list(export);
 #undef export
