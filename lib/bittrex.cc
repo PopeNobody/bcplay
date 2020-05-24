@@ -25,7 +25,7 @@ namespace bittrex {
 };
 bool bittrex::fake_loads=false;
 bool bittrex::fake_buys=true;
-bool bittrex::show_urls=false;
+bool bittrex::show_urls=true;
 const static string api_url = "https://bittrex.com/api/v1.1/";
 
 void bittrex::save_json(const string &fname, const json &json, bool backup)
@@ -225,14 +225,14 @@ void coin::from_json(const json &j, market_l &ml)
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
   for( auto it = j.begin(); it != j.end();it++ ) 
   {
-    try {
+//       try {
       market_t tmp;
       coin::from_json(*it,tmp);
       ml.push_back(tmp);
-    } catch ( exception &ex ) {
-      xcarp(ex.what());
-      xcomment("in json: " << setw(4) << *it);
-    };
+//       } catch ( exception &ex ) {
+//         xcarp(ex.what());
+//         xcomment("in json: " << setw(4) << *it);
+//       };
   };
 };
 void coin::from_json(const json &j, money_t &val) {
@@ -283,7 +283,11 @@ void coin::to_json  (      json &j, const market_t &m)
   }
 
 }
-std::vector<string> skips = { "BTC-DNA", "USDT-DNA" };
+std::vector<string> skips = { 
+  "BTC-LOON"   ,  "BTC-TNC",   "BTC-UBT",  "BTC-ALGO",
+  "USDT-LOON"  ,  "USDT-TNC",  "ETH-UBT", "USDT-ALGO",
+  "USDT-CGLD"  ,  "USD-CGLD",  "ETH-CGLD", "BTC-CGLD",
+};
 void coin::from_json(const json &j, market_t &m)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
@@ -298,6 +302,10 @@ void coin::from_json(const json &j, market_t &m)
     };
     money_t bid=j.at("Bid");
     money_t ask=j.at("Ask");
+    if(bid<=0 || bid>=ask ) {
+      xcomment("bad bid/ask for " << name << " skipping");
+      return;
+    };
     market_t tmp(name,bid,ask);
     xassert(tmp.name()==tmp.cur()+"-"+tmp.sym());
     coin::from_json(j.at("Last"),tmp.data.last);
@@ -311,7 +319,7 @@ void coin::from_json(const json &j, market_t &m)
     return;
   } catch ( const exception &ex ) {
     xcomment(ex.what());
-    throw;
+    return;
   }
 };
 

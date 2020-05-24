@@ -28,13 +28,21 @@ coin::market_t::market_t(const data_t &data)
 };
 coin::market_t::market_t(const string &name, money_t bid, money_t ask)
 {
-  data_t tmp;
-  tmp.name=name;
-  split_name(tmp.name,tmp.cur,tmp.sym);
-  tmp.bid=bid;
-  tmp.ask=ask;
-  xassert(bid>0 && bid<ask);
-  data=tmp;
+  try {
+    data_t tmp;
+    tmp.name=name;
+    split_name(tmp.name,tmp.cur,tmp.sym);
+    tmp.bid=bid;
+    tmp.ask=ask;
+    xassert(bid>0 && bid<ask);
+    data=tmp;
+  } catch ( const exception &ex ) {
+    xthrowre
+      (
+       "while processing market '" << name << "' (bid=" << bid << ", ask=" << ask << "\n" << 
+       ex.what() << endl
+      );
+  };
 };
 const market_l& market_t::get_markets()
 {

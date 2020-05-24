@@ -190,6 +190,7 @@ ostream &operator<<(ostream &lhs, const header_t &head)
     << left
     << "|" << setw( symw ) << "SYM "
     << right
+    << "|" << setw( monw ) << "rawBal"
     << "|" << setw( monw ) << "spot$ "
     << "|" << setw( monw ) << "spotB$ "
     << "|"
@@ -200,10 +201,6 @@ ostream &operator<<(ostream &lhs, const header_t &head)
     << "|" << setw( monw ) << "cur$ "
     << "|" << setw( monw ) << "goal$ "
     << "|" << setw( monw ) << "del$"
-    << "|"
-    << "|" << setw( monw ) << "curB$ "
-    << "|" << setw( monw ) << "goalB$ "
-    << "|" << setw( monw ) << "delB$"
     << "|";
   string str=text.str();
   if(head.dashes) {
@@ -236,6 +233,7 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
     << left
     << setw(symw) << rhs.sym << "|"
     << right
+    << setw(monw) << rhs.bal << "|"
     << setw(monw) << spot_usd << "|"
     << setw(monw) << spot_btc << "|"
     << "|"
@@ -246,10 +244,6 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
     << setw(monw) << rhs.btc*usd_spot() << "|"
     << setw(monw) << rhs.btc_goal*usd_spot() << "|"
     << setw(monw) << rhs.btc_del*usd_spot() << "|"
-    << "|"
-    << setw(monw) << rhs.btc << "|"
-    << setw(monw) << rhs.btc_goal << "|"
-    << setw(monw) << rhs.btc_del << "|"
     ;
   return lhs;
 };
@@ -276,10 +270,8 @@ todo_m todo_map;
 todo_v mk_todos()
 {
   todo_map.clear();
-  if( !goals.size() ) {
-    xcarp("you have no goals!");
-    return todo_v();
-  };
+  if( !goals.size() )
+    xthrowre("you have no goals!");
   for ( auto &g : goals )
   {
     todo_map[ g.first ].sym = g.first;
@@ -317,14 +309,12 @@ todo_v mk_todos()
       vector<sym_t> avoid;
       auto &btc=todo_map["BTC"];
       {
-        todo_t tot_all("Total");
         if(btc.btc_del<0) {
-          cout << "sort with more" << endl;
           sort(todos.begin(),todos.end(),todo_more());
         } else {
-          cout << "sort with less" << endl;
           sort(todos.begin(),todos.end(),todo_less());
         };
+        todo_t tot_all("Total");
         for( auto &todo : todos  )
           tot_all+=todo;
         tot_all+=btc;
@@ -348,7 +338,7 @@ todo_v mk_todos()
   return todo_v();
 };
 
-#define xverbose(x)
+#define xverbose(x) xtrace(x)
 void adjust(const todo_t &todo)
 {
   const auto &mkt=market_t::get("BTC",todo.sym)[0];
@@ -360,57 +350,67 @@ void adjust(const todo_t &todo)
   money_t qty, tot, unitp; 
   bool is_buy;
   money_t btc_del=todo.btc_del;
+  xtrace(max_size());
   if(btc_del > max_size()) {
     btc_del=max_size();
+  } else if ( btc_del < -max_size() ) {
+    btc_del=-max_size();
   };
   if(qty_unit == todo.sym && pri_unit=="BTC") 
   {
     xtrace("product: " << qty_unit);
     xtrace("currency: " << pri_unit);
 
-    tot=btc_del;
-    if(tot<0)
-      tot=-tot;
-    unitp=mkt.ask();
-    qty=tot/unitp;
     if(btc_del>=0) {
+      tot=btc_del;
+      unitp=mkt.ask();
+      qty=tot/unitp;
       xverbose(
-          "AAAA buy " << qty << qty_unit << " for " << unitp << pri_unit
+          "AAAA buy " << qty << qty_unit << " for "
+          << unitp << pri_unit
           << " per "  << qty_unit
-          << "  Total: " << tot << pri_unit
+          << "  Total: "
+          << tot << pri_unit
           );
       is_buy=true;
     } else {
+      tot=-btc_del;
       unitp=mkt.bid();
+      qty=tot/unitp;
       xverbose(
-          "BBBB sell " << qty << qty_unit << " for " << unitp << pri_unit
+          "BBBB sell " << qty << qty_unit << " for " << unitp
+          << pri_unit
           << " per " << qty_unit
-          << " total: " << tot << pri_unit
+          << " total: "
+          << tot << pri_unit
           );
       is_buy=false;
     }
   } else if(qty_unit=="BTC" && pri_unit==todo.sym) {
     xtrace("product: " << qty_unit);
     xtrace("currency: " << pri_unit);
+    xtrace("delta: " << btc_del);
 
-    if(btc_del<=0) {
-      unitp=mkt.ask();
+    if(btc_del>=0) {
       tot=btc_del;
-      qty=tot/unitp;
-      xverbose(
-          "CCCC buy " << qty << qty_unit << " for " << unitp
-          << "each.  total: " << tot << pri_unit
-          );
-      is_buy=true;
-    } else {
       unitp=mkt.bid();
-      qty=btc_del;
-      tot=qty*unitp;
+      qty=tot;
       xverbose(
           "DDDD sell " << qty << qty_unit << " for " << unitp
-          << "each.  total " << tot << pri_unit
+          << "each.  total "
+          << tot << qty_unit
           );
       is_buy=false;
+    } else {
+      tot=-btc_del;
+      unitp=mkt.ask();
+      qty=tot;
+      xverbose(
+          "CCCC buy " << qty << qty_unit << " for " << unitp
+          << "each.  total: "
+          << tot << qty_unit
+          );
+      is_buy=true;
     };
   } else {
     xthrowre(
@@ -444,6 +444,13 @@ int xmain( const argv_t &args )
 
   sort(todos.begin(),todos.end(),todo_more());
   for(auto &todo:todos) 
+  {
+    todo_t &btc=todo_map["BTC"];
+    xexpose(todo.btc_del);
+    xexpose(btc.btc_del);
+    xexpose(todo.btc_del-btc.btc_del);
+  };
+  for(auto &todo:todos) 
     adjust(todo);
   return 0;
 };
@@ -452,7 +459,6 @@ int main( int argc, char** argv )
   try
   {
     split_stream("log/bal.log");
-    cout << "log/bal.log:1:started\n";
     argv_t args( argv+1, argv+argc );
     if ( xmain( args ) )
       return 1;
@@ -460,14 +466,11 @@ int main( int argc, char** argv )
   }
   catch ( exception& e )
   {
-    cout << e << endl;
+    cout << e << nl;
   }
   catch ( ... )
   {
-    cout << nl;
-    cout << nl;
-    cout << nl;
-    cout << "wtf?" << nl;
+    cout << nl << "wtf?" << nl;
   }
   return 1;
 };
