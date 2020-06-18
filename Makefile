@@ -8,7 +8,7 @@ MAKEFLAGS:= -Rr --warn-undefined-variable
 MAKEFLAGS:= $(shell touch etc/make_jobs_flag)
 
 #CXX
-CXX:= clang++
+CXX:= g++
 #    CXXFLAGS += -g
 #    CXXFLAGS += -fPIC
 CXXFLAGS=@cxxflags

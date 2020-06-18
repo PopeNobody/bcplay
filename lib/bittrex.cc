@@ -283,11 +283,7 @@ void coin::to_json  (      json &j, const market_t &m)
   }
 
 }
-std::vector<string> skips = { 
-  "BTC-LOON"   ,  "BTC-TNC",   "BTC-UBT",  "BTC-ALGO",
-  "USDT-LOON"  ,  "USDT-TNC",  "ETH-UBT", "USDT-ALGO",
-  "USDT-CGLD"  ,  "USD-CGLD",  "ETH-CGLD", "BTC-CGLD",
-};
+std::vector<string> skips = { "BTC-4ART", "USDT-4ART" };
 void coin::from_json(const json &j, market_t &m)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
