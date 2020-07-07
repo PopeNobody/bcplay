@@ -22,15 +22,14 @@ CPPFLAGS += -Iinclude
 CPPFLAGS += -DWITH_ICU 
 CPPFLAGS=  -MD -MT $@ @cppflags
 #LD
-LDFLAGS := 
-LDFLAGS += -L$(HOME)/lib -L$(PWD)/lib
+LDFLAGS := -L$(PWD)/lib
+LDFLAGS += -L$(HOME)/lib
 LDFLAGS += -g -L. 
 
 LDLIBS := -Wl,--start-group
 LDLIBS += -lcoin
-LDLIBS += -lcurl 
+LDLIBS += -lcurl
 LDLIBS += -lcurlpp
-#LDLIBS += -lbitcoin-system
 #LDLIBS += -lsecp256k1 -lgmp
 #LDLIBS += -lboost_system
 #LDLIBS += -lboost_thread
