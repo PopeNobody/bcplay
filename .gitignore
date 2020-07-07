@@ -34,7 +34,6 @@ guard
 ham
 hd_addrs
 include
-include
 libcoin.a.lock
 log/
 make.out
