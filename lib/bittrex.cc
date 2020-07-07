@@ -355,6 +355,26 @@ string bittrex::simple_xact (
   if(fake_buys || fake_loads)
     return "faked";
 
+  try {
+    string page = web::load_hmac_page(url);
+    auto jpage=json::parse(page);
+    cout << setw(4) << jpage << endl;
+    if(!jpage.at("success")) {
+      throw runtime_error( "no success in buylimit result\n\n"+page);
+    };
+    jpage=jpage.at("result");
+    cout << setw(4) << jpage << endl;
+    jpage=jpage.at("uuid");
+    cout << setw(4) << jpage << endl;
+    return jpage;
+  } catch ( const exception &ex ) {
+    ostringstream msg;
+    msg << "got exception: " << ex << endl;
+    msg << "           in: " << __PRETTY_FUNCTION__ << endl;
+    msg << "          url: " << url << endl;
+    throw runtime_error(msg.str());
+  };
+};
 void bittrex::show_withdrawals() {
   cout << "with" << endl;
   const static string gw_url=
