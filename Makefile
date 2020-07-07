@@ -59,7 +59,7 @@ $(TESTS): %: t/%.o libcoin.a
 
 test: $(TESTS)
 
-all: tags $(TESTS)
+all: $(TESTS)
 
 
 CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt --language-force=c++

@@ -50,6 +50,10 @@ int xmain(int argc, char**argv)
     if(argv[i]==string("-y"))
       bittrex::fake_buys=false;
   };
+  if(!bittrex::fake_buys) {
+    cout << "not ";
+  };
+  cout << "faking buys!" << endl;
   //demo(10000,0.01,"BTC","$$$");
   vector<balance_t> todo;
   auto &bals=balance_t::get_balances();
@@ -135,6 +139,7 @@ int xmain(int argc, char**argv)
               mkt.bid(),
               false
               );
+
           while(res.size())
           {
             order_l ords=bittrex::get_order(res);
@@ -163,15 +168,18 @@ int xmain(int argc, char**argv)
               mkt.bid(),
               true
               );
-          while(res.size())
-          {
-            order_l ords=bittrex::get_order(res);
-            xexpose(ords.size());
-            xexpose(ords);
-            if( !ords[0].is_open() ) {
+          xexpose(res);
+          if(res!="faked") {
+            while(res.size())
+            {
+              order_l ords=bittrex::get_order(res);
+              xexpose(ords.size());
+              xexpose(ords);
+              if( !ords[0].is_open() ) {
+                break;
+              };
               break;
             };
-            break;
           };
           break;
         } else {
