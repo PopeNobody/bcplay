@@ -3,6 +3,7 @@ include etc/default_target.mk
 all:
 
 
+CXX:=g++
 #Make
 MAKEFLAGS:= -Rr --warn-undefined-variable
 MAKEFLAGS:= $(shell touch etc/make_jobs_flag)
