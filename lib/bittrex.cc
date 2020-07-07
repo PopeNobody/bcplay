@@ -350,45 +350,11 @@ string bittrex::simple_xact (
   if(ioc)
     url+="&timeInForce=IOC";
   url+="&";
-  if(url.length()!=strlen(url.c_str()))
-  {
-    asm("int3");
-    cerr << "url: ";
-    for( auto ch : url )
-    {
-      if(!isprint(ch)) {
-        cerr << "[" << int(ch) << "]";
-      } else {
-        cerr << ch;
-      };
-    };
-    xassert(url.length()==strlen(url.c_str()));
-  };
   if(show_urls)
     cout << "url: " << url << endl;
   if(fake_buys || fake_loads)
     return "faked";
 
-  try {
-    string page = web::load_hmac_page(url);
-    auto jpage=json::parse(page);
-    cout << setw(4) << jpage << endl;
-    if(!jpage.at("success")) {
-      throw runtime_error( "no success in buylimit result\n\n"+page);
-    };
-    jpage=jpage.at("result");
-    cout << setw(4) << jpage << endl;
-    jpage=jpage.at("uuid");
-    cout << setw(4) << jpage << endl;
-    return jpage;
-  } catch ( const exception &ex ) {
-    ostringstream msg;
-    msg << "got exception: " << ex << endl;
-    msg << "           in: " << __PRETTY_FUNCTION__ << endl;
-    msg << "          url: " << url << endl;
-    throw runtime_error(msg.str());
-  };
-};
 void bittrex::show_withdrawals() {
   cout << "with" << endl;
   const static string gw_url=
