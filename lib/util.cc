@@ -130,9 +130,9 @@ void util::split_stream(const string &logname) {
 };
 ostream &operator<<(ostream &lhs, const type_info &rhs)
 {
-  return lhs << demangle(rhs.name());
+  return lhs<<demangle(typeid(rhs).name());
 };
 ostream &operator<<(ostream &lhs, const std::exception &rhs)
 {
-  return lhs << typeid(rhs) << "( "  <<rhs.what() << " )";
+  return lhs << typeid(rhs) << endl <<rhs.what();
 };
