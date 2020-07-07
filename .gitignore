@@ -51,3 +51,4 @@ tags
 tc_stat
 unit_test
 xkey
+bin/curlpp-config
