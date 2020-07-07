@@ -35,6 +35,7 @@ guard
 ham
 hd_addrs
 include
+lib/pkgconfig/
 libcoin.a.lock
 log/
 make.out
