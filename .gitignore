@@ -3,9 +3,11 @@
 **.ii
 **.o
 *.db
+*.out
 .gdb_history
 bal
 bals2db
+bin/curlpp-config
 can_orders
 ckey
 closeout
