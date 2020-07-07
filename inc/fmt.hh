@@ -10,14 +10,20 @@ namespace fmt {
   struct streamable_tag
   {
   };
+#if 1
   template<typename rhs_t>
   inline typename std::enable_if<std::is_base_of<fmt::streamable_tag,rhs_t>::value,ostream &>::type &operator<<( ostream &lhs, const rhs_t &rhs )
   {
     return rhs.stream(lhs);
   };
-}
+#else
+  template<typename rhs_t>
+  inline typename std::enable_if<streamable_tag<rhs_t>::value,ostream &>::type &operator<<(ostream &lhs, const rhs_t &rhs)
+  {
+    return rhs.stream(lhs);
+  };
+#endif
 
-namespace fmt {
   class fp_val : public streamable_tag
   {
     protected:
@@ -52,7 +58,7 @@ namespace fmt {
         : fp_val(lhs/rhs)
         {
         };
-      virtual int get_width() const;
+      int get_width() const;
       string fmt() const;
       pct_t &operator+=(const pct_t&rhs)
       {
@@ -64,7 +70,7 @@ namespace fmt {
         val+=rhs.val;
         return *this;
       };
-      virtual ostream &stream(ostream &lhs, int ind=0) const;
+      ostream &stream(ostream &lhs, int ind=0) const;
   };
   template<typename otype_t>
     inline otype_t operator*(const otype_t &lhs, const pct_t &rhs)
