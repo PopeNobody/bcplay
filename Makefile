@@ -7,40 +7,18 @@ all:
 MAKEFLAGS:= -Rr --warn-undefined-variable
 MAKEFLAGS:= $(shell touch etc/make_jobs_flag)
 
-#CXX
-CXX:= g++
-#    CXXFLAGS += -g
-#    CXXFLAGS += -fPIC
-CXXFLAGS=@cxxflags
-#AR
 AR:= ar
 
-#CPP
-CPPFLAGS = -I$(HOME)/include
-CPPFLAGS += -Iinc
-CPPFLAGS += -Iinclude
-CPPFLAGS += -DWITH_ICU 
+CXXFLAGS=@cxxflags
 CPPFLAGS=  -MD -MT $@ @cppflags
-#LD
-LDFLAGS := -L$(PWD)/lib
+LDFLAGS := @ld_flags -L$(PWD)/lib
 LDFLAGS += -L$(HOME)/lib
-LDFLAGS += -g -L. 
+LDFLAGS += -g
 
 LDLIBS := -Wl,--start-group
 LDLIBS += -lcoin
 LDLIBS += -lcurl
 LDLIBS += -lcurlpp
-#LDLIBS += -lsecp256k1 -lgmp
-#LDLIBS += -lboost_system
-#LDLIBS += -lboost_thread
-#LDLIBS += -lboost_regex
-#LDLIBS += -lboost_locale
-#LDLIBS += -lboost_program_options
-#LDLIBS += -licudata
-#LDLIBS += -licuuc
-#LDLIBS += -licui18n
-#LDLIBS += -ldl
-#LDLIBS += -lpthread
 LDLIBS += -Wl,--end-group
 
 LCOIN_SRC:=$(wildcard lib/*.cc)
