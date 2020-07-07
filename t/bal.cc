@@ -53,7 +53,7 @@ void load_config()
   try {
     string text=util::read_file("etc/goals.json");
     json data=json::parse(text);
-    json jgoals=data.at("goals");;
+    json jgoals=data.at("goals");
     json jlims=data.at("limits");
     _usd_min_size=(double)jlims.at("usd_min_size");
     _usd_max_size=(double)jlims.at("usd_max_size");
