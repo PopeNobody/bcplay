@@ -1,1 +1,1 @@
--Iinclude -Iinc -DWITH_ICU -DSYSCONFDIR="/home/rfp/stow/bx/etc"
+-I/home/nn/include -Iinclude -Iinc
