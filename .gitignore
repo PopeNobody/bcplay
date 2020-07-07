@@ -3,6 +3,7 @@
 **.ii
 **.o
 *.db
+*.out
 .gdb_history
 bal
 bals2db
@@ -33,6 +34,7 @@ guard
 ham
 hd_addrs
 include
+include
 libcoin.a.lock
 log/
 make.out
@@ -50,5 +52,3 @@ tags
 tc_stat
 unit_test
 xkey
-include
-*.out
