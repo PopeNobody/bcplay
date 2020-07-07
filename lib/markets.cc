@@ -150,23 +150,22 @@ ostream &coin::market_t::stream( ostream &res, int ind ) const
 };
 money_t market_t::yield(money_t qty, sym_t f, sym_t t, bool neutral)
 {
-  auto &mkt=*this;
   money_t rate;
   if( neutral )
-    rate=(mkt.bid()+mkt.ask())/2;
-  if( f == mkt.data.cur && t == mkt.data.sym ) {
+    rate=(bid()+ask())/2;
+  if( f == data.cur && t == data.sym ) {
     // This is a buy
     if( !neutral )
-      rate=mkt.bid();
+      rate=bid();
     return qty/rate;
-  } else if ( f == mkt.data.sym && t == mkt.data.cur ) {
+  } else if ( f == data.sym && t == data.cur ) {
     // This is a sell
     if( !neutral )
-      rate=mkt.ask();
+      rate=ask();
     return qty*rate;
   } else {
     xthrow(runtime_error,
-        "market " << mkt.name() << " cannot convert from " << f << " to " << t);
+        "market " << name() << " cannot convert from " << f << " to " << t);
   };
 };
 bool market_t::split_name(const string &name, string &cur, string &sym)
