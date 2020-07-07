@@ -1,0 +1,13 @@
+inc/balance.hh:8:	struct balance_t : public fmt::can_str {
+inc/fmt.hh:6:  struct can_str {
+inc/fmt.hh:8:    virtual ~can_str();
+inc/fmt.hh:10:  inline ostream &operator<<( ostream &lhs, const fmt::can_str &rhs )
+inc/fmt.hh:14:  class fp_val : public can_str
+inc/json.hh:7681:    token_type scan_string()
+inc/json.hh:8898:                return scan_string();
+inc/markets.hh:11:  struct market_t : public fmt::can_str 
+inc/markets.hh:63:  struct market_l : public vector<market_t>, public fmt::can_str
+inc/money.hh:7:  using fmt::can_str;
+inc/money.hh:8:	class money_t : public can_str
+inc/order.hh:9:	class order_t : public fmt::can_str
+inc/order.hh:59:	class order_l : public std::vector<order_t>, public fmt::can_str

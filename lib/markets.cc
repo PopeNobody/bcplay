@@ -198,9 +198,7 @@ bool market_t::operator<(const market_t &rhs) const
 }
 
 #define empty_des(x) x::~ x(){}
-empty_des(can_str);
-empty_des(market_l);
-empty_des(market_t);
+//   empty_des(can_str);
 //   empty_des(market_path);
 //   empty_des(market_path_l);
 

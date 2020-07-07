@@ -4,8 +4,7 @@
 #include <fmt.hh>
 
 namespace coin {
-  using fmt::can_str;
-	class money_t : public can_str
+	class money_t : public fmt::streamable_tag
   {
 		double val;
 		public:
@@ -53,7 +52,7 @@ namespace coin {
 				return val-lhs.val;
 			};
 			int get_width() const;
-			virtual ostream &stream(ostream &lhs,int ind=0) const;
+			ostream &stream(ostream &lhs,int ind=0) const;
 	};
 #define def_op(op) \
 			inline money_t operator op(double lhs, const money_t &rhs) \

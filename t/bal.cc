@@ -341,7 +341,8 @@ todo_v mk_todos()
 #define xverbose(x) xtrace(x)
 void adjust(const todo_t &todo)
 {
-  const auto &mkt=market_t::get("BTC",todo.sym)[0];
+  const auto mkt_l=market_t::get("BTC",todo.sym);
+  const auto &mkt=mkt_l[0];
   const auto &btc=todo_map["BTC"];
 
   sym_t qty_unit=mkt.sym();
@@ -350,7 +351,7 @@ void adjust(const todo_t &todo)
   money_t qty, tot, unitp; 
   bool is_buy;
   money_t btc_del=todo.btc_del;
-  xtrace(max_size());
+  xexpose(todo.bal);
   if(btc_del > max_size()) {
     btc_del=max_size();
   } else if ( btc_del < -max_size() ) {
@@ -358,8 +359,9 @@ void adjust(const todo_t &todo)
   };
   if(qty_unit == todo.sym && pri_unit=="BTC") 
   {
-    xtrace("product: " << qty_unit);
-    xtrace("currency: " << pri_unit);
+    xexpose(qty_unit);
+    xexpose(pri_unit);
+    xexpose(btc_del);
 
     if(btc_del>=0) {
       tot=btc_del;
@@ -387,9 +389,9 @@ void adjust(const todo_t &todo)
       is_buy=false;
     }
   } else if(qty_unit=="BTC" && pri_unit==todo.sym) {
-    xtrace("product: " << qty_unit);
-    xtrace("currency: " << pri_unit);
-    xtrace("delta: " << btc_del);
+    xexpose(qty_unit);
+    xexpose(pri_unit);
+    xexpose(btc_del);
 
     if(btc_del>=0) {
       tot=btc_del;
@@ -417,6 +419,7 @@ void adjust(const todo_t &todo)
         "WTF? mkt symbols: cur="<<mkt.cur()<<" and prod=" << mkt.sym()
         );
   };;
+  xexpose( qty * unitp );
   string uuid=simple_xact(mkt, is_buy, qty, unitp, true );
   if(uuid.size() && uuid!="faked")
   {
@@ -443,13 +446,6 @@ int xmain( const argv_t &args )
     return 0;
 
   sort(todos.begin(),todos.end(),todo_more());
-  for(auto &todo:todos) 
-  {
-    todo_t &btc=todo_map["BTC"];
-    xexpose(todo.btc_del);
-    xexpose(btc.btc_del);
-    xexpose(todo.btc_del-btc.btc_del);
-  };
   for(auto &todo:todos) 
     adjust(todo);
   return 0;

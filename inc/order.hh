@@ -6,7 +6,7 @@
 #include <fmt.hh>
 
 namespace coin {
-	class order_t : public fmt::can_str
+	class order_t : public fmt::streamable_tag
 	{
     public:
     struct data_t {
@@ -49,19 +49,19 @@ namespace coin {
     bool is_open() const {
       return data.is_open;
     };
-    virtual ~order_t();
-		virtual ostream &stream(ostream &lhs, int ind=0) const;
+    ~order_t();
+		ostream &stream(ostream &lhs, int ind=0) const;
     const data_t &get_data() const {
       return data;
     };
     data_t data;
 	};
-	class order_l : public std::vector<order_t>, public fmt::can_str
+	class order_l : public std::vector<order_t>, public fmt::streamable_tag
   {
     using std::vector<order_t>::vector;
   public:
-    virtual ~order_l();
-		virtual ostream &stream(ostream &lhs, int ind=0) const;
+    ~order_l();
+		ostream &stream(ostream &lhs, int ind=0) const;
   };
 };
 

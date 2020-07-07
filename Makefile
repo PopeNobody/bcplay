@@ -8,7 +8,7 @@ MAKEFLAGS:= -Rr --warn-undefined-variable
 MAKEFLAGS:= $(shell touch etc/make_jobs_flag)
 
 #CXX
-CXX:= clang++
+CXX:= g++
 #    CXXFLAGS += -g
 #    CXXFLAGS += -fPIC
 CXXFLAGS=@cxxflags
@@ -18,18 +18,19 @@ AR:= ar
 #CPP
 CPPFLAGS = -I$(HOME)/include
 CPPFLAGS += -Iinc
+CPPFLAGS += -Iinclude
 CPPFLAGS += -DWITH_ICU 
-CPPFLAGS += -DSYSCONFDIR="\"/home/rfp/stow/bx/etc\""
-$(shell echo $(CPPFLAGS) > cppflags)
 CPPFLAGS=  -MD -MT $@ @cppflags
 #LD
-LDFLAGS += -L$(HOME)/lib
+LDFLAGS := 
+LDFLAGS += -L$(HOME)/lib -L$(PWD)/lib
 LDFLAGS += -g -L. 
 
 LDLIBS := -Wl,--start-group
 LDLIBS += -lcoin
-LDLIBS += -lcurl -lcurlpp
-LDLIBS += -lbitcoin-system
+LDLIBS += -lcurl 
+LDLIBS += -lcurlpp
+#LDLIBS += -lbitcoin-system
 #LDLIBS += -lsecp256k1 -lgmp
 #LDLIBS += -lboost_system
 #LDLIBS += -lboost_thread

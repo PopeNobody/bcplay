@@ -5,7 +5,7 @@
 
 namespace coin {
   class balance_l;
-	struct balance_t : public fmt::can_str {
+	struct balance_t : public fmt::streamable_tag {
 		sym_t sym;
 		money_t bal;
 		money_t ava;
@@ -13,8 +13,8 @@ namespace coin {
 		money_t usd;
 		money_t btc;
 		bool operator<(const balance_t &rhs) const;
-		virtual ostream &stream(ostream &lhs, int ind=0) const;
-		virtual ~balance_t();
+		ostream &stream(ostream &lhs, int ind=0) const;
+		~balance_t();
     static const balance_t &get(const sym_t &sym);
 		static const balance_l &get_balances();
 		static const balance_l &load_balances();

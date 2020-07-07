@@ -4,10 +4,12 @@
 #include <web_api.hh>
 #include <cmath>
 #include <dbg.hh>
+#include <sstream>
 
 using namespace coin;
 using namespace util;
 using namespace fmt;
+using std::ostringstream;
 using nlohmann::detail::value_t;
 
 #if 1
@@ -283,11 +285,7 @@ void coin::to_json  (      json &j, const market_t &m)
   }
 
 }
-std::vector<string> skips = { 
-  "BTC-LOON"   ,  "BTC-TNC",   "BTC-UBT",  "BTC-ALGO",
-  "USDT-LOON"  ,  "USDT-TNC",  "ETH-UBT", "USDT-ALGO",
-  "USDT-CGLD"  ,  "USD-CGLD",  "ETH-CGLD", "BTC-CGLD",
-};
+std::vector<string> skips = { "BTC-COMP", "USDT-COMP", "USD-COMP", "ETH-COMP" };
 void coin::from_json(const json &j, market_t &m)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
@@ -307,7 +305,6 @@ void coin::from_json(const json &j, market_t &m)
       return;
     };
     market_t tmp(name,bid,ask);
-    xassert(tmp.name()==tmp.cur()+"-"+tmp.sym());
     coin::from_json(j.at("Last"),tmp.data.last);
     coin::from_json(j.at("High"),tmp.data.high);
     coin::from_json(j.at("Low"),tmp.data.low);
@@ -353,22 +350,44 @@ string bittrex::simple_xact (
   if(ioc)
     url+="&timeInForce=IOC";
   url+="&";
+  if(url.length()!=strlen(url.c_str()))
+  {
+    asm("int3");
+    cerr << "url: ";
+    for( auto ch : url )
+    {
+      if(!isprint(ch)) {
+        cerr << "[" << int(ch) << "]";
+      } else {
+        cerr << ch;
+      };
+    };
+    xassert(url.length()==strlen(url.c_str()));
+  };
   if(show_urls)
     cout << "url: " << url << endl;
   if(fake_buys || fake_loads)
     return "faked";
 
-  string page = web::load_hmac_page(url);
-  auto jpage=json::parse(page);
-  cout << setw(4) << jpage << endl;
-  if(!jpage.at("success")) {
-    throw runtime_error( "no success in buylimit result\n\n"+page);
+  try {
+    string page = web::load_hmac_page(url);
+    auto jpage=json::parse(page);
+    cout << setw(4) << jpage << endl;
+    if(!jpage.at("success")) {
+      throw runtime_error( "no success in buylimit result\n\n"+page);
+    };
+    jpage=jpage.at("result");
+    cout << setw(4) << jpage << endl;
+    jpage=jpage.at("uuid");
+    cout << setw(4) << jpage << endl;
+    return jpage;
+  } catch ( const exception &ex ) {
+    ostringstream msg;
+    msg << "got exception: " << ex << endl;
+    msg << "           in: " << __PRETTY_FUNCTION__ << endl;
+    msg << "          url: " << url << endl;
+    throw runtime_error(msg.str());
   };
-  jpage=jpage.at("result");
-  cout << setw(4) << jpage << endl;
-  jpage=jpage.at("uuid");
-  cout << setw(4) << jpage << endl;
-  return jpage;
 };
 void bittrex::show_withdrawals() {
   cout << "with" << endl;

@@ -4,18 +4,18 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 #include <json.hh>
-#include <bitcoin/system/math/hash.hpp>
-#include <bitcoin/system/formats/base_16.hpp>
+//#include <bitcoin/system/math/hash.hpp>
+//#include <bitcoin/system/formats/base_16.hpp>
+#include <hash.hh>
 
 using namespace curlpp::options;
 using namespace std;
 
 using nlohmann::json;
 
-using bc::system::encode_base16;
-using bc::system::hmac_sha512_hash;
+//using bc::system::encode_base16;
+//using bc::system::hmac_sha512_hash;
 
-typedef std::vector<unsigned char> data_chunk;
 bool web::verbose =false;
 
 const string web::load_page(const string &url, const list<string> &headers)
@@ -40,7 +40,7 @@ const string web::load_page(const string &url, const list<string> &headers)
   myRequest.setOpt(new curlpp::options::FailOnError(true));
   myRequest.perform();
 
-  return move(os.str());
+  return os.str();
 }
 data_chunk str2chunk(const string &str) {
   return data_chunk(str.begin(),str.end());
@@ -59,7 +59,7 @@ std::list<string> signurl(const string &url, const string &key, const string &se
   string sign=encode_base16(hmac_sha512_hash(urldat,secdat));
   res.push_back(url);
   res.push_back("apisign:"+sign);
-  return move(res);
+  return res;
 };
 string web::pp_json(const string &page) {
   json jpage;

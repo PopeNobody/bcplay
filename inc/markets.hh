@@ -8,7 +8,7 @@
 namespace coin {
   using namespace std;
   class market_l;
-  struct market_t : public fmt::can_str 
+  struct market_t : public fmt::streamable_tag 
   {
     struct data_t {
       string name;
@@ -28,6 +28,7 @@ namespace coin {
     market_t(const data_t &);
     market_t(const market_t &);
     market_t(const string &name, money_t bid, money_t ask);
+    public:
     market_t reverse() const;
    
     explicit operator bool() const; 
@@ -52,7 +53,6 @@ namespace coin {
     money_t avg()const {
       return (bid()+ask())/2;
     };
-    virtual ~market_t();
     ostream &stream(ostream &lhs, int ind=0) const;
     static money_t conv(money_t, const sym_t &from, const sym_t &to, bool neutral=true);
     static money_t conv2(money_t, const sym_t &from, const sym_t &to, bool neutral=true);
@@ -60,9 +60,8 @@ namespace coin {
     static const market_l &load_markets();
     static market_l get(const string &from, const string &to, bool exceptions=true);
   };
-  struct market_l : public vector<market_t>, public fmt::can_str
+  struct market_l : public vector<market_t>, public fmt::streamable_tag
   {
-    virtual ~market_l();
     ostream &stream(ostream &lhs, int ind=0) const;
   };
 }

@@ -128,11 +128,11 @@ void util::split_stream(const string &logname) {
   cerr.rdbuf(&ebuf);
   cout << logname << ":1:started\n";
 };
-ostream &operator<<(ostream &lhs, const std::exception &rhs)
-{
-  return lhs << typeid(rhs) << endl <<rhs.what();
-};
 ostream &operator<<(ostream &lhs, const type_info &rhs)
 {
-  return lhs<<demangle(typeid(rhs).name());
+  return lhs << demangle(rhs.name());
+};
+ostream &operator<<(ostream &lhs, const std::exception &rhs)
+{
+  return lhs << typeid(rhs) << "( "  <<rhs.what() << " )";
 };

@@ -2,27 +2,34 @@
 #define fmt_hh fmt_hh
 
 #include <coinfwd.hh>
+#include <iostream>
+
 namespace fmt {
-  struct can_str {
-    virtual ostream &stream(ostream &lhs, int ind=0) const=0;
-    virtual ~can_str();
-  };
-  inline ostream &operator<<( ostream &lhs, const fmt::can_str &rhs )
+  using std::ostream;
+  using std::string;
+  struct streamable_tag
   {
-    return rhs.stream(lhs,0);
   };
-  class fp_val : public can_str
+  template<typename rhs_t>
+  inline typename std::enable_if<std::is_base_of<fmt::streamable_tag,rhs_t>::value,ostream &>::type &operator<<( ostream &lhs, const rhs_t &rhs )
+  {
+    return rhs.stream(lhs);
+  };
+}
+
+namespace fmt {
+  class fp_val : public streamable_tag
   {
     protected:
       double val;
-      virtual ~fp_val ();
+      ~fp_val ();
       fp_val(double val)
         : val(val)
       {
       };
     public:
-      virtual string fmt() const=0;
-      virtual int get_width() const=0;
+      string fmt() const;
+      int get_width() const;
       double get() const {
         return val;
       };
