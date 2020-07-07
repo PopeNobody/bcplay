@@ -419,7 +419,6 @@ void adjust(const todo_t &todo)
         "WTF? mkt symbols: cur="<<mkt.cur()<<" and prod=" << mkt.sym()
         );
   };
-  xexpose( qty * unitp );
   string uuid=simple_xact(mkt, is_buy, qty, unitp, true );
   if(uuid.size() && uuid!="faked")
   {
