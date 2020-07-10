@@ -51,12 +51,11 @@ namespace coin {
 	};
 	ostream &balance_t::stream(ostream &lhs, int ind) const {
 		lhs
-      << " | " 
-      << sym << bal << " | " 
-      << " U$" << usd << " | " 
-      << " B$" << btc << " | " 
-      << " P:" << pend << " | "
-      << " A: " << ava << " | "
+      << "| " 
+      << left << setw(6) << sym << "|" << right << setw(14) << bal << " | " 
+      << " USD " << usd << " | " 
+      << " BTC " << btc << " | " 
+      << " P:" << pend << " |"
       ;
 		return lhs;
 	};

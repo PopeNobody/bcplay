@@ -9,6 +9,22 @@
 #include <boost/lexical_cast.hpp>
 #include <dbg.hh>
 
+vector<string> util::split( char sep, const string &str )
+{
+  vector<string> res;
+  auto b(str.begin());
+  auto e(str.end());
+  auto d(find(b,e,sep));
+  while( b!=e )
+  {
+    res.push_back(string(b,d));
+    cout << "got: " << res.back() << endl;
+    b=++d;
+    d=find(b,e,sep);
+  }; 
+  
+  return res;
+}
 string util::strip(const string &str)
 {
 	auto b(str.begin());

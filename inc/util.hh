@@ -52,23 +52,7 @@ namespace util {
     {
       return join(c,cont.begin(),cont.end());
     };
-  inline vector<string> split( char sep, const string &str )
-  {
-    vector<string> res;
-    auto s=str.begin();
-    for( auto b(s), e(str.end()); b!=e; b++ ) {
-      if( *b == sep )
-      {
-        res.push_back(string(s,b));
-        while(b!=e && *b == sep)
-          ++b;
-        s=b;
-      };
-    };
-    res.push_back(string(s,str.end()));
-
-    return res;
-  }
+  vector<string> split( char sep, const string &str );
   void split_stream(const string &logname);
   template<typename itr_t, typename val_t>
     bool contains(itr_t b, itr_t e, const val_t &val){

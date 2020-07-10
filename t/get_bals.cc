@@ -57,8 +57,10 @@ int xmain(int argc, char**argv) {
     << endl;
   int num=0;
   for( auto bal : bals ) {
-    if(!bal.bal)
+    if(!bal.bal) {
+      cout << bal.sym << " " << bal.bal << endl;
       continue;
+    };
 
     cout
       << left
