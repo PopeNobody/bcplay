@@ -16,15 +16,19 @@ ostream &operator<<(ostream &lhs, const vector<string> rhs)
 int check_split(const string &str, const vector<string> expect, char del)
 {
   auto result=util::split(del,str);
-  if( expect == result )
-    return 0;
   cerr << "expected: " << expect << endl;
   cerr << "     got: " << result << endl;
-  return 1;
+  return ( expect != result );
 };
 int main(int, char**)
 {
   int errs=0;
+  errs+=check_split("",{},',');
+  errs+=check_split("a",{"a"},',');
+  errs+=check_split("a,b",{"a","b"},',');
+  errs+=check_split("a,,b",{"a","","b"},',');
+  errs+=check_split(",,b",{"","","b"},',');
+  errs+=check_split("a,",{"a",""},',');
   errs+=check_split(",",{"",""},',');
-  return 0;
+  return errs;
 }

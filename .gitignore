@@ -52,4 +52,5 @@ t/ham.txt
 tags
 tc_stat
 unit_test
+util_unit_tests
 xkey

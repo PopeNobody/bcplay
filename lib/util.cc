@@ -14,15 +14,16 @@ vector<string> util::split( char sep, const string &str )
   vector<string> res;
   auto b(str.begin());
   auto e(str.end());
-  auto d(find(b,e,sep));
-  while( b!=e )
+  if(b==e)
+    return res;
+  while(true)
   {
-    res.push_back(string(b,d));
-    cout << "got: " << res.back() << endl;
-    b=++d;
-    d=find(b,e,sep);
-  }; 
-  
+    auto s(find(b,e,sep));
+    res.push_back(string(b,s));
+    if(s==e)
+      break;
+    b=s+1;
+  };
   return res;
 }
 string util::strip(const string &str)

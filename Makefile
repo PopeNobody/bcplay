@@ -72,7 +72,7 @@ clean:
 tags:	deps.all
 	ctags $(CTAGS_FLAGS) -L $^
 
-DEPS:=$(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
+DEPS:= /dev/null $(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
 $(DEPS): ;
 deps.all: $(DEPS)
 	vi_perl all_deps.pl  $@ $^
