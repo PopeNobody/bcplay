@@ -6,8 +6,8 @@ use warnings;
 use Carp qw(cluck);
 use Data::Dumper;
 
+die "usage: $0 [outfile] [depfiles...]" unless @ARGV > 1;
 my $ofn=shift;
-die "usage: $0 [outfile] [depfiles...]" unless @ARGV;
 eval "use autodie qw(:all);";
 open(my $ofh,">$ofn");
 my %seen;
@@ -19,4 +19,4 @@ while(<ARGV>) {
   };
 };
 
-print "$_\n" for sort keys %seen;
+$ofh->print("$_\n") for sort keys %seen;

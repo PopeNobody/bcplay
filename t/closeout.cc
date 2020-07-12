@@ -22,7 +22,7 @@ void adjust(const balance_t &bal)
     cout << "we need to buy more " << bal.sym << " before we can sell it." << endl;
     cout << "  btc val: " << bal.btc << endl;
     cout << "  min txn: " << min_txn_btc << endl;
-    auto mlist = market_t::get(bal.sym,"");
+    auto mlist = market_t::get(bal.sym,"BTC");
     for( auto mkt : mlist ) {
       cout << mkt << endl;
     };
