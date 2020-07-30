@@ -40,6 +40,7 @@ libcoin.a.lock
 log/
 make.out
 markets
+mk_html
 mkts2db
 onebal
 orders
@@ -54,4 +55,3 @@ tc_stat
 unit_test
 util_unit_tests
 xkey
-mk_html
