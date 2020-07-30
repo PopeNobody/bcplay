@@ -68,6 +68,7 @@ clean:
 	rm -f libcoin.a $(TESTS)
 	rm -f tags deps.all
 	rm -f */*.[od] */*.ii
+	csort .gitignore -o .gitignore -u
 
 tags:	deps.all
 	ctags $(CTAGS_FLAGS) -L $^
