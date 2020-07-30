@@ -14,6 +14,10 @@ using fmt::nl;
 int xmain(int argc, char**argv) {
   cerr << "Loading Balances" << endl;
   balance_l bals = balance_l::load_balances();
+  for( auto const &bal : bals ) 
+  {
+    cout << bal << endl;
+  };
   return 0;
 };
 int main(int argc, char**argv) {
