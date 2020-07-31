@@ -17,10 +17,7 @@ deps.all
 doit
 etc/*.mk
 etc/ar_flags
-etc/ar_flags
 etc/cppflags
-etc/cppflags
-etc/cxxflags
 etc/cxxflags
 etc/default_target
 etc/default_target.mk
@@ -29,7 +26,6 @@ etc/goals.json
 etc/goals.json.cur
 etc/goals.json.new
 etc/goals.json.save
-etc/ld_flags
 etc/ld_flags
 etc/make_jobs_flag
 etc/shit
