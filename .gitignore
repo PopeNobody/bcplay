@@ -17,6 +17,7 @@ deps.all
 doit
 etc/*.mk
 etc/default_target
+etc/default_target.mk
 etc/fuck.def
 etc/goals.json
 etc/goals.json.cur
