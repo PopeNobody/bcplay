@@ -10,9 +10,9 @@ MAKEFLAGS:= $(shell touch etc/make_jobs_flag)
 
 AR:= ar
 
-CXXFLAGS=@cxxflags
-CPPFLAGS=  -MD -MT $@ @cppflags
-LDFLAGS := @ld_flags -L$(PWD)/lib
+CXXFLAGS=@etc/cxxflags
+CPPFLAGS=  -MD -MT $@ @etc/cppflags
+LDFLAGS := @etc/ld_flags -L$(PWD)/lib
 LDFLAGS += -L$(HOME)/lib
 LDFLAGS += -g
 
