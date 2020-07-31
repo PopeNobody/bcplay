@@ -13,7 +13,14 @@ ostream &operator<<(ostream &lhs, const vector<string> rhs)
   res << "}";
   return lhs << res.str();
 };
-int check_split(const string &str, const vector<string> expect, char del)
+int check_join(const string &expect, const string &str, char del=',')
+{
+  auto result=util::join(del,str);
+  cerr << "expected: " << expect << endl;
+  cerr << "     got: " << result << endl;
+  return ( expect != result );
+};
+int check_split(const string &str, const vector<string> expect, char del=',')
 {
   auto result=util::split(del,str);
   cerr << "expected: " << expect << endl;
@@ -23,12 +30,12 @@ int check_split(const string &str, const vector<string> expect, char del)
 int main(int, char**)
 {
   int errs=0;
-  errs+=check_split("",{},',');
-  errs+=check_split("a",{"a"},',');
-  errs+=check_split("a,b",{"a","b"},',');
-  errs+=check_split("a,,b",{"a","","b"},',');
-  errs+=check_split(",,b",{"","","b"},',');
-  errs+=check_split("a,",{"a",""},',');
-  errs+=check_split(",",{"",""},',');
+  errs+=check_split("",      {});
+  errs+=check_split("a",     {"a"});
+  errs+=check_split("a,b",   {"a","b"});
+  errs+=check_split("a,,b",  {"a","","b"});
+  errs+=check_split(",,b",   {"","","b"});
+  errs+=check_split("a,",    {"a",""});
+  errs+=check_split(",",     {"",""});
   return errs;
 }

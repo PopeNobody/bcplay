@@ -253,6 +253,12 @@ void coin::from_json(const json &j, balance_t &bal) {
     from_json(j.at("Balance"),res.bal);
     from_json(j.at("Available"),res.ava);
     from_json(j.at("Pending"),res.pend);
+    from_json(j.at("Pending"),res.addr);
+    if(j.at("CryptoAddress").is_null()) {
+      res.addr="";
+    } else {
+      from_json(j.at("CryptoAddress"),res.addr);
+    };
     try {
       res.btc=market_t::conv(res.bal,res.sym,"BTC");
       res.usd=market_t::conv(res.btc,"BTC","USD");
@@ -285,7 +291,7 @@ void coin::to_json  (      json &j, const market_t &m)
   }
 
 }
-std::vector<string> skips = { "BTC-COMP", "USDT-COMP", "USD-COMP", "ETH-COMP" };
+std::vector<string> skips;
 void coin::from_json(const json &j, market_t &m)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
@@ -293,8 +299,8 @@ void coin::from_json(const json &j, market_t &m)
     xassert(!j.is_null());
     string name=j.at("MarketName");
     if(j.at("Bid").is_null() || j.at("Ask").is_null()) {
-      if(find(skips.begin(),skips.end(),name)==skips.end()) {
-        xcarp("Bid or Ask is not usable for market "<<name);
+      if(find(skips.begin(),skips.end(),name)==skips.end()){
+        skips.push_back(name);
       };
       return;
     };
