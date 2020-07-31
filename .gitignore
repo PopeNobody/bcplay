@@ -39,6 +39,7 @@ get_trans
 guard
 ham
 hd_addrs
+hist
 include
 lib/pkgconfig/
 libcoin.a.lock
