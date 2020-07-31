@@ -30,6 +30,15 @@ TESTS_SRC:=$(wildcard test/src/*.cc)
 TESTS_OBJ:=$(patsubst %.cc,%.cc.o,$(TESTS_SRC))
 TESTS:=    $(patsubst test/src/%.cc,test/bin/%,$(TESTS_SRC))
 
+ETC_FLAGS:=etc/ar_flags etc/cppflags etc/cxxflags etc/ld_flags
+ETC_FLAGS_P:=$(wildcard $(ETC_FLAGS)),$(ETC_FLAGS)
+ETC_FLAGS_M:=$(filter-out $(ETC_FLAGS_P),$(ETC_FLAGS))
+
+etc $(ETC_FLAGS_M): %: %.def
+	cp $< $@
+
+
+
 test_%: %
 	report ./$<
 
