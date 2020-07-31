@@ -1,7 +1,7 @@
 include etc/default_target.mk
 
 all:
-MAKEFLAGS:= -Rr --warn-undefined-variable 
+MAKEFLAGS:= -pd -Rr --warn-undefined-variable 
 
 CXX:=g++
 #Make

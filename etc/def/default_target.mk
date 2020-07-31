@@ -1,1 +1,1 @@
-fuck: all
+all:
