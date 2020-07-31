@@ -27,7 +27,8 @@ LCOIN_OBJ:=$(patsubst %.cc,%.o,$(LCOIN_SRC))
 LCOIN_MOD:=$(patsubst lib/%.cc,%,$(LCOIN_SRC))
 
 TESTS_SRC:=$(wildcard test/src/*.cc)
-TESTS_OBJ:=$(patsubst %.cc,%.cc.o,$(TESTS_SRC))
+TESTS_CPP:=$(patsubst test/src/%.cc,test/obj/%.ii,$(TESTS_SRC))
+TESTS_OBJ:=$(patsubst test/src/%.cc,test/obj/%.oo,$(TESTS_SRC))
 TESTS:=    $(patsubst test/src/%.cc,test/bin/%,$(TESTS_SRC))
 
 ETC_FLAGS:=etc/ar_flags etc/cppflags etc/cxxflags etc/ld_flags
