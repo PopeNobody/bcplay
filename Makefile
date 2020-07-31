@@ -26,10 +26,9 @@ LCOIN_SRC:=$(wildcard lib/*.cc)
 LCOIN_OBJ:=$(patsubst %.cc,%.o,$(LCOIN_SRC))
 LCOIN_MOD:=$(patsubst lib/%.cc,%,$(LCOIN_SRC))
 
-TESTS_SRC:=$(wildcard t/*.cc)
-TESTS_OBJ:=$(patsubst %.cc,%.o,$(TESTS_SRC))
-TESTS_MOD:=$(patsubst t/%.cc,%,$(TESTS_SRC))
-TESTS:=$(TESTS_MOD)
+TESTS_SRC:=$(wildcard test/src/*.cc)
+TESTS_OBJ:=$(patsubst %.cc,%.cc.o,$(TESTS_SRC))
+TESTS:=    $(patsubst test/src/%.cc,test/bin/%,$(TESTS_SRC))
 
 test_%: %
 	report ./$<
@@ -54,7 +53,7 @@ libcoin.a: $(LCOIN_OBJ)
 %.i:
 	make $(@:.i:.o)
 
-$(TESTS): %: t/%.o libcoin.a
+$(TESTS): test/bin/%: test/src/%.o libcoin.a
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
 test: $(TESTS)

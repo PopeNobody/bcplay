@@ -1,43 +1,9 @@
-// Components for manipulating non-owning sequences of characters -*- C++ -*-
-// Copyright (C) 2013-2019 Free Software Foundation, Inc.
-//
-// This file is part of the GNU ISO C++ Library.  This library is free
-// software; you can redistribute it and/or modify it under the
-// terms of the GNU General Public License as published by the
-// Free Software Foundation; either version 3, or (at your option)
-// any later version.
-
-// This library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-
-// Under Section 7 of GPL version 3, you are granted additional
-// permissions described in the GCC Runtime Library Exception, version
-// 3.1, as published by the Free Software Foundation.
-
-// You should have received a copy of the GNU General Public License and
-// a copy of the GCC Runtime Library Exception along with this program;
-// see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-// <http://www.gnu.org/licenses/>.
-
-/** @file string_view
- *  This is a Standard C++ Library header.
- */
-
-//
-// N3762 basic_string_view library
-//
-
 #ifndef _GLIBCXX_STRING_VIEW
 #define _GLIBCXX_STRING_VIEW 1
 
 #pragma GCC system_header
 
-fukfuk(__cplusplus)
 
-#if __cplusplus >= 201703L
-#warning true_1
 #include <limits>
 #include <iosfwd>
 #include <bits/char_traits.h>
@@ -90,9 +56,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   template<typename _CharT, typename _Traits = std::char_traits<_CharT>>
     class basic_string_view
     {
-      static_assert(!is_array_v<_CharT>);
-      static_assert(is_trivial_v<_CharT> && is_standard_layout_v<_CharT>);
-      static_assert(is_same_v<_CharT, typename _Traits::char_type>);
+//         static_assert(!is_array_v<_CharT>);
+//         static_assert(is_trivial_v<_CharT> && is_standard_layout_v<_CharT>);
+//         static_assert(is_same_v<_CharT, typename _Traits::char_type>);
 
     public:
 
@@ -714,8 +680,5 @@ _GLIBCXX_END_NAMESPACE_VERSION
 
 #include <bits/string_view.tcc>
 
-#warning end_true_1
-#endif // __cplusplus <= 201402L
-#warning after
 
 #endif // _GLIBCXX_EXPERIMENTAL_STRING_VIEW

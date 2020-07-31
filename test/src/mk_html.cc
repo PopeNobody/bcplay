@@ -4,7 +4,7 @@
 #include <markets.hh>
 #include <balance.hh>
 #include <stack>
-#include <string_view>
+#include <string_view.hh>
 
 using namespace coin;
 using namespace std;
@@ -53,8 +53,9 @@ struct tester_t
 {
   constexpr static int num=42;
   constexpr static float pi=3.14159;
-  constexpr static string_view str="test";
+  static string_view str;
 };
+string_view tester_t::str="test";
 //   struct bracket_t
 //   {
 //     ostream &stream;
