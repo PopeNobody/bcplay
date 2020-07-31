@@ -52,7 +52,7 @@ ARFLAGS:= Urv
 LCOIN_OBJ: $(LCOIN_OBJ)
 	echo "LCOIN_OBJ: done"
 
-libcoin.a: $(LCOIN_OBJ)
+lib/libcoin.a: $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
 %.o: %.cc
@@ -62,7 +62,7 @@ libcoin.a: $(LCOIN_OBJ)
 %.i:
 	make $(@:.i:.o)
 
-$(TESTS): test/bin/%: test/src/%.o libcoin.a
+$(TESTS): test/bin/%: test/src/%.o lib/libcoin.a
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
 test: $(TESTS)
@@ -73,7 +73,7 @@ all: $(TESTS)
 CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt --language-force=c++
 
 clean:
-	rm -f libcoin.a $(TESTS)
+	rm -f lib/libcoin.a $(TESTS)
 	rm -f tags deps.all
 	rm -f */*.[od] */*.ii
 	LC_ALL=C LANG=C sort .gitignore -o .gitignore -u
