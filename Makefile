@@ -23,11 +23,9 @@ LDLIBS += -lcurlpp
 LDLIBS += -Wl,--end-group
 
 LCOIN_SRC:=$(wildcard lib/*.cc)
-LCOIN_OBJ:=$(patsubst %.cc,%.o,$(LCOIN_SRC))
-LCOIN_MOD:=$(patsubst lib/%.cc,%,$(LCOIN_SRC))
+LCOIN_OBJ:=$(patsubst lib/%.cc,lib/%.oo,$(LCOIN_SRC))
 
 TESTS_SRC:=$(wildcard test/src/*.cc)
-TESTS_CPP:=$(patsubst test/src/%.cc,test/obj/%.ii,$(TESTS_SRC))
 TESTS_OBJ:=$(patsubst test/src/%.cc,test/obj/%.oo,$(TESTS_SRC))
 TESTS:=    $(patsubst test/src/%.cc,test/bin/%,$(TESTS_SRC))
 
@@ -56,14 +54,11 @@ LCOIN_OBJ: $(LCOIN_OBJ)
 lib/libcoin.a: $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
-%.o: %.cc
+test/obj/%.oo: test/src/%.cc
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
 	$(CXX) $(CXXFLAGS) -c $(<:.cc=.ii) -o $@
 
-%.i:
-	make $(@:.i:.o)
-
-$(TESTS): test/bin/%: test/src/%.o lib/libcoin.a
+$(TESTS): test/bin/%: test/src/%.oo lib/libcoin.a
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
 test: $(TESTS)

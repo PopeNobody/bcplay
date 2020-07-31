@@ -1,24 +1,22 @@
 
 MAKE_FLAGS:= -Rr --warn-undefined-variable $(shell cat etc/make_jobs_flag)
 
-CONF_DEFS:=$(wildcard etc/*.def)
-CONFS:=$(patsubst %.def,%,$(CONF_DEFS))
-MISSING:=$(filter-out $(wildcard $(CONFS)), $(CONFS))
+CONF_DEFS:=$(wildcard etc/def/*)
+CONF_COPY:=$(patsubst etc/def/%, etc/%, $(CONF_DEFS))
+CONF_MISS:=$(filter-out $(wildcard $(CONF_COPY)), $(CONF_COPY))
 
-default: fake_tgt
+
+default: Makefile
 	@mkdir -p log
-	make -f Makefile 2>&1 $(MAKE_FLAGS) | tee log/xmake.out
+	${MAKE} -f Makefile $(MAKE_FLAGS) $(MAKE_CMD_GOALS) | tee log/make.out
 
-%: fake_tgt
-	@mkdir -p log
-	make  -f Makefile $@ 2>&1 $(MAKE_FLAGS) | tee log/xmake.out
+Makefile: $(CONF_MISS)
+	touch Makefile
 
-fake_tgt: $(CONFS)
-	@echo starting make.
+$(CONF_MISS): etc/%: etc/def/%
+	cp $< $@
 
-.PHONY: 
-
-$(CONFS): %: %.def
+$(CONF_MISS): etc/%: etc/def/%
 	cp $< $@
 
 GNUmakefile: ;
