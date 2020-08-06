@@ -1,0 +1,3 @@
+etc/*flags
+!etc/def/*flags
+test
