@@ -1,3 +1,4 @@
-etc/*flags
 !etc/def/*flags
+etc/*flags
+lib/libcoin.a.lock 
 test
