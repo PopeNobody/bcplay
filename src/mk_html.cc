@@ -80,18 +80,8 @@ string_view tester_t::str="test";
 //   };
 int xmain(int argc, char**argv)
 {
-  auto lit = std::literals::string_literals::operator""s("test",5);
-  cout << typeid(lit) << endl;
-
-//     tester_t tester;
-//     cout << tester << endl;
-  return 0;
-};
-#if 0
-int xmain(int argc, char**argv)
-{
   cerr << "Loading Balances" << endl;
-  balance_l bals; // = balance_l::load_balances();
+  balance_l bals = balance_l::load_balances();
   for( auto const &bal : bals ) 
   {
     if( bal.sym == "USD" )
@@ -108,7 +98,6 @@ int xmain(int argc, char**argv)
   };
   return 0;
 };
-#endif
 int main(int argc, char**argv) {
   try {
     return xmain(argc,argv);
