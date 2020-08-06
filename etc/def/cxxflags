@@ -1,1 +1,1 @@
--g -fPIC
+-ggdb3 -O0
