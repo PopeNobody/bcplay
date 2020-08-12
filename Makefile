@@ -10,11 +10,12 @@ CXX:=g++
 CXXFLAGS=@etc/cxxflags
 CPPFLAGS=  -MD -MT $@ @etc/cppflags
 
-LDFLAGS := @etc/ld_flags -L$(PWD)/lib
-LDFLAGS += -L$(HOME)/lib
+
+LDFLAGS += -L$(HOME)/lib -Wl,--verbose
 LDFLAGS += -ggdb3 -O0
 
 LDLIBS := -Wl,--start-group
+LDLIBS += @etc/ld_flags -L$(PWD)/lib
 LDLIBS += -lcoin
 LDLIBS += -lcurl
 LDLIBS += -lcurlpp
@@ -45,8 +46,8 @@ EXES:=$(patsubst src/%.cc, bin/%, $(EXES_SRC))
 all+=$(EXES)
 #all+= $(TESTS) $(TESTS_OBJ)
 
-bal_test: bin/bal
-	./bin/bal
+%_test: bin/%
+	./$<
 
 ETC_FLAGS:=etc/ar_flags etc/cppflags etc/cxxflags etc/ld_flags
 ETC_FLAGS_P:=$(wildcard $(ETC_FLAGS)),$(ETC_FLAGS)

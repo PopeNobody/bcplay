@@ -12,6 +12,16 @@ using fmt::pct_t;
 using fmt::nl;
 using namespace std::literals::string_literals;
 
+namespace myns {
+int system(const char *cmd)
+{
+  return std::system(cmd);
+};
+int system(const string &cmd)
+{
+  return std::system(cmd.c_str());
+};
+};
 //   struct html_stream
 //   {
 //     template<typename stream_t>
@@ -53,49 +63,67 @@ struct tester_t
 {
   constexpr static int num=42;
   constexpr static float pi=3.14159;
-  static string_view str;
+  constexpr static string_view str = { "test", 4 };
 };
-string_view tester_t::str="test";
-//   struct bracket_t
-//   {
-//     ostream &stream;
-//     string obr, cbr;
-//     bracket_t(ostream &stream, const string &obr, const string &cbr)
-//       : stream(stream), obr(obr), cbr(cbr)
-//     {
-//       stream << obr;
-//     }
-//     ~bracket_t()
-//     {
-//       stream << cbr;
-//     };
-//   };
-//   ostream &operator <<(ostream &lhs, const tester_t &tester)
-//   {
-//     lhs << typeid(tester);
-//     {
-//       bracket_t(lhs, "{", "}");
-//     };
-//     return lhs;
-//   };
+struct bracket_t
+{
+  ostream &stream;
+  string obr, cbr;
+  bracket_t(ostream &stream, const string &obr, const string &cbr)
+    : stream(stream), obr(obr), cbr(cbr)
+  {
+    stream << obr;
+  }
+  ~bracket_t()
+  {
+    stream << cbr;
+  };
+};
+ostream &operator <<(ostream &lhs, const tester_t &tester)
+{
+  lhs << typeid(tester);
+  {
+    bracket_t(lhs, "{", "}");
+  };
+  return lhs;
+};
 int xmain(int argc, char**argv)
 {
+  static vector<sym_t> ignore = { "USD", "XMR", "ETH", "XLM" };
   cerr << "Loading Balances" << endl;
   balance_l bals = balance_l::load_balances();
-  for( auto const &bal : bals ) 
   {
-    if( bal.sym == "USD" )
-      continue;
-    if( bal.addr == "" )
-      continue;
+    mkdir("html",0755);
+    ofstream html("html/page.html");
     cout
-      << "|" 
-      << left << setw(12) << bal.sym
-      << "|"
-      << right << setw(48) << bal.addr
-      << "|"
+      << "<html>" << endl
+      << "<body>" << endl;
+    for( auto const &bal : bals ) 
+    {
+      if( bal.addr == "" )
+        continue;
+      if( find(ignore.begin(),ignore.end(),bal.sym)!=ignore.end() )
+        continue;
+      cout
+        << "<div>" << endl
+        << "<h3>" << endl
+        << bal.sym << endl
+        << "</h3>" << endl
+        << "<a href=\"html/" << bal.addr << ".png\">" << endl
+        << "</a>" << endl
+        << "</div>" << endl;
+      string cmd="qrencode -ohtml/"+bal.addr+".png "+bal.addr;
+      if( myns::system(cmd) != 0 ) {
+        cerr << "image failed" << endl;
+        return 1;
+      };
+
+    };
+    cout
+      << "</body>" << endl
+      << "</html>" << endl
       << endl;
-  };
+  }
   return 0;
 };
 int main(int argc, char**argv) {
