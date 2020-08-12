@@ -2,3 +2,6 @@
 etc/*flags
 lib/libcoin.a.lock 
 test
+**.a
+*.out
+
