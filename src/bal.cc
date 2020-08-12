@@ -351,7 +351,6 @@ void adjust(const todo_t &todo)
   money_t qty, tot, unitp; 
   bool is_buy;
   money_t btc_del=todo.btc_del;
-  xexpose(todo.bal);
   if(btc_del > max_size()) {
     btc_del=max_size();
   } else if ( btc_del < -max_size() ) {
@@ -359,18 +358,21 @@ void adjust(const todo_t &todo)
   };
   if(qty_unit == todo.sym && pri_unit=="BTC") 
   {
-    xexpose(qty_unit);
-    xexpose(pri_unit);
-    xexpose(btc_del);
-
     if(btc_del>=0) {
       tot=btc_del;
       unitp=mkt.ask();
       qty=tot/unitp;
+      xexpose(mkt.ask());
+      xexpose(mkt.bid());
+      xexpose(qty);
+      xexpose(todo.bal);
+      xassert(qty<todo.bal);
       xverbose(
-          "AAAA buy " << qty << qty_unit << " for "
+          "AAAA buy "
+          << qty << qty_unit
+          << " for "
           << unitp << pri_unit
-          << " per "  << qty_unit
+          << " / " << qty_unit
           << "  Total: "
           << tot << pri_unit
           );
@@ -379,27 +381,39 @@ void adjust(const todo_t &todo)
       tot=-btc_del;
       unitp=mkt.bid();
       qty=tot/unitp;
+      xexpose(mkt.ask());
+      xexpose(mkt.bid());
+      xexpose(qty);
+      xexpose(todo.bal);
+      xassert(qty<todo.bal);
       xverbose(
-          "BBBB sell " << qty << qty_unit << " for " << unitp
-          << pri_unit
-          << " per " << qty_unit
+          "BBBB sell "
+          << qty << qty_unit
+          << " for "
+          << unitp << pri_unit
+          << " / " << qty_unit
           << " total: "
           << tot << pri_unit
           );
       is_buy=false;
     }
   } else if(qty_unit=="BTC" && pri_unit==todo.sym) {
-    xexpose(qty_unit);
-    xexpose(pri_unit);
-    xexpose(btc_del);
-
     if(btc_del>=0) {
       tot=btc_del;
       unitp=mkt.bid();
       qty=tot;
+      xexpose(mkt.ask());
+      xexpose(mkt.bid());
+      xexpose(qty);
+      xexpose(todo.bal);
+      xassert(qty<todo.bal);
       xverbose(
-          "DDDD sell " << qty << qty_unit << " for " << unitp
-          << "each.  total "
+          "DDDD sell "
+          << qty << qty_unit
+          << " for "
+          << unitp << pri_unit
+          << " / " << qty_unit
+          << " total: "
           << tot << qty_unit
           );
       is_buy=false;
@@ -407,9 +421,17 @@ void adjust(const todo_t &todo)
       tot=-btc_del;
       unitp=mkt.ask();
       qty=tot;
+      xexpose(mkt.ask());
+      xexpose(mkt.bid());
+      xexpose(qty);
+      xexpose(todo.bal);
+      xassert(qty<todo.bal);
       xverbose(
-          "CCCC buy " << qty << qty_unit << " for " << unitp
-          << "each.  total: "
+          "CCCC buy "
+          << qty << qty_unit
+          << " for " << unitp
+          << "/" << qty_unit
+          << " total: "
           << tot << qty_unit
           );
       is_buy=true;

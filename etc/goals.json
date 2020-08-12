@@ -1,11 +1,11 @@
 {
     "goals": {
-        "BSV": 105,
-        "BCH": 105,
-        "BTC":790
+        "BSV": 25,
+        "BCH": 25,
+        "BTC": 50
     },
     "limits": {
-        "usd_max_size": 200.0,
-        "usd_min_size": 140.0
+        "usd_max_size": 100.0,
+        "usd_min_size": 10.0
     }
 }
