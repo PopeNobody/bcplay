@@ -6,6 +6,7 @@
 #include <web_api.hh>
 #include <fcntl.h>
 #include <util.hh>
+#include <list>
 
 using namespace util;
 using namespace coin;

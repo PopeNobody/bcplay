@@ -93,37 +93,67 @@ int xmain(int argc, char**argv)
   cerr << "Loading Balances" << endl;
   balance_l bals = balance_l::load_balances();
   {
-    mkdir("html",0755);
-    ofstream html("html/page.html");
-    cout
-      << "<html>" << endl
-      << "<body>" << endl;
+    if( myns::system("rm -fr html.new") )
+    {
+      cerr << "failed to remove old temp dir" << endl;
+      return 1;
+    };
+    mkdir("html.new",0755);
+    if( myns::system("cp  etc/index.css html.new/") )
+    {
+      cerr << "failed to copy index.css from etc/" << endl;
+      return 1;
+    };
+    ofstream html("html.new/index.html");
+    html << ""
+      "<html>\n"
+      "  <head>\n"
+      "    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\">\n"
+      "  </head>\n"
+      "  <body>\n"
+      ;
     for( auto const &bal : bals ) 
     {
       if( bal.addr == "" )
         continue;
       if( find(ignore.begin(),ignore.end(),bal.sym)!=ignore.end() )
         continue;
-      cout
-        << "<div>" << endl
-        << "<h3>" << endl
+      html
+        << "<div style=\"float: left\" >" << endl
+        << "<h1>" << endl
+        << "<center>" << endl
         << bal.sym << endl
-        << "</h3>" << endl
-        << "<a href=\"html/" << bal.addr << ".png\">" << endl
-        << "</a>" << endl
+        << "</center>" << endl
+        << "</h1>" << endl
+        << "<img src=\"" << bal.addr << ".png\">" << "<a>"
         << "</div>" << endl;
-      string cmd="qrencode -ohtml/"+bal.addr+".png "+bal.addr;
+      string cmd="qrencode -ohtml.new/"+bal.addr+".png "+bal.addr;
       if( myns::system(cmd) != 0 ) {
         cerr << "image failed" << endl;
         return 1;
       };
-
     };
-    cout
+    html
       << "</body>" << endl
       << "</html>" << endl
       << endl;
   }
+  if( myns::system("rm -fr html.old") ) {
+    cerr << "failed to remove html.old" << endl;
+    return 1;
+  };
+  if( myns::system("test -e html || exit 0; mv html html.old") ) {
+    cerr << "failed to move html to html.old" << endl;
+    return 1;
+  };
+  if( myns::system("mv html.new html") ) {
+    cerr << "failed to move html to html.old" << endl;
+    return 1;
+  };
+  if( myns::system("xdg-open html/index.html") != 0 ) {
+    cerr << "failed to run xdg-open" << endl;
+    return 1;
+  };
   return 0;
 };
 int main(int argc, char**argv) {

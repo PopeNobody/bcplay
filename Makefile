@@ -6,16 +6,17 @@ Makefile: ;
 all:=
 
 PWD:=$(shell pwd)
-CXX:=g++
-CXXFLAGS=@etc/cxxflags
-CPPFLAGS=  -MD -MT $@ @etc/cppflags
+CXX:=clang++
+CXXFLAGS = @etc/cxxflags
+CPPFLAGS += -MD -MT $@ @etc/cppflags
+CPPFLAGS += -I/home/nn/src/bc/curlpp/include
 
 
-LDFLAGS += -L$(HOME)/lib -Wl,--verbose
-LDFLAGS += -ggdb3 -O0
+LDFLAGS := 
+LDFLAGS += -L/home/nn/src/bc/curlpp/lib64
+LDFLAGS += @etc/ld_flags -L$(PWD)/lib
 
 LDLIBS := -Wl,--start-group
-LDLIBS += @etc/ld_flags -L$(PWD)/lib
 LDLIBS += -lcoin
 LDLIBS += -lcurl
 LDLIBS += -lcurlpp
@@ -75,7 +76,8 @@ $(TESTS): test/bin/%: test/obj/%.o $(LCOIN_LIB)
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
 clean:
-	rm -f $(TESTS)
+	rm -f $(TESTS) $(LCOIN_OBJ) $(EXES_OBJ)
+	rm -f $(patsubst %.o,%.dd,$(LCOIN_OBJ) $(EXES_OBJ))
 	rm -f $(LCOIN_LIB)
 
 all: $(all)
