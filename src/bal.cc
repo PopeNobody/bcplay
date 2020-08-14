@@ -367,7 +367,6 @@ void adjust(const todo_t &todo)
       xexpose(mkt.bid());
       xexpose(qty);
       xexpose(todo.bal);
-      xassert(qty<todo.bal);
       xverbose(
           "AAAA buy "
           << qty << qty_unit

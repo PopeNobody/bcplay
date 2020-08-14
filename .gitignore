@@ -4,6 +4,5 @@ lib/libcoin.a.lock
 test
 **.a
 *.out
-etc/goals.json
 out
 tags
