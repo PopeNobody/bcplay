@@ -6,13 +6,15 @@ Makefile: ;
 all:=
 
 PWD:=$(shell pwd)
-CXX:=g++
-CXXFLAGS=@etc/cxxflags
-CPPFLAGS=  -MD -MT $@ @etc/cppflags
+CXX:=clang++
+CXXFLAGS = @etc/cxxflags
+CPPFLAGS += -MD -MT $@ @etc/cppflags
+CPPFLAGS += -I/home/nn/src/bc/curlpp/include
 
-LDFLAGS := @etc/ld_flags -L$(PWD)/lib
-LDFLAGS += -L$(HOME)/lib
-LDFLAGS += -ggdb3 -O0
+
+LDFLAGS := 
+LDFLAGS += -L/home/nn/src/bc/curlpp/lib64
+LDFLAGS += @etc/ld_flags -L$(PWD)/lib
 
 LDLIBS := -Wl,--start-group
 LDLIBS += -lcoin
@@ -45,8 +47,8 @@ EXES:=$(patsubst src/%.cc, bin/%, $(EXES_SRC))
 all+=$(EXES)
 #all+= $(TESTS) $(TESTS_OBJ)
 
-bal_test: bin/bal
-	./bin/bal
+%_test: bin/%
+	./$<
 
 ETC_FLAGS:=etc/ar_flags etc/cppflags etc/cxxflags etc/ld_flags
 ETC_FLAGS_P:=$(wildcard $(ETC_FLAGS)),$(ETC_FLAGS)
@@ -74,7 +76,8 @@ $(TESTS): test/bin/%: test/obj/%.o $(LCOIN_LIB)
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
 clean:
-	rm -f $(TESTS)
+	rm -f $(TESTS) $(LCOIN_OBJ) $(EXES_OBJ)
+	rm -f $(patsubst %.o,%.dd,$(LCOIN_OBJ) $(EXES_OBJ))
 	rm -f $(LCOIN_LIB)
 
 all: $(all)

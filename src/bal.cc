@@ -6,6 +6,7 @@
 #include <web_api.hh>
 #include <fcntl.h>
 #include <util.hh>
+#include <list>
 
 using namespace util;
 using namespace coin;
@@ -366,7 +367,6 @@ void adjust(const todo_t &todo)
       xexpose(mkt.bid());
       xexpose(qty);
       xexpose(todo.bal);
-      xassert(qty<todo.bal);
       xverbose(
           "AAAA buy "
           << qty << qty_unit
