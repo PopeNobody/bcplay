@@ -6,7 +6,7 @@ Makefile: ;
 all:=
 
 PWD:=$(shell pwd)
-CXX:=clang++
+CXX:=clang++-10
 CXXFLAGS = @etc/cxxflags
 CPPFLAGS += -MD -MT $@ @etc/cppflags
 CPPFLAGS += -I/home/nn/src/bc/curlpp/include
