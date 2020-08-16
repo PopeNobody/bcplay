@@ -1,11 +1,12 @@
 {
     "goals": {
         "BSV": 32,
-        "BCH": 32,
+        "BCH": 31,
         "BTC": 32,
         "LINK": 1,
         "ETH": 1,
         "TRX": 1,
+        "EXP": 1,
         "ZRX": 1
     },
     "limits": {
