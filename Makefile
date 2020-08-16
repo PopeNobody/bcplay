@@ -30,7 +30,7 @@ EXES:=$(patsubst src/%.cc, bin/%, $(EXES_SRC))
 all+=$(EXES)
 #all+= $(TESTS) $(TESTS_OBJ)
 
-%_test: bin/%
+test_%: bin/%
 	./$<
 
 ETC_FLAGS:=etc/ar_flags etc/cppflags etc/cxxflags etc/ld_flags
