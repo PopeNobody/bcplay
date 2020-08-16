@@ -1,29 +1,12 @@
 MAKEFLAGS+= -rR
 include etc/default_target.mk
+include etc/chain.mk
 
 Makefile: ;
 
 all:=
 
 PWD:=$(shell pwd)
-CXX:=clang++-10
-CXXFLAGS = @etc/cxxflags
-CPPFLAGS += -MD -MT $@ @etc/cppflags
-CPPFLAGS += -I/home/nn/src/bc/curlpp/include
-
-
-LDFLAGS := 
-LDFLAGS += -L/home/nn/src/bc/curlpp/lib64
-LDFLAGS += @etc/ld_flags -L$(PWD)/lib
-
-LDLIBS := -Wl,--start-group
-LDLIBS += -lcoin
-LDLIBS += -lcurl
-LDLIBS += -lcurlpp
-LDLIBS += -Wl,--end-group
-
-AR:= ar
-ARFLAGS:= Urv
 
 LCOIN_SRC:=$(wildcard lib/src/*.cc)
 LCOIN_OBJ:=$(patsubst lib/src/%.cc,lib/obj/%.o,$(LCOIN_SRC))
