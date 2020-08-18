@@ -1,0 +1,13 @@
+CXX:=clang++
+CXXFLAGS = @etc/cxxflags
+CPPFLAGS += -MD -MT $@ @etc/cppflags
+LDFLAGS := 
+LDFLAGS += -L/home/nn/src/bc/lib64
+LDFLAGS += @etc/ld_flags -L$(PWD)/lib
+LDLIBS := -Wl,--start-group
+LDLIBS += -lcoin
+LDLIBS += -lcurl
+LDLIBS += -lcurlpp
+LDLIBS += -Wl,--end-group
+AR:= ar
+ARFLAGS:= Urv
