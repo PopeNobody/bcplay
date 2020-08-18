@@ -84,21 +84,26 @@ market_l market_t::get(const string &f, const string &t, bool except)
   bool verbose=false;
   if(f == "Total" || t == "Total")
     xthrowre("WTF?");
-  //       if( f == "XLM" || t=="XLM" ) {
-  //         verbose=true;
-  //         cout << f << "-" << t << endl;
-  //       } else {
-  //         verbose=false;
-  //       };
-  const auto list = split(',',f+","+t);
+  set<sym_t> syms;
+  for(auto sym :  split(',',f+","+t))
+  {
+    syms.insert(sym_t(sym));
+  };
+  if(verbose) {
+    string space="";
+    for( auto sym :syms )
+    {
+      cout << space << sym;
+      space="  ";
+    };
+    cout << endl;
+  };
   for( auto const &m : get_markets() )
   {
     if(verbose) {
-      xexpose(m.name() << "sym: " << m.sym() << "cur: " << m.cur());
-      xexpose(contains(list,m.sym()));
-      xexpose(contains(list,m.cur()));
+      xexpose(m.name());
     };
-    if(contains(list,m.sym()) and contains(list,m.cur()))
+    if(syms.count(m.sym()) and syms.count(m.cur()))
       res.push_back(m);
   };
   if( except && ( res.size() ==0  ) )

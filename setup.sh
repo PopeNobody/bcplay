@@ -1,1 +1,1 @@
-eval $(gpg < ~/.cpsh/keys.asc )
+eval $(gpg --decrypt < ~/.cpsh/keys.asc )
