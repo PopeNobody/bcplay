@@ -1,6 +1,7 @@
 !etc/def/*flags
 etc/*flags
 etc/*.mk
+!etc/chain.mk
 lib/libcoin.a.lock 
 test
 **.a
