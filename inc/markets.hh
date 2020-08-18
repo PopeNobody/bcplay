@@ -50,6 +50,9 @@ namespace coin {
     const money_t & bid()const {
       return data.bid;
     };
+    const money_t &last()const {
+      return data.last;
+    };
     money_t avg()const {
       return (bid()+ask())/2;
     };

@@ -440,7 +440,7 @@ const market_l bittrex::load_markets()
   market_l selected;
   for( auto &market : markets )
   {
-    if( market.data.cur == "BTC" || market.data.sym=="BTC" )
+//    if( market.data.cur == "BTC" || market.data.sym=="BTC" )
       selected.push_back(market);
   };
   cout << selected.size() << " markets selected" << endl;
