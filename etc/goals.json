@@ -1,16 +1,18 @@
 {
     "goals": {
-        "BSV": 30,
-        "BCH": 30,
-        "BTC": 25,
-        "LINK": 3,
-        "ETH": 3,
-        "TRX": 3,
-        "EXP": 3,
-        "ZRX": 3
+        "BCH": 400,
+        "BSV": 300,
+        "BTC": 90,
+        "LINK": 30,
+        "ETH": 30,
+        "TRX": 30,
+        "EXP": 30,
+        "XMR": 30,
+        "ZRX": 30, 
+        "ADA": 30
     },
     "limits": {
         "usd_max_size": 200.0,
-        "usd_min_size": 30.0
+        "usd_min_size": 20.0
     }
 }
