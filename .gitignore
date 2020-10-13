@@ -17,3 +17,4 @@ html
 html.old
 html.new
 etc/todos.json
+etc/chain.mk
