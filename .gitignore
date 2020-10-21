@@ -4,7 +4,8 @@ etc/*.mk
 !etc/chain*.mk
 lib/libcoin.a.lock 
 test
-**.a
+**.[aod]
+**.ii
 *.out
 out
 tags
