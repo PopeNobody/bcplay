@@ -356,29 +356,25 @@ void adjust(const todo_t &todo)
   money_t qty, tot, unitp; 
   bool is_buy;
   money_t btc_del=todo.btc_del;
-  cout << btc_del * usd_spot() << endl;
+  xexpose( btc_del * usd_spot() );
   if(btc_del > max_size()) {
-    cout << "btc_del:  " << btc_del << endl;
-    cout << "max_size: " << max_size() << endl;
+    xexpose(btc_del);
+    xexpose(max_size());
     btc_del=max_size();
-    cout << "btc_del:  " << btc_del << endl;
+    xexpose(max_size());
   } else if ( btc_del < -max_size() ) {
-    cout << "btc_del:  " << btc_del << endl;
-    cout << "max_size: " << -max_size() << endl;
+    xexpose(btc_del);
+    xexpose(-max_size());
     btc_del=-max_size();
-    cout << "btc_del:  " << btc_del << endl;
+    xexpose(btc_del);
   };
-  cout << btc_del * usd_spot() << endl;
+  xexpose( btc_del * usd_spot() );
   if(qty_unit == todo.sym && pri_unit=="BTC") 
   {
     if(btc_del>=0) {
       tot=btc_del;
       unitp=mkt.ask();
       qty=tot/unitp;
-      xexpose(mkt.ask());
-      xexpose(mkt.bid());
-      xexpose(qty);
-      xexpose(todo.bal);
       xverbose(
           "AAAA buy "
           << qty << qty_unit
@@ -393,7 +389,15 @@ void adjust(const todo_t &todo)
       tot=-btc_del;
       unitp=mkt.bid();
       qty=tot/unitp;
-      xassert(qty<todo.bal);
+      xexpose(mkt.ask());
+      xexpose(mkt.bid());
+      xexpose(qty);
+      xexpose(todo.bal);
+      if( todo.bal - qty ) {
+        qty=todo.bal * (1-0.002);
+      };
+      xexpose(qty);
+      xexpose(todo.bal);
       xverbose(
           "BBBB sell "
           << qty << qty_unit
@@ -414,7 +418,6 @@ void adjust(const todo_t &todo)
       xexpose(mkt.bid());
       xexpose(qty);
       xexpose(todo.bal);
-      //xassert(qty<todo.bal);
       xverbose(
           "DDDD sell "
           << qty << qty_unit
