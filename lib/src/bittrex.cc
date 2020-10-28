@@ -261,7 +261,6 @@ void coin::from_json(const json &j, balance_t &bal) {
     };
     try {
       res.btc=market_t::conv(res.bal,res.sym,"BTC");
-      res.usd=market_t::conv(res.btc,"BTC","USD");
     } catch ( exception &ex ) {
       xtrace(ex.what());
       throw;

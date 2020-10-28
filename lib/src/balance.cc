@@ -53,7 +53,6 @@ namespace coin {
 		lhs
       << "| " 
       << left << setw(6) << sym << "|" << right << setw(14) << bal << " | " 
-      << " USD " << usd << " | " 
       << " BTC " << btc << " | " 
       << " P:" << pend << " |"
       ;

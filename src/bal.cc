@@ -41,10 +41,10 @@ const money_t & usd_min_size() {
 const money_t & usd_max_size() {
   return _usd_max_size;
 };
-money_t max_size() {
+money_t btc_max_size() {
   return usd_max_size()/usd_spot();
 };
-money_t min_size() {
+money_t btc_min_size() {
   return usd_min_size()/usd_spot();
 };
 
@@ -288,7 +288,7 @@ todo_v mk_todos()
     if (
         ( goals.find( b.sym ) != goals.end() )
         ||
-        ( b.usd > 5 )
+        ( b.btc > btc_min_size() )
        )
     {
       auto &todo=todo_map[ b.sym ];
@@ -329,7 +329,7 @@ todo_v mk_todos()
         todo_v willdo;
         todo_t tot_all("Total");
         for( auto &todo:todos ) {
-          if( abs(todo.btc_del) >= min_size() ) {
+          if( abs(todo.btc_del) >= btc_min_size() ) {
             tot_all+=todo;
             willdo.push_back(todo);
           };
@@ -357,15 +357,15 @@ void adjust(const todo_t &todo)
   bool is_buy;
   money_t btc_del=todo.btc_del;
   xexpose( btc_del * usd_spot() );
-  if(btc_del > max_size()) {
+  if(btc_del > btc_max_size()) {
     xexpose(btc_del);
-    xexpose(max_size());
-    btc_del=max_size();
-    xexpose(max_size());
-  } else if ( btc_del < -max_size() ) {
+    xexpose(btc_max_size());
+    btc_del=btc_max_size();
+    xexpose(btc_max_size());
+  } else if ( btc_del < -btc_max_size() ) {
     xexpose(btc_del);
-    xexpose(-max_size());
-    btc_del=-max_size();
+    xexpose(-btc_max_size());
+    btc_del=-btc_max_size();
     xexpose(btc_del);
   };
   xexpose( btc_del * usd_spot() );
@@ -393,9 +393,6 @@ void adjust(const todo_t &todo)
       xexpose(mkt.bid());
       xexpose(qty);
       xexpose(todo.bal);
-      if( todo.bal - qty ) {
-        qty=todo.bal * (1-0.002);
-      };
       xexpose(qty);
       xexpose(todo.bal);
       xverbose(

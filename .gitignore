@@ -17,5 +17,7 @@ etc/*.new
 html
 html.old
 html.new
+etc/goals.json
 etc/todos.json
 etc/chain.mk
+.gdb_history

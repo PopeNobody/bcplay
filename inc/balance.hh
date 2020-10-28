@@ -10,10 +10,10 @@ namespace coin {
 		money_t bal;
 		money_t ava;
 		money_t pend;
-		money_t usd;
 		money_t btc;
     string addr;
 		bool operator<(const balance_t &rhs) const;
+    bool operator>(const balance_t &rhs) const;
 		ostream &stream(ostream &lhs, int ind=0) const;
 		~balance_t();
     static const balance_t &get(const sym_t &sym);

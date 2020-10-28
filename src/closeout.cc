@@ -39,18 +39,22 @@ int xmain(int argc, char**argv)
     if(argv[i]==string("-y"))
       bittrex::fake_buys=false;
   };
-  min_txn_btc=market_t::conv(money_t(6),"USD","BTC",true);
+  min_txn_btc=0.0005;
   min_bal_btc=min_txn_btc*2;
-  auto &bals=balance_t::get_balances();
-  for( auto &bal : bals ) {
-    cout << "checking: " << bal.sym << " usd: " << bal.usd << "btc: " << bal.btc << endl;
+  auto bals=balance_t::get_balances();
+  sort(bals.begin(),bals.end(),std::less<balance_t>());
+  reverse(bals.begin(),bals.end());
+  for( auto &bal : bals )
+  {
+//    cout << "checking: " << bal.sym << " usd: " << bal.usd << "btc: " << bal.btc << endl;
     if( bal.btc > min_bal_btc ) {
-      cout << " -- got enough to hold" << endl;
-    } else if ( bal.usd < 0.01 ) {
-      cout << " -- got none" << endl;
+//      cout << " -- got enough to hold" << endl;
+    } else if ( !bal.btc ) {
+//      cout << " -- got none" << endl;
     } else {
       cout << " -- adjusting" << endl;
-      adjust(bal);
+      cout << bal << endl;
+      //adjust(bal);
     };
   };
   return 0;
