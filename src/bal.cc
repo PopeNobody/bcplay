@@ -279,10 +279,10 @@ todo_v mk_todos()
     todo_map[ g.first ].pct_goal = g.second;
   };
   money_t tot_btc = 0.0;
-  for ( auto &b : balance_l::load_balances() )
-  {
-    cout << b.sym << " " << b.bal << " " << b.btc << endl;
-  };
+//     for ( auto &b : balance_l::load_balances() )
+//     {
+//       cout << b.sym << " " << b.bal << " " << b.btc << endl;
+//     };
   for ( auto &b : balance_l::load_balances() )
   {
     if (
