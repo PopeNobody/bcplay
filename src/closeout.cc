@@ -47,14 +47,16 @@ int xmain(int argc, char**argv)
   for( auto &bal : bals )
   {
 //    cout << "checking: " << bal.sym << " usd: " << bal.usd << "btc: " << bal.btc << endl;
-    if( bal.btc > min_bal_btc ) {
+    if( bal.sym == "BTC" ) {
+    } else if( bal.btc > min_bal_btc ) {
 //      cout << " -- got enough to hold" << endl;
     } else if ( !bal.btc ) {
 //      cout << " -- got none" << endl;
     } else {
       cout << " -- adjusting" << endl;
       cout << bal << endl;
-      //adjust(bal);
+      adjust(bal);
+      return 0;
     };
   };
   return 0;
