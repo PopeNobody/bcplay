@@ -153,6 +153,7 @@ using coin::todo_v;
 struct todo_more {
   bool operator()( const todo_t &lhs, const todo_t &rhs )
   {
+      return true;
     if((lhs.btc_del) > (rhs.btc_del))
       return true;
     if((lhs.btc_del) < (rhs.btc_del))
@@ -368,7 +369,7 @@ void adjust(const todo_t &todo)
     btc_del=-btc_max_size();
     xexpose(btc_del);
   };
-  xexpose( btc_del * usd_spot() );
+  xexpose( (btc_del * usd_spot()) );
   if(qty_unit == todo.sym && pri_unit=="BTC") 
   {
     if(btc_del>=0) {
@@ -389,6 +390,9 @@ void adjust(const todo_t &todo)
       tot=-btc_del;
       unitp=mkt.bid();
       qty=tot/unitp;
+      if( qty > todo.bal ) {
+        qty=todo.bal;
+      };
       xexpose(mkt.ask());
       xexpose(mkt.bid());
       xexpose(qty);

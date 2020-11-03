@@ -41,6 +41,8 @@ EXES:=$(patsubst src/%.cc, bin/%, $(EXES_SRC))
 ALL_DEP:= $(EXES_DEP)
 ALL_DEP+= $(LCOIN_DEP)
 ALL_DEP+= $(TESTS_DEP)
+PRE_DEP:= $(wildcard $(ALL_DEP))
+MIS_DEP:= $(filter-out $(PRE_DEP),$(ALL_DEP))
 
 $(EXES_OBJ): etc/chain.mk
 
@@ -78,9 +80,15 @@ $(TESTS): test/bin/%: test/obj/%.o $(LCOIN_LIB)
 all_deps: $(ALL_DEP)
 	perl all_deps.pl $@ $^
 
+tags: all_deps
+	ctags -L $<
+
 clean:
 	rm -f $(TESTS) $(LCOIN_OBJ) $(EXES_OBJ)
 	rm -f $(patsubst %.o,%.dd,$(LCOIN_OBJ) $(EXES_OBJ))
 	rm -f $(LCOIN_LIB)
 
 all: $(all)
+	make tags
+
+

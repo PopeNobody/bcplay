@@ -58,7 +58,7 @@ const market_l &market_t::load_markets() {
     xthrow(runtime_error,"failed to load markets!");
   return markets;
 };
-money_t market_t::conv(money_t amount, const sym_t &from, const sym_t &to, bool neutral) {
+money_t market_t::conv(money_t amount, const sym_t &from, const sym_t &to) {
   if(from==to)
     return amount;
   market_l list=market_t::get(from,to);
@@ -66,9 +66,9 @@ money_t market_t::conv(money_t amount, const sym_t &from, const sym_t &to, bool 
   auto &mkt=list.back();
   if(false)
     xexpose(mkt);
-  return mkt.yield(amount,from,to,neutral);
+  return mkt.yield(amount,from,to);
 };
-money_t market_t::conv2(money_t amount, const sym_t &from, const sym_t &to, bool neutral) {
+money_t market_t::conv2(money_t amount, const sym_t &from, const sym_t &to) {
   if(from==to)
     return amount;
   market_l list=market_t::get(from,to,false);

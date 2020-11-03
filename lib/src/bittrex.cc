@@ -335,12 +335,12 @@ string bittrex::simple_xact (
 {
   string act=(buy?"buy":"sell");
   xassert(qty>=0);
-  money_t total=qty*rate*1.002;
+  money_t total=qty*rate;
   cout 
     << setw(5) << act
     << "  " << qty 
     << "  " << market.sym()
-    << " at " << rate << "BTC/unit"
+    << " at " << rate << market.cur() << "/unit"
     << " on " << market.data.name
     << " for " << total
     << " ioc: " << ioc
