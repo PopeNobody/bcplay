@@ -1,4 +1,4 @@
-CXX:=clang++-11
+CXX:=g++
 CXXFLAGS = @etc/cxxflags
 CPPFLAGS += -MD -MT $@ @etc/cppflags
 LDFLAGS := 
