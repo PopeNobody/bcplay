@@ -1,24 +1,14 @@
+ifeq ($(MAKECMDGOALS),)
 
-MAKE_FLAGS:= -Rr --warn-undefined-variable $(shell cat etc/make_jobs_flag)
+include etc/default_target.mk
 
-CONF_DEFS:=$(wildcard etc/*.def)
-CONFS:=$(patsubst %.def,%,$(CONF_DEFS))
-MISSING:=$(filter-out $(wildcard $(CONFS)), $(CONFS))
+%:
+	cleanmake -f Makefile
 
-default: fake_tgt
-	@mkdir -p log
-	make -f Makefile 2>&1 $(MAKE_FLAGS) | tee log/xmake.out
+else
 
-%: fake_tgt
-	@mkdir -p log
-	make  -f Makefile $@ 2>&1 $(MAKE_FLAGS) | tee log/xmake.out
+$(MAKECMDGOALS): 
+	cleanmake -f Makefile $(MAKECMDGOALS)
 
-fake_tgt: $(CONFS)
-	@echo starting make.
+endif
 
-.PHONY: 
-
-$(CONFS): %: %.def
-	cp $< $@
-
-GNUmakefile: ;
