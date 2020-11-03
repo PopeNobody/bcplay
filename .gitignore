@@ -8,7 +8,6 @@ test
 **.ii
 *.out
 out
-tags
 bin/*
 */obj
 obj
