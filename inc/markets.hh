@@ -50,12 +50,15 @@ namespace coin {
     const money_t & bid()const {
       return data.bid;
     };
+    const money_t &last()const {
+      return data.last;
+    };
     money_t avg()const {
       return (bid()+ask())/2;
     };
     ostream &stream(ostream &lhs, int ind=0) const;
-    static money_t conv(money_t, const sym_t &from, const sym_t &to, bool neutral=true);
-    static money_t conv2(money_t, const sym_t &from, const sym_t &to, bool neutral=true);
+    static money_t conv(money_t, const sym_t &from, const sym_t &to);
+    static money_t conv2(money_t, const sym_t &from, const sym_t &to);
     static const market_l &get_markets( );
     static const market_l &load_markets();
     static market_l get(const string &from, const string &to, bool exceptions=true);
