@@ -1,20 +1,12 @@
+MAKEFLAGS+= -rR
 include etc/default_target.mk
+include etc/chain.mk
 
-all:
+Makefile: ;
 
+all:=
 
-CXX:=g++
-#Make
-MAKEFLAGS:= -Rr --warn-undefined-variable
-MAKEFLAGS:= $(shell touch etc/make_jobs_flag)
-
-AR:= ar
-
-CXXFLAGS=@cxxflags
-CPPFLAGS=  -MD -MT $@ @cppflags
-LDFLAGS := @ld_flags -L$(PWD)/lib
-LDFLAGS += -L$(HOME)/lib
-LDFLAGS += -g
+PWD:=$(shell pwd)
 
 LDLIBS := -Wl,--start-group
 LDLIBS += -lcoin
@@ -22,66 +14,81 @@ LDLIBS += -lcurl
 LDLIBS += -lcurlpp
 LDLIBS += -Wl,--end-group
 
-LCOIN_SRC:=$(wildcard lib/*.cc)
-LCOIN_OBJ:=$(patsubst %.cc,%.o,$(LCOIN_SRC))
-LCOIN_MOD:=$(patsubst lib/%.cc,%,$(LCOIN_SRC))
+LCOIN_SRC:=$(wildcard lib/src/*.cc)
+LCOIN_OBJ:=$(patsubst lib/src/%.cc,lib/obj/%.o,$(LCOIN_SRC))
+LCOIN_DEP:=$(patsubst %.o, %.d, $(LCOIN_OBJ))
+LCOIN_LIB:=lib/libcoin.a
 
-TESTS_SRC:=$(wildcard t/*.cc)
-TESTS_OBJ:=$(patsubst %.cc,%.o,$(TESTS_SRC))
-TESTS_MOD:=$(patsubst t/%.cc,%,$(TESTS_SRC))
-TESTS:=$(TESTS_MOD)
+$(LCOIN_OBJ): etc/chain.mk
+#all+= $(LCOIN_LIB) $(LCOIN_OBJ)
 
-test_%: %
-	report ./$<
+ifeq (0,1)
+TESTS_SRC:=$(wildcard test/src/*.cc)
+TESTS_OBJ:=$(patsubst test/src/%.cc,test/obj/%.o,$(TESTS_SRC))
+TESTS_DEP:=$(patsubst %.o, %.d, $(TESTS_OBJ))
+TESTS:=    $(patsubst test/src/%.cc,test/bin/%,$(TESTS_SRC))
+else
+TESTS_SRC:= $(shell echo)
+TESTS_OBJ:= $(shell echo)
+TESTS_DEP:= $(shell echo)
+TESTS:= $(shell echo)
+endif
+EXES_SRC:=$(wildcard src/*.cc)
+EXES_OBJ:=$(patsubst src/%.cc, obj/%.o, $(EXES_SRC))
+EXES_DEP:=$(patsubst %.o, %.d, $(EXES_OBJ))
+EXES:=$(patsubst src/%.cc, bin/%, $(EXES_SRC))
 
+ALL_DEP:= $(EXES_DEP)
+ALL_DEP+= $(LCOIN_DEP)
+ALL_DEP+= $(TESTS_DEP)
+PRE_DEP:= $(wildcard $(ALL_DEP))
+MIS_DEP:= $(filter-out $(PRE_DEP),$(ALL_DEP))
 
+$(EXES_OBJ): etc/chain.mk
 
-test_markets: markets
-	./$< BCH BSV
+all+=$(EXES)
+#all+= $(TESTS) $(TESTS_OBJ)
 
-ARFLAGS:= Urv
+test_%: bin/%
+	./$<
 
-LCOIN_OBJ: $(LCOIN_OBJ)
-	echo "LCOIN_OBJ: done"
+ETC_FLAGS:=etc/ar_flags etc/cppflags etc/cxxflags etc/ld_flags
+ETC_FLAGS_P:=$(wildcard $(ETC_FLAGS)),$(ETC_FLAGS)
+ETC_FLAGS_M:=$(filter-out $(ETC_FLAGS_P),$(ETC_FLAGS))
 
-libcoin.a: $(LCOIN_OBJ)
+$(LCOIN_LIB): $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
-%.o: %.cc
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $(<:.cc=.ii)
-	$(CXX) $(CXXFLAGS) -c $(<:.cc=.ii) -o $@
+$(LCOIN_OBJ): lib/obj/%.o: lib/src/%.cc etc/cppflags etc/cxxflags
+	@mkdir -p $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-%.i:
-	make $(@:.i:.o)
+$(TESTS_OBJ): test/obj/%.o: test/src/%.cc etc/cppflags etc/cxxflags
+	@mkdir -p $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-$(TESTS): %: t/%.o libcoin.a
+$(EXES_OBJ): obj/%.o: src/%.cc etc/cppflags etc/cxxflags
+	@mkdir -p $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	
+$(EXES): bin/%: obj/%.o $(LCOIN_LIB) etc/ld_flags
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
-test: $(TESTS)
+$(TESTS): test/bin/%: test/obj/%.o $(LCOIN_LIB)
+	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
-all: $(TESTS)
+all_deps: $(ALL_DEP)
+	perl all_deps.pl $@ $^
 
-
-CTAGS_FLAGS:= --extra=fq --fields=afikKlmnsSzt --language-force=c++
+tags: all_deps
+	ctags -L $<
 
 clean:
-	rm -f libcoin.a $(TESTS)
-	rm -f tags deps.all
-	rm -f */*.[od] */*.ii
+	rm -f $(TESTS) $(LCOIN_OBJ) $(EXES_OBJ)
+	rm -f $(patsubst %.o,%.dd,$(LCOIN_OBJ) $(EXES_OBJ))
+	rm -f $(LCOIN_LIB)
 
-tags:	deps.all
-	ctags $(CTAGS_FLAGS) -L $^
+all: $(all)
+	make tags
 
-DEPS:= /dev/null $(wildcard $(patsubst %.cc,%.d,$(wildcard */*.cc)))
-$(DEPS): ;
-deps.all: $(DEPS)
-	vi_perl all_deps.pl  $@ $^
-	wc -l $@
 
-.PHONY: sums
-
-sums:
-	git ls-files | xargs md5sum | tee sums
-
-include $(wildcard /dev/null */*.d)
-#-L/usr/lib/x86_64-linux-gnu/mit-krb5 -lcurl -lnghttp2 -lidn2 -lrtmp -lpsl -lssl -lcrypto -lssl -lcrypto -Wl,-Bsymbolic-functions -Wl,-z,relro -lgssapi_krb5 -lkrb5 -lk5crypto -lcom_err -llber -lldap -llber -lz
