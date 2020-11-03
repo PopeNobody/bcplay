@@ -1,22 +1,20 @@
-!etc/def/*flags
-etc/*flags
-etc/*.mk
 !etc/chain*.mk
-lib/libcoin.a.lock 
-test
+!etc/def/*
+##   we want the defaults in git, but not the working
+## files.
+
 **.[aod]
 **.ii
-*.out
-out
-bin/*
+**.out
 */obj
-obj
-log
-etc/*.new
-html
-html.old
-html.new
-etc/goals.json
-etc/todos.json
-etc/chain.mk
 .gdb_history
+bin/*
+etc/*
+html
+html.new
+html.old
+lib/libcoin.a.lock 
+log
+obj
+out
+test
