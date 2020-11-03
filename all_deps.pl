@@ -9,7 +9,7 @@ use Data::Dumper;
 die "usage: $0 [outfile] [depfiles...]" unless @ARGV > 1;
 my $ofn=shift;
 eval "use autodie qw(:all);";
-open(my $ofh,">$ofn");
+open(STDOUT,">$ofn");
 my %seen;
 while(<ARGV>) {
   s{[\\\s:]}{ }g;
@@ -19,4 +19,4 @@ while(<ARGV>) {
   };
 };
 
-$ofh->print("$_\n") for sort keys %seen;
+print("$_\n") for sort keys %seen;

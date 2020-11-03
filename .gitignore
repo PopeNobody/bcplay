@@ -1,20 +1,14 @@
-!etc/chain*.mk
 !etc/def/*
-##   we want the defaults in git, but not the working
-## files.
-
+etc/*
+lib/libcoin.a.lock 
+test
 **.[aod]
 **.ii
-**.out
-*/obj
-.gdb_history
-bin/*
-etc/*
-html
-html.new
-html.old
-lib/libcoin.a.lock 
-log
-obj
+*.out
 out
-test
+bin/*
+*/obj
+obj
+log
+html*
+.gdb_history
