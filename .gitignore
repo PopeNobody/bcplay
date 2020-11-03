@@ -1,7 +1,5 @@
-!etc/def/*flags
-etc/*flags
-etc/*.mk
-!etc/chain*.mk
+!etc/def/*
+etc/*
 lib/libcoin.a.lock 
 test
 **.[aod]
@@ -12,11 +10,5 @@ bin/*
 */obj
 obj
 log
-etc/*.new
-html
-html.old
-html.new
-etc/goals.json
-etc/todos.json
-etc/chain.mk
+html*
 .gdb_history
