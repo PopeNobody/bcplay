@@ -72,6 +72,7 @@ $(EXES_OBJ): obj/%.o: src/%.cc etc/cppflags etc/cxxflags
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 	
 $(EXES): bin/%: obj/%.o $(LCOIN_LIB) etc/ld_flags
+	@mkdir -p $(dir $@)
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
 $(TESTS): test/bin/%: test/obj/%.o $(LCOIN_LIB)
