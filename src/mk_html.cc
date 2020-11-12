@@ -99,9 +99,9 @@ int xmain(int argc, char**argv)
       return 1;
     };
     mkdir("html.new",0755);
-    if( myns::system("cp  etc/index.css html.new/") )
+    if( myns::system("cp  css/index.css html.new/") )
     {
-      cerr << "failed to copy index.css from etc/" << endl;
+      cerr << "failed to copy index.css from css/" << endl;
       return 1;
     };
     ofstream html("html.new/index.html");
