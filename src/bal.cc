@@ -493,6 +493,7 @@ int main( int argc, char** argv )
 {
   try
   {
+    mkdir("log",0700);
     split_stream("log/bal.log");
     argv_t args( argv+1, argv+argc );
     if ( xmain( args ) )
