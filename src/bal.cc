@@ -472,6 +472,8 @@ int xmain( const argv_t &args )
       exit(1);
     };
   };
+
+  cout << read_gpg_file("localbitcoins.com.json.asc");
   load_config();
   usd_spot(market_t::conv(1, "BTC","USD"));
   auto todos=mk_todos();

@@ -70,12 +70,18 @@ namespace util {
   bool exists(const string &fn);
   bool exists(const char *path);
   string read_file(const string &path);
+  string read_gpg_file(const string &name);
   ssize_t write_file(const string &name, const string &text);
   string quote(const string &str);
   int open_log(const string &in_fn, bool save=false);
   int xrename(const char *ofn, const char *nfn);
   int xdup2(int fd, int ofd);
   int xdup(int fd);
+  int xpipe(int pipe[2]);
+  int xfork();
+  //FIXME
+  void xexecv(const char *file, char * const *args);
+  int xfcntl(int fd, int cmd, int arg);
   int xopen(const char *fn, int flags, int mode=0644);
   int xclose(int fd);
 };

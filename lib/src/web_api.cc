@@ -7,6 +7,7 @@
 //#include <bitcoin/system/math/hash.hpp>
 //#include <bitcoin/system/formats/base_16.hpp>
 #include <hash.hh>
+#include <util.hh>
 
 using namespace curlpp::options;
 using namespace std;
@@ -61,15 +62,19 @@ std::list<string> signurl(const string &url, const string &key, const string &se
   res.push_back("apisign:"+sign);
   return res;
 };
-string web::pp_json(const string &page) {
-  json jpage;
+static json parse_json(const string &page)
+{
   try {
-    jpage= json::parse(page);
+    json jpage= json::parse(page);
+    return jpage;
   } catch ( std::exception &e ) {
     cout << "caught: " << e.what() << endl;
     cout << page << endl;
     throw;
   };
+};
+string web::pp_json(const string &page) {
+  json jpage = json::parse(page);
   ostringstream res;
   res << setw(2) << jpage << endl;
   return move(res.str());
@@ -80,14 +85,26 @@ string web::pp_json_url(const string &url) {
     return "error";
   return web::pp_json(page);
 };
+
+static const pair<string,string> read_creds()
+{
+  static int first=0;
+  cerr << "first: " << first << endl;
+  xassert(!first++);
+  string text=util::read_gpg_file("etc/cred.json.asc");
+  json js = parse_json(text);
+  pair<string,string> res;
+  res.first=js["key"];
+  res.second=js["sec"];
+  return res;
+};
 const string web::load_hmac_page(
     const string &url
     )
 {
-  const static string key=getenv("KEY");
-  setenv("KEY","",true);
-  const static string sec=getenv("SEC");
-  setenv("SEC","",true);
+  const static pair<string,string> creds=read_creds();
+  const string &key=creds.first;
+  const string &sec=creds.second;
   // Set the URL.
   string fixurl=url;
   std::list<string> headers=signurl(fixurl,key,sec);

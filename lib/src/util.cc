@@ -1,10 +1,12 @@
-#include <util.hh>
-#include <unistd.h>
+#include <assert.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
+#include <stdarg.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <util.hh>
 #include <sstream>
 #include <boost/lexical_cast.hpp>
 #include <dbg.hh>
@@ -62,6 +64,97 @@ ssize_t util::write_file(const string &name, const string &text)
     xthrowre("error writing "<<name);
   return text.length();
 };
+static size_t try_read(int &fd, char* buf, size_t size)
+{
+  if(fd < 0)
+    return 0;
+  int res=read(fd,buf,size);
+  if(res<0) {
+    fd=-1;
+    return 0;
+  };
+  return res;
+};
+int util::xfcntl(int fd, int cmd, int arg)
+{
+  int res=fcntl(fd,cmd,arg);
+  if(res<0)
+    xthrowre("fcntl:" << strerror(errno));
+  return res;
+};
+void util::xexecv(const char *exe, char * const *args)
+{
+  execv(exe,args);
+  xthrowre("execv:" << exe << ":" << strerror(errno));
+};
+int util::xfork()
+{
+  int res=fork();
+  if(res<0)
+    xthrowre("fork:"<<strerror(errno));
+  return res;
+};
+void ls_fds() {
+  ostringstream b_cmd;
+  b_cmd << "ls -l /proc/" << getpid() << "/fd/";
+  string cmd=b_cmd.str();
+  cout << "running: (" << cmd << ")" << endl;
+  system(cmd.c_str());
+};
+string util::read_gpg_file(const string &name)
+{
+  xtrace("reading: " << name);
+  static int first_time=unlink("log/gpg.err");
+  system("ls -l log/*");
+  int out_pipe[2];
+  xpipe(out_pipe);
+  int pid=-1;
+  if(!(pid=fork()))
+  {
+    int efd = xopen("log/gpg.err",O_WRONLY|O_CREAT|O_APPEND);
+    dup2(efd,2);
+    xclose(efd);
+    xclose(out_pipe[0]);
+    if(out_pipe[1]!=1) {
+      xdup2(out_pipe[1],1);
+      xclose(out_pipe[1]);
+    };
+    const char *args[]={
+      "gpg",
+      "-d",
+      name.c_str(),
+      0
+    };
+    xexecv("/usr/bin/gpg",(char*const*)args);
+    xthrowre("execve:/usr/bin/gpg:"<<strerror(errno));
+  } else {
+    char buf[8192];
+    int &ofd=out_pipe[0];
+    xclose(out_pipe[1]);
+    string text;
+    while(true)
+    {
+      int res=read(ofd,buf,sizeof(buf));
+      if(res<0)
+        xthrowre("read:"<<ofd<<":"<<strerror(errno));
+      if(res==0)
+        break;
+      text.append(buf,res);
+    };
+    xclose(ofd);
+    int wstatus=0;
+    //int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
+    siginfo_t info;
+    waitid(P_PID,pid,&info,WEXITED);
+    xexpose(info.si_pid);
+    xexpose(info.si_uid);
+    xexpose(info.si_uid);
+    xexpose(info.si_signo);
+    xexpose(info.si_status);
+    xexpose(info.si_code);
+    return text;
+  };
+};
 bool util::exists(const char *name)
 {
 	struct stat buf;
@@ -107,6 +200,13 @@ int util::xrename(const char *ofn, const char *nfn)
   int res=rename(ofn,nfn);
   if(res<0)
     xcroak("rename("<<ofn<<","<<nfn<<"):" << strerror(errno));
+  return res;
+};
+int util::xpipe(int fds[2])
+{
+  int res=pipe(fds);
+  if(res<0)
+    xthrowre("xpipe:" << &fds << ":" << strerror(errno));
   return res;
 };
 int util::xdup2(int fd, int ofd)
