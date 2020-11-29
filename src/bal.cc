@@ -490,6 +490,8 @@ int xmain( const argv_t &args )
     adjust(todo);
   return 0;
 };
+// This is atest.
+// This is only a test
 int main( int argc, char** argv )
 {
   try
