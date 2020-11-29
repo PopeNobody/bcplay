@@ -203,6 +203,7 @@ ostream &operator<<(ostream &lhs, const header_t &head)
     << "|" << setw( monw ) << "cur$ "
     << "|" << setw( monw ) << "goal$ "
     << "|" << setw( monw ) << "del$"
+    << "|" << setw( monw ) << "btc$"
     << "|";
   string str=text.str();
   if(head.dashes) {
@@ -246,6 +247,8 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
     << setw(monw) << rhs.btc*usd_spot() << "|"
     << setw(monw) << rhs.btc_goal*usd_spot() << "|"
     << setw(monw) << rhs.btc_del*usd_spot() << "|"
+    << setw(monw) << rhs.btc
+    << "|"
     ;
   return lhs;
 };
@@ -280,10 +283,6 @@ todo_v mk_todos()
     todo_map[ g.first ].pct_goal = g.second;
   };
   money_t tot_btc = 0.0;
-//     for ( auto &b : balance_l::load_balances() )
-//     {
-//       cout << b.sym << " " << b.bal << " " << b.btc << endl;
-//     };
   for ( auto &b : balance_l::load_balances() )
   {
     if (
