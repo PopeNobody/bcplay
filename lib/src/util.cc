@@ -103,8 +103,27 @@ void ls_fds() {
 };
 string util::read_gpg_file(const string &name)
 {
-  xtrace("reading: " << name);
-  static int first_time=unlink("log/gpg.err");
+  int pipe[2];
+  xpipe(pipe);
+  if(!xfork()) {
+    xdup2(1,pipe[1]);
+    close(pipe[1]);
+    close(pipe[0]);
+    while(1) {
+      sleep(1);
+      cout << "testing" << endl;
+    };
+    exit(0);
+  } else {
+    xdup2(0,pipe[0]);
+    close(pipe[0]);
+    close(pipe[1]);
+    string line;
+    while(getline(cin,line)){
+      cout << line << endl;
+    };
+  };
+};
   system("ls -l log/*");
   int out_pipe[2];
   xpipe(out_pipe);
