@@ -146,6 +146,7 @@
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/debug/debug.h
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/deque
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/exception
+/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/experimental/memory_resource
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/ext/aligned_buffer.h
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/ext/alloc_traits.h
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/ext/atomicity.h
@@ -174,6 +175,7 @@
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/numeric
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/ostream
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/set
+/usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/shared_mutex
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/sstream
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/stack
 /usr/bin/../lib/gcc/x86_64-linux-gnu/8/../../../../include/c++/8/stdexcept
@@ -870,12 +872,6 @@
 /usr/include/boost/utility/enable_if.hpp
 /usr/include/boost/utility/identity_type.hpp
 /usr/include/boost/version.hpp
-/usr/include/clang/7.0.1/include/__stddef_max_align_t.h
-/usr/include/clang/7.0.1/include/float.h
-/usr/include/clang/7.0.1/include/limits.h
-/usr/include/clang/7.0.1/include/stdarg.h
-/usr/include/clang/7.0.1/include/stddef.h
-/usr/include/clang/7.0.1/include/stdint.h
 /usr/include/ctype.h
 /usr/include/endian.h
 /usr/include/errno.h
@@ -1019,6 +1015,12 @@
 /usr/include/x86_64-linux-gnu/sys/types.h
 /usr/include/x86_64-linux-gnu/sys/ucontext.h
 /usr/include/x86_64-linux-gnu/sys/wait.h
+/usr/lib/llvm-11/lib/clang/11.0.1/include/__stddef_max_align_t.h
+/usr/lib/llvm-11/lib/clang/11.0.1/include/float.h
+/usr/lib/llvm-11/lib/clang/11.0.1/include/limits.h
+/usr/lib/llvm-11/lib/clang/11.0.1/include/stdarg.h
+/usr/lib/llvm-11/lib/clang/11.0.1/include/stddef.h
+/usr/lib/llvm-11/lib/clang/11.0.1/include/stdint.h
 inc/balance.hh
 inc/bittrex.hh
 inc/bittrex_json.hh
@@ -1052,7 +1054,10 @@ lib/src/web_api.cc
 src/bal.cc
 src/closeout.cc
 src/mk_html.cc
+src/one.cc
 src/orders.cc
 src/prices.cc
 src/ratios.cc
 test/src/read_gpg_file.cc
+test/src/sym_test.cc
+test/src/ws_split.cc

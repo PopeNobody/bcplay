@@ -1,18 +1,15 @@
 MAKEFLAGS+= -rR
-test:
-
 include etc/default_target.mk
 include etc/chain.mk
-include $(wildcard $(ALL_DEP)) /dev/null
 
 all:=
 
 PWD:=$(shell pwd)
 
 LDLIBS := -Wl,--start-group
-#LDLIBS += -lcoin
-#LDLIBS += -lcurl
-#LDLIBS += -lcurlpp
+LDLIBS += -lcoin
+LDLIBS += -lcurl
+LDLIBS += -lcurlpp
 LDLIBS += -Wl,--end-group
 
 LCOIN_SRC:=$(wildcard lib/src/*.cc)
@@ -28,7 +25,6 @@ TESTS_SRC:=$(wildcard test/src/*.cc)
 TESTS_OBJ:=$(patsubst test/src/%.cc,test/obj/%.o,$(TESTS_SRC))
 TESTS_DEP:=$(patsubst %.o, %.d, $(TESTS_OBJ))
 TESTS:=    $(patsubst test/src/%.cc,test/bin/%,$(TESTS_SRC))
-TESTS:=test/bin/sym_test
 all+=$(TESTS)
 else
 TESTS_SRC:= $(shell echo)
@@ -62,16 +58,6 @@ ETC_FLAGS_M:=$(filter-out $(ETC_FLAGS_P),$(ETC_FLAGS))
 $(LCOIN_LIB): $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
-%.mk: ;
-
-%.i: %.cc etc/cppflags etc/cxxflags
-	@mkdir -p $(dir $@)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $@
-
-test/obj/%.i: test/src/%.cc etc/cppflags etc/cxxflags
-	@mkdir -p $(dir $@)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $@
-
 $(LCOIN_OBJ): lib/obj/%.o: lib/src/%.cc etc/cppflags etc/cxxflags
 	@mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
@@ -91,7 +77,7 @@ $(EXES): bin/%: obj/%.o $(LCOIN_LIB) etc/ld_flags
 	@mkdir -p $(dir $@)
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
-$(TESTS): test/bin/%: test/obj/%.o #$(LCOIN_LIB)
+$(TESTS): test/bin/%: test/obj/%.o $(LCOIN_LIB)
 	@mkdir -p $(dir $@)
 	$(CXX) $(LDFLAGS) $< -o $@ $(LDLIBS)
 
@@ -108,11 +94,5 @@ clean:
 
 all: $(all) tags
 	make tags
-
-tests: $(TESTS)
-
-test: tests
-	for i in $(TESTS); do $$i || exit 1; done
-
 
 

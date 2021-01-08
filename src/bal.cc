@@ -153,7 +153,6 @@ using coin::todo_v;
 struct todo_more {
   bool operator()( const todo_t &lhs, const todo_t &rhs )
   {
-      return true;
     if((lhs.btc_del) > (rhs.btc_del))
       return true;
     if((lhs.btc_del) < (rhs.btc_del))

@@ -52,6 +52,7 @@ namespace util {
     {
       return join(c,cont.begin(),cont.end());
     };
+  vector<string> ws_split( const string &str );
   vector<string> split( char sep, const string &str );
   void split_stream(const string &logname);
   template<typename itr_t, typename val_t>

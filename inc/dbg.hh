@@ -11,31 +11,8 @@
 using std::ostream;
 using std::exception;
 using std::type_info;
-
-
-
-struct helper {
-  static ostream &stream(ostream &lhs, const type_info &rhs);
-  static ostream &stream(ostream &lhs, const exception &rhs);
-};
-inline ostream &operator<<(ostream &lhs, const type_info &rhs)
-{
-  return helper::stream(lhs,rhs);
-}
-inline ostream &operator<<(ostream &lhs, const exception &rhs)
-{
-  return helper::stream(lhs,rhs);
-}
-
-
-//   inline ostream &operator<<(ostream &lhs, const exception &rhs)
-//   {
-//     return ex_streamer::stream(lhs, rhs);
-//   };
-//   inline ostream &operator<<(ostream &lhs, const type_info &rhs)
-//   {
-//     return ex_streamer::stream(lhs, rhs);
-//   };
+ostream &operator<<(ostream &lhs, const exception &rhs);
+ostream &operator<<(ostream &lhs, const type_info &rhs);
 
 #define nop()
 #define macwrap(x,y)  do{ x; y; }while(0)

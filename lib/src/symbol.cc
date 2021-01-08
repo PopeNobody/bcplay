@@ -2,8 +2,9 @@
 #include <coinfwd.hh>
 
 
-ostream &coin::operator<<(ostream &lhs, const sym_t &rhs) {
-  return lhs << (&lhs.text[0]);
+namespace coin {
+  ostream &operator<<(ostream &lhs, const sym_t &rhs) {
+    return lhs << (const string &)rhs;
+  };
 };
-
 
