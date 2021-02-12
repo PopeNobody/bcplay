@@ -18675,7 +18675,7 @@ addr	inc/balance.hh	/^    string addr;$/;"	m	struct:coin::balance_t
 addrlen	/usr/include/x86_64-linux-gnu/curl/curl.h	/^  unsigned int addrlen; \/* addrlen was a socklen_t type before 7.18.0 but it$/;"	m	struct:curl_sockaddr
 adjust	src/bal.cc	/^void adjust(const todo_t &todo)$/;"	f
 adjust	src/closeout.cc	/^bool adjust(const balance_t &bal)$/;"	f
-adjust	src/one.cc	/^void adjust(const todo_t &todo)$/;"	f
+adjust	src/one.cc	/^void adjust(todo_t &chosen)$/;"	f
 adl_begin	/usr/include/boost/range/iterator_range_core.hpp	/^            static IteratorT adl_begin( ForwardRange& r )$/;"	f	struct:boost::iterator_range_detail::iterator_range_impl
 adl_end	/usr/include/boost/range/iterator_range_core.hpp	/^            static IteratorT adl_end( ForwardRange& r )$/;"	f	struct:boost::iterator_range_detail::iterator_range_impl
 adl_serializer	inc/json.hh	/^struct adl_serializer$/;"	s	namespace:nlohmann
@@ -19558,6 +19558,7 @@ brotli_version	/usr/include/x86_64-linux-gnu/curl/curl.h	/^  const char *brotli_
 btc	inc/balance.hh	/^		money_t btc;$/;"	m	struct:coin::balance_t
 btc	src/bal.cc	/^    money_t   btc;$/;"	m	struct:coin::todo_t	file:
 btc	src/one.cc	/^    money_t   btc;$/;"	m	struct:coin::todo_t	file:
+btc	src/one.cc	/^todo_t &btc() {$/;"	f
 btc_del	src/bal.cc	/^    money_t   btc_del;$/;"	m	struct:coin::todo_t	file:
 btc_del	src/one.cc	/^    money_t   btc_del;$/;"	m	struct:coin::todo_t	file:
 btc_goal	src/bal.cc	/^    money_t   btc_goal;$/;"	m	struct:coin::todo_t	file:
@@ -22685,8 +22686,8 @@ minus_impl	/usr/include/boost/mpl/aux_/preprocessed/gcc/minus.hpp	/^template<> s
 minus_one	/usr/include/boost/type_traits/is_signed.hpp	/^   static const no_cv_t minus_one = (static_cast<no_cv_t>(-1));$/;"	m	struct:boost::detail::is_signed_values
 minus_one	/usr/include/boost/type_traits/is_unsigned.hpp	/^   static const no_cv_t minus_one = (static_cast<no_cv_t>(-1));$/;"	m	struct:boost::detail::is_unsigned_values
 minus_tag	/usr/include/boost/mpl/aux_/preprocessed/gcc/minus.hpp	/^template< typename T > struct minus_tag$/;"	s	namespace:boost::mpl
+mk_job	src/one.cc	/^todo_t mk_job()$/;"	f
 mk_todos	src/bal.cc	/^todo_v mk_todos()$/;"	f
-mk_todos	src/one.cc	/^todo_v mk_todos()$/;"	f
 mknod	/usr/include/x86_64-linux-gnu/sys/stat.h	/^__NTH (mknod (const char *__path, __mode_t __mode, __dev_t __dev))$/;"	f
 mknodat	/usr/include/x86_64-linux-gnu/sys/stat.h	/^__NTH (mknodat (int __fd, const char *__path, __mode_t __mode,$/;"	f
 mkostemp	/usr/include/stdlib.h	745;"	d
@@ -25422,6 +25423,7 @@ upper_bound_	/usr/include/boost/mpl/vector/aux_/item.hpp	/^    typedef index_ up
 upper_bound_	/usr/include/boost/mpl/vector/aux_/item.hpp	/^    typedef typename next<index_>::type upper_bound_;$/;"	t	struct:boost::mpl::v_item
 upper_bound_	/usr/include/boost/mpl/vector/aux_/vector0.hpp	/^    typedef lower_bound_    upper_bound_;$/;"	t	struct:boost::mpl::vector0
 usage_requirements	/usr/include/boost/concept/usage.hpp	/^struct usage_requirements$/;"	s	namespace:boost::concepts
+usd	src/one.cc	/^money_t usd( const money_t btc )$/;"	f
 usd_max_size	src/bal.cc	/^const money_t & usd_max_size() {$/;"	f
 usd_max_size	src/one.cc	/^const money_t & usd_max_size() {$/;"	f
 usd_min_size	src/bal.cc	/^const money_t & usd_min_size() {$/;"	f
@@ -25665,7 +25667,7 @@ xthrowre	inc/dbg.hh	39;"	d
 xtrace	inc/dbg.hh	23;"	d
 xtrace2	inc/dbg.hh	20;"	d
 xverbose	src/bal.cc	345;"	d	file:
-xverbose	src/one.cc	345;"	d	file:
+xverbose	src/one.cc	356;"	d	file:
 yes	/usr/include/boost/concept/detail/has_constraints.hpp	/^  typedef char yes;$/;"	t	namespace:boost::concepts::detail
 yes_no_tag	/usr/include/boost/mpl/aux_/yes_no.hpp	/^template< bool C_ > struct yes_no_tag$/;"	s	namespace:boost::mpl::aux
 yes_no_tag	/usr/include/boost/mpl/aux_/yes_no.hpp	/^template<> struct yes_no_tag<true>$/;"	s	namespace:boost::mpl::aux

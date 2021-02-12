@@ -12,9 +12,59 @@ using namespace util;
 using namespace std;
 using namespace fmt;
 
-const money_t min_txn_btc = 0.00055;
-const money_t min_bal_btc = 4*min_txn_btc;
+//   const money_t min_txn_btc = 0.00055;
+//   const money_t min_bal_btc = 4*min_txn_btc;
 
+money_t _usd_min_txn, _usd_max_txn, _usd_btc_spot;
+const money_t usd_min_txn() {
+  xassert(_usd_min_txn);
+  return _usd_min_txn;
+};
+const money_t usd_max_txn() {
+  xassert(_usd_max_txn);
+  return _usd_max_txn;
+};
+const money_t usd_min_bal() {
+  return 2*usd_min_txn();
+};
+const money_t usd_btc_spot() {
+  return _usd_btc_spot;
+};
+const money_t btc_usd_spot() {
+  return 1/_usd_btc_spot;
+};
+const money_t btc_max_txn() {
+  return usd_max_txn()/usd_btc_spot();
+};
+const money_t btc_min_bal() {
+  return usd_min_bal()/usd_btc_spot();
+};
+const money_t btc_min_txn() {
+  return usd_min_txn()/usd_btc_spot();
+};
+
+typedef map<sym_t,pct_t> goals_t;
+goals_t goals;
+void load_config() {
+    string text=util::read_file("etc/goals.json");
+    json data=json::parse(text);
+    json jgoals=data.at("goals");
+    json jlims=data.at("limits");
+    _usd_min_txn=(double)jlims.at("usd_min_size");
+    _usd_max_txn=(double)jlims.at("usd_max_size");
+
+    pct_t tot; 
+    for( auto b(jgoals.begin()), e(jgoals.end()); b!=e; b++ )
+    {
+      pct_t pct =(double)b.value();
+      goals[sym_t(b.key())]=pct;
+      tot+=pct;
+    };
+    for( auto &goal : goals ) {
+      goal.second = goal.second / tot;
+      cout << goal.first << " " << goal.second << endl;
+    };
+};
 //  string simple_xact ( const market_t &market, bool buy, money_t qty, money_t rate, bool ioc);
 //#define xcheckin(x)
 // using bittrex::simple_xact;
@@ -28,88 +78,112 @@ const money_t min_bal_btc = 4*min_txn_btc;
 bool adjust(const balance_t &bal)
 {
   xtrace("adjust: " << bal);
-  bool shown=false;
-  if( bal.btc < min_txn_btc ) {
-    shown=true;
-    xexpose(bal.btc);
-  }
-  xexpose(min_txn_btc);
-  if( !shown && bal.btc < min_bal_btc ) {
-    shown=true;
-    xexpose(bal.btc);
-  };
-  xexpose(min_bal_btc);
 
-  auto mlist = market_t::get(bal.sym,"BTC");
-  xassert(mlist.size()==1);
-  auto &mkt=mlist[0];
-  string res;
-  if( bal.btc < min_txn_btc ) {
-    xtrace("Buy Then Sell");
-    if( mkt.sym() == bal.sym ) {
-      money_t rate = mkt.ask();
-      money_t qty = min_txn_btc/rate;
-      xexpose(rate);
-      xexpose(qty);
-      string res=bittrex::simple_xact( mkt, true, qty, rate, false ); 
-      cout << res << endl;
-      return true;
-    } else {
-      money_t rate = mkt.bid();
-      money_t qty = min_txn_btc*rate;
-      xexpose(rate);
-      xexpose(qty);
-      string res=bittrex::simple_xact( mkt, false, qty, rate, false ); 
-      cout << res << endl;
-      return true;
-    };
-  } else if ( bal.btc < min_bal_btc ) {
-    xtrace("we have enough " << bal.sym << " to sell, but not enough to keep");
-    if( mkt.sym() == bal.sym ) {
-      cout << "yes" << endl;
-    } else {
-      money_t rate=mkt.ask();
-      money_t q = bal.bal/rate;
-      money_t qty;
-      ((qty=q));
-      ((qty=q/1.0015));
-      res=bittrex::simple_xact( mkt, true, qty, rate, false ); 
-      cout << res << endl;
-      return true;
-    };
+  auto mkt = market_t::get(bal.sym,"BTC")[0];
+  if(bal.btc < btc_min_txn()) {
+    cout << "Buy, then sell" << endl;
+    xexpose(mkt.bid());
+    xexpose(mkt.ask());
+  } else if ( bal.btc < btc_min_bal() ) {
+    cout << "sell" << endl;
+    xexpose(mkt.bid());
+    xexpose(mkt.ask());
   } else {
-    xtrace("how did we get here?");
+    xthrowre("And you may ask yourself \"How did I get here?\"");
   };
+
+//     string res;
+//     if( bal.btc < min_txn_btc ) {
+//       xtrace("Buy Then Sell");
+//       if( mkt.sym() == bal.sym ) {
+//         money_t rate = mkt.ask();
+//         money_t qty = min_txn_btc/rate;
+//         xexpose(rate);
+//         xexpose(qty);
+//      string res=bittrex::simple_xact( mkt, true, qty, rate, false ); 
+//      cout << res << endl;
+//         return true;
+//       } else {
+//         money_t rate = mkt.bid();
+//         money_t qty = min_txn_btc*rate;
+//         xexpose(rate);
+//         xexpose(qty);
+//      string res=bittrex::simple_xact( mkt, false, qty, rate, false ); 
+//      cout << res << endl;
+//         return true;
+//       };
+//     } else if ( bal.btc < min_bal_btc ) {
+//       xtrace("we have enough " << bal.sym << " to sell, but not enough to keep");
+//       if( mkt.sym() == bal.sym ) {
+//         cout << "yes" << endl;
+//       } else {
+//         money_t rate=mkt.ask();
+//         money_t q = bal.bal/rate;
+//         money_t qty;
+//         ((qty=q));
+//         ((qty=q/1.0015));
+//   //     res=bittrex::simple_xact( mkt, true, qty, rate, false ); 
+//   //      cout << res << endl;
+//         return true;
+//       };
+//     } else {
+//       xtrace("And you may ask yourself ... how did I get here?");
+//     };
   return false;
 };
+string prog_name;
 int xmain(int argc, char**argv)
 {
-  for( int i=0;i<argc;i++){
+  prog_name=argv[0];
+  for( int i=1;i<argc;i++){
     if(argv[i]==string("-y"))
       bittrex::fake_buys=false;
+    else
+      xthrowre("no idea what '"<<argv[i]<<"' means");
   };
-  cout << min_bal_btc << " BTC min bal" << endl;
-  cout << min_txn_btc << " BTC min trade" << endl; 
-  auto bals=balance_t::get_balances();
-  sort(bals.begin(),bals.end(),std::less<balance_t>());
-  cout << market_t::get("USD","BTC") << endl;
-  cout << endl;
+  load_config();
 
+  _usd_btc_spot=market_t::get("BTC","USD")[0].last();
+  xexpose(usd_btc_spot());
+  xexpose(btc_usd_spot());
+  auto bals=balance_t::get_balances();
+  sort(bals.begin(),bals.end(),std::greater<balance_t>());
+  bool min_txn_shown=false;
+  bool min_bal_shown=false;
   for( auto &bal : bals )
   {
-    if( bal.sym == "BTC" ) {
-    } else if( bal.btc > min_bal_btc ) {
-      cout << " -- got enough to hold" << endl;
-    } else if ( !bal.btc ) {
-    } else {
-      xtrace(bal.sym << ":");
-      xtrace("  " << bal.bal);
-      cout << bal << endl;
-      if(adjust(bal)) {
-        return 0;
-      };
+    if(!bal.bal) {
+      //cout << bal.sym << ": 0 balance" << endl;
+      continue;
     };
+    if(bal.pend) {
+      //cout << bal.sym << ": transaction pending" << endl;
+      continue;
+    };
+    if(bal.btc > btc_max_txn()) {
+      continue;
+    };
+    if(goals[bal.sym]) {
+      continue;
+    };
+    if(bal.btc >= btc_min_txn()) {
+      if(!min_txn_shown)
+        xexpose(btc_min_txn());
+      min_txn_shown=true;
+    };
+    if(bal.btc >= btc_min_bal()) {
+      if(!min_bal_shown)
+        xexpose(btc_min_bal());
+      min_bal_shown=true;
+    };
+    cout << bal << endl;
+    adjust(bal);
+    break;
   };
+  if(!min_txn_shown)
+    xexpose(btc_min_txn());
+  if(!min_bal_shown)
+    xexpose(btc_min_bal());
   return 0;
 };
 int main(int argc, char**argv) {

@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <util.hh>
 #include <list>
+#include <array>
 
 using namespace util;
 using namespace coin;
@@ -48,6 +49,7 @@ money_t btc_min_size() {
   return usd_min_size()/usd_spot();
 };
 
+array<string,2> ignored_syms = { "DASH", "XMR" };
 void load_config()
 {
   goals_t res;
@@ -278,6 +280,8 @@ todo_v mk_todos()
     xthrowre("you have no goals!");
   for ( auto &g : goals )
   {
+    if(find(ignored_syms.begin(),ignored_syms.end(),g.first)!=ignored_syms.end())
+      continue;
     todo_map[ g.first ].sym = g.first;
     todo_map[ g.first ].pct_goal = g.second;
   };
@@ -291,21 +295,31 @@ todo_v mk_todos()
        )
     {
       auto &todo=todo_map[ b.sym ];
+      bool skipped =  find(ignored_syms.begin(),ignored_syms.end(),todo.sym)!=ignored_syms.end();
       todo.sym = b.sym;
       todo.btc = b.btc;
       todo.bal = b.bal;
-      tot_btc += b.btc;
+      if(!skipped) {
+        tot_btc += b.btc;
+      };
     };
   }
   {
     todo_v todos;
     for ( auto &item : todo_map ) {
       auto &sym=item.first;
+      bool skipped =  find(ignored_syms.begin(),ignored_syms.end(),item.first)!=ignored_syms.end();
       auto &todo=item.second;
 
-      todo.pct = todo.btc/tot_btc;
-      todo.btc_goal = tot_btc * todo.pct_goal.get();
-      todo.btc_del = (todo.btc_goal - todo.btc);
+      if( skipped ) {
+        todo.pct = 0;
+        todo.btc_goal=todo.btc;
+        todo.btc_del=0;
+      } else {
+        todo.pct = todo.btc/tot_btc;
+        todo.btc_goal = tot_btc * todo.pct_goal.get();
+        todo.btc_del = (todo.btc_goal - todo.btc);
+      };
       if(todo.sym != "BTC")
         todos.push_back(todo);
     };
@@ -471,7 +485,6 @@ int xmain( const argv_t &args )
     };
   };
 
-  cout << read_gpg_file("localbitcoins.com.json.asc");
   load_config();
   usd_spot(market_t::conv(1, "BTC","USD"));
   auto todos=mk_todos();
@@ -485,8 +498,13 @@ int xmain( const argv_t &args )
     cout << todo.sym << " " << "BTC" << endl;
   };
   cout << " ----- " << endl;
-  for(auto &todo:todos) 
-    adjust(todo);
+  for(auto &todo:todos) {
+    try {
+    adjust(todo); 
+    } catch ( const exception &ex ) {
+      cout << ex << endl;
+    };
+  };
   return 0;
 };
 // This is atest.

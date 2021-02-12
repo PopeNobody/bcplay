@@ -224,8 +224,10 @@ inline ostream &operator<<(ostream &lhs, todo_t rhs)
   auto pctw=rhs.pct_goal.get_width();
   money_t spot_btc;
   money_t spot_usd;
+  assert(rhs.sym.size());
   if(rhs.sym=="Total") {
     spot_usd=spot_btc=nan("total");
+  } else if ( rhs.sym == "" ) {
   } else {
     spot_btc= market_t::conv(money_t(1), rhs.sym,"BTC");
     spot_usd= market_t::conv(spot_btc,   "BTC",  "USD");
@@ -261,7 +263,7 @@ void show_todos(const todo_t &btc, todo_v &todos, const todo_t &tot_all, const s
   for( auto &todo : todos ) {
     cout << " " << todo << endl;
   };
-  cout << "%" << tot_all << endl;
+  cout << " " << tot_all <<endl;
   cout << " " << header_t(btc,true) << endl;
   if(fname.size())
   {
@@ -271,7 +273,14 @@ void show_todos(const todo_t &btc, todo_v &todos, const todo_t &tot_all, const s
   };
 };
 todo_m todo_map;
-todo_v mk_todos()
+money_t usd( const money_t btc )
+{
+  return btc*usd_spot();
+};
+todo_t &btc() {
+  return todo_map["BTC"];
+};
+todo_t mk_job()
 {
   todo_map.clear();
   if( !goals.size() )
@@ -297,168 +306,69 @@ todo_v mk_todos()
       tot_btc += b.btc;
     };
   }
-  {
-    todo_v todos;
-    for ( auto &item : todo_map ) {
-      auto &sym=item.first;
-      auto &todo=item.second;
-
-      todo.pct = todo.btc/tot_btc;
-      todo.btc_goal = tot_btc * todo.pct_goal.get();
-      todo.btc_del = (todo.btc_goal - todo.btc);
-      if(todo.sym != "BTC")
-        todos.push_back(todo);
-    };
-    {
-      vector<sym_t> avoid;
-      auto &btc=todo_map["BTC"];
-      {
-        if(btc.btc_del<0) {
-          sort(todos.begin(),todos.end(),todo_more());
-        } else {
-          sort(todos.begin(),todos.end(),todo_less());
-        };
-        todo_t tot_all("Total");
-        for( auto &todo : todos  )
-          tot_all+=todo;
-        tot_all+=btc;
-        show_todos(btc, todos, tot_all,"etc/todos.json");
-      };
-      {
-        todo_v willdo;
-        todo_t tot_all("Total");
-        for( auto &todo:todos ) {
-          if( abs(todo.btc_del) >= btc_min_size() ) {
-            tot_all+=todo;
-            willdo.push_back(todo);
-          };
-        };
-        if(willdo.size())
-          show_todos(todo_t(),willdo,tot_all);
-        return willdo;
-      }
-    };
-  }
-  return todo_v();
-};
-
-#define xverbose(x) xtrace(x)
-void adjust(const todo_t &todo)
-{
-  const auto mkt_l=market_t::get("BTC",todo.sym);
-  const auto &mkt=mkt_l[0];
-  const auto &btc=todo_map["BTC"];
-
-  sym_t qty_unit=mkt.sym();
-  sym_t pri_unit=mkt.cur();
-
-  money_t qty, tot, unitp; 
-  bool is_buy;
-  money_t btc_del=todo.btc_del;
-  xexpose( btc_del * usd_spot() );
-  if(btc_del > btc_max_size()) {
-    xexpose(btc_del);
-    xexpose(btc_max_size());
-    btc_del=btc_max_size();
-    xexpose(btc_max_size());
-  } else if ( btc_del < -btc_max_size() ) {
-    xexpose(btc_del);
-    xexpose(-btc_max_size());
-    btc_del=-btc_max_size();
-    xexpose(btc_del);
+  todo_v todos;
+  todo_t tot_all;
+  todo_t &btc = todo_map["BTC"];
+  for( auto &p : todo_map ) {
+    auto &todo = p.second;
+    todo.pct = todo.btc / tot_btc;
+    todo.btc_goal = tot_btc * todo.pct_goal;
+    todo.btc_del = todo.btc_goal - todo.btc;
+    tot_all += todo;
+    if(todo.sym != "BTC")
+      todos.push_back(todo);
   };
-  xexpose( (btc_del * usd_spot()) );
-  if(qty_unit == todo.sym && pri_unit=="BTC") 
-  {
-    if(btc_del>=0) {
-      tot=btc_del;
-      unitp=mkt.ask();
-      qty=tot/unitp;
-      xverbose(
-          "AAAA buy "
-          << qty << qty_unit
-          << " for "
-          << unitp << pri_unit
-          << " / " << qty_unit
-          << "  Total: "
-          << tot << pri_unit
-          );
-      is_buy=true;
-    } else {
-      tot=-btc_del;
-      unitp=mkt.bid();
-      qty=tot/unitp;
-      if( qty > todo.bal ) {
-        qty=todo.bal;
-      };
-      xexpose(mkt.ask());
-      xexpose(mkt.bid());
-      xexpose(qty);
-      xexpose(todo.bal);
-      xexpose(qty);
-      xexpose(todo.bal);
-      xverbose(
-          "BBBB sell "
-          << qty << qty_unit
-          << " for "
-          << unitp << pri_unit
-          << " / " << qty_unit
-          << " total: "
-          << tot << pri_unit
-          );
-      is_buy=false;
-    }
-  } else if(qty_unit=="BTC" && pri_unit==todo.sym) {
-    if(btc_del>=0) {
-      tot=btc_del;
-      unitp=mkt.bid();
-      qty=tot;
-      xexpose(mkt.ask());
-      xexpose(mkt.bid());
-      xexpose(qty);
-      xexpose(todo.bal);
-      xverbose(
-          "DDDD sell "
-          << qty << qty_unit
-          << " for "
-          << unitp << pri_unit
-          << " / " << qty_unit
-          << " total: "
-          << tot << qty_unit
-          );
-      is_buy=false;
-    } else {
-      tot=-btc_del;
-      unitp=mkt.ask();
-      qty=tot;
-      xexpose(mkt.ask());
-      xexpose(mkt.bid());
-      xexpose(qty);
-      xexpose(todo.bal);
-      xassert(qty<todo.bal);
-      xverbose(
-          "CCCC buy "
-          << qty << qty_unit
-          << " for " << unitp
-          << "/" << qty_unit
-          << " total: "
-          << tot << qty_unit
-          );
-      is_buy=true;
-    };
+  if(btc.btc_del < 0) {
+    sort(todos.begin(),todos.end(),todo_more());
   } else {
-    xthrowre(
-        "WTF? mkt symbols: cur="<<mkt.cur()<<" and prod=" << mkt.sym()
-        );
+    sort(todos.begin(),todos.end(),todo_less());
   };
-  string uuid=simple_xact(mkt, is_buy, qty, unitp, true );
-  if(uuid.size() && uuid!="faked")
-  {
-    order_l ords=bittrex::get_order(uuid);
-    cout << setw(4) << ords[0] << endl;
+
+  show_todos(btc, todos, tot_all,"etc/todos.json");
+  todo_t chosen(todos.front());
+  money_t tot_btc_del;
+  if( btc.btc_del < 0 ) {
+    tot_btc_del = chosen.btc_del-btc.btc_del;
+  } else {
+    tot_btc_del = -chosen.btc_del+btc.btc_del;
   };
-  cout << endl << endl;
+  if( tot_btc_del < btc_min_size() ) {
+    return todo_t();
+  } else {
+    return chosen;
+  };
 };
+
+void adjust(todo_t &chosen)
+{
+  auto &btc=::btc();
+
+  cout << btc << endl;
+  cout << chosen << endl;
+  money_t tot_btc_del;
+  market_l mkts;
+  market_t mkt;
+  bool buy;
+  money_t pri;
+  if( btc.btc_del < 0 ) {
+    tot_btc_del = chosen.btc_del-btc.btc_del;
+    mkts = market_t::get(chosen.sym,btc.sym);
+    mkt = mkts[0];
+    buy = (mkt.sym()!=btc.sym);
+  } else {
+    tot_btc_del = -chosen.btc_del+btc.btc_del;
+    mkts = market_t::get(btc.sym,chosen.sym);
+    mkt = mkts[0];
+    buy = (mkt.sym()==btc.sym);
+  };
+  pri = buy ? mkt.ask() : mkt.bid();
+  cout << "market: " << mkt << endl;
+  cout << "  " << btc.sym << " " << btc.btc_del << endl;
+  cout << "  " << chosen.sym << " " << chosen.btc_del << endl;
+  cout << "  " << "buy: " << boolalpha << buy << endl;
+  simple_xact(mkt,buy,pri,tot_btc_del/2,true);
+};
+#define xverbose(x) xtrace(x)
 int xmain( const argv_t &args )
 {
   for( auto arg : args ) {
@@ -471,22 +381,13 @@ int xmain( const argv_t &args )
     };
   };
 
-  cout << read_gpg_file("localbitcoins.com.json.asc");
   load_config();
   usd_spot(market_t::conv(1, "BTC","USD"));
-  auto todos=mk_todos();
-  if(!todos.size() )
-    return 0;
-
-  sort(todos.begin(),todos.end(),todo_less());
-  cout << " ----- " << endl;
-  for(auto &todo:todos)
-  {
-    cout << todo.sym << " " << "BTC" << endl;
-  };
-  cout << " ----- " << endl;
-  for(auto &todo:todos) 
+  auto todo = mk_job();
+  if( todo.sym.size() ) {
     adjust(todo);
+  };
+
   return 0;
 };
 // This is atest.

@@ -53,6 +53,12 @@ namespace coin {
     const money_t &last()const {
       return data.last;
     };
+    const money_t &high() const {
+      return data.high;
+    };
+    const money_t &low() const {
+      return data.low;
+    };
     money_t avg()const {
       return (bid()+ask())/2;
     };

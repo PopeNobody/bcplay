@@ -297,6 +297,7 @@ void coin::from_json(const json &j, market_t &m)
   if( skips.empty() ) {
     string text = read_file("etc/badstuff.txt");
     vector<string> toks = util::ws_split(text);
+    skips.push_back("BTC-BTC");
     for( auto &tok : toks ) {
       skips.push_back(tok);
     };
@@ -346,7 +347,7 @@ void coin::from_json(const json &j, market_t &m)
 string bittrex::simple_xact (
  const market_t &market,
  bool buy,    // buy or sell
- money_t qty, // in the symbol to buy or sell
+ money_t qty, // in the symbol to buy
  money_t rate, // in currency per unit
  bool ioc
  )
