@@ -70,6 +70,9 @@ namespace fmt {
         val+=rhs.val;
         return *this;
       };
+      operator bool() const {
+        return !!val;
+      };
       ostream &stream(ostream &lhs, int ind=0) const;
   };
   template<typename otype_t>

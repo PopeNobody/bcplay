@@ -11,6 +11,23 @@
 #include <boost/lexical_cast.hpp>
 #include <dbg.hh>
 
+vector<string> util::ws_split( const string &str )
+{
+  vector<string> res;
+  auto b(str.begin()), e(str.end());
+  while(b!=e) {
+    while(b!=e && isspace(*b))
+      b++;
+    if(b!=e) {
+      auto sb=b;
+      while(b!=e && !isspace(*b))
+        b++;
+      auto se=b;
+      res.push_back(string(sb,se));
+    };
+  };
+  return res;
+}
 vector<string> util::split( char sep, const string &str )
 {
   vector<string> res;
@@ -28,6 +45,10 @@ vector<string> util::split( char sep, const string &str )
   };
   return res;
 }
+string util::quote(const string &str){
+  // FIXME:
+  return "'"+str+"'";
+};
 string util::strip(const string &str)
 {
 	auto b(str.begin());
@@ -42,7 +63,6 @@ string util::strip(const string &str)
 };
 string util::read_file(const string &name)
 {
-  xtrace("reading: " << name);
 	ifstream file(name);
   if(!file)
     xthrowre("failed to read file " << name << ":" << strerror(errno));
@@ -103,9 +123,7 @@ void ls_fds() {
 };
 string util::read_gpg_file(const string &name)
 {
-  xtrace("reading: " << name);
   static int first_time=unlink("log/gpg.err");
-  system("ls -l log/*");
   int out_pipe[2];
   xpipe(out_pipe);
   int pid=-1;
@@ -146,12 +164,12 @@ string util::read_gpg_file(const string &name)
     //int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
     siginfo_t info;
     waitid(P_PID,pid,&info,WEXITED);
-    xexpose(info.si_pid);
-    xexpose(info.si_uid);
-    xexpose(info.si_uid);
-    xexpose(info.si_signo);
-    xexpose(info.si_status);
-    xexpose(info.si_code);
+//       xexpose(info.si_pid);
+//       xexpose(info.si_uid);
+//       xexpose(info.si_uid);
+//       xexpose(info.si_signo);
+//       xexpose(info.si_status);
+//       xexpose(info.si_code);
     return text;
   };
 };

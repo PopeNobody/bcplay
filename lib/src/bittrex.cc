@@ -294,6 +294,21 @@ std::vector<string> skips;
 void coin::from_json(const json &j, market_t &m)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ":" << setw(4) << j);
+  if( skips.empty() ) {
+    string text = read_file("etc/badstuff.txt");
+    vector<string> toks = util::ws_split(text);
+    skips.push_back("BTC-BTC");
+    for( auto &tok : toks ) {
+      skips.push_back(tok);
+    };
+    if(skips.size()) {
+      cout << "skips:";
+      auto b(skips.begin()), e(skips.end());
+      while(b!=e)
+        cout << " " << *b++;
+      cout << endl;
+    };
+  };
   try {
     xassert(!j.is_null());
     string name=j.at("MarketName");
@@ -306,7 +321,11 @@ void coin::from_json(const json &j, market_t &m)
     money_t bid=j.at("Bid");
     money_t ask=j.at("Ask");
     if(bid<=0 || bid>=ask ) {
-      xcomment("bad bid/ask for " << name << " skipping");
+      if(find(skips.begin(),skips.end(),name)==skips.end())
+      {
+        xcomment("bad bid/ask for " << name << " skipping");
+        xcomment("     bid: " << bid << " ask: " << ask);
+      };
       return;
     };
     market_t tmp(name,bid,ask);
@@ -328,7 +347,7 @@ void coin::from_json(const json &j, market_t &m)
 string bittrex::simple_xact (
  const market_t &market,
  bool buy,    // buy or sell
- money_t qty, // in the symbol to buy or sell
+ money_t qty, // in the symbol to buy
  money_t rate, // in currency per unit
  bool ioc
  )

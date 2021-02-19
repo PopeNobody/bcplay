@@ -7,6 +7,13 @@ using fmt::nl;
 
 namespace coin {
 	balance_l balance_t::list;
+	bool balance_t::operator>(const balance_t &rhs) const {
+		if( btc > rhs.btc )
+			return true;
+		if( btc < rhs.btc )
+			return false;
+		return sym > rhs.sym;
+	};
 	bool balance_t::operator<(const balance_t &rhs) const {
 		if( btc < rhs.btc )
 			return true;
@@ -18,14 +25,18 @@ namespace coin {
 	{
 		return balance_t::load_balances();
 	};
-  const balance_t &balance_t::get(const sym_t &sym)
+  const balance_t &balance_t::get(const sym_t &sym, bool except)
   {
     for( auto &bal : list )
     {
       if(bal.sym == sym)
         return bal;
     };
-    throw runtime_error("unable to fine balance for "+sym);
+    if(except)
+      throw runtime_error("unable to fine balance for "+sym);
+    static balance_t temp;
+    temp.sym=sym;
+    return temp;
   };
 	const balance_l &balance_t::get_balances()
   {
@@ -51,10 +62,11 @@ namespace coin {
 	};
 	ostream &balance_t::stream(ostream &lhs, int ind) const {
 		lhs
-      << "| " 
-      << left << setw(6) << sym << "|" << right << setw(14) << bal << " | " 
-      << " BTC " << btc << " | " 
-      << " P:" << pend << " |"
+      << " | " << left << setw(8) << sym
+      << " | " << right << setw(14) << bal
+      << " | " << setw(14) << " BTC " << btc
+      << " | " << setw(14) << ava << " |"
+      << " | " << setw(14) << pend << " |"
       ;
 		return lhs;
 	};
