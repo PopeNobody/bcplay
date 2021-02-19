@@ -12,3 +12,5 @@ obj
 log
 html*
 .gdb_history
+all_deps
+tags
