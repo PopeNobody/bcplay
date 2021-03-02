@@ -94539,3 +94539,2850 @@
     ],
     "success": true
 }
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16416506,
+            "Balance": 0.16416506,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 154463.57599041,
+            "Balance": 154463.57599041,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7621.08945887,
+            "Balance": 7621.08945887,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16416506,
+            "Balance": 0.16416506,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 154463.57599041,
+            "Balance": 154463.57599041,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7621.08945887,
+            "Balance": 7621.08945887,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16416506,
+            "Balance": 0.16416506,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 154463.57599041,
+            "Balance": 154463.57599041,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7621.08945887,
+            "Balance": 7621.08945887,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16416506,
+            "Balance": 0.16416506,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 154463.57599041,
+            "Balance": 154463.57599041,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7621.08945887,
+            "Balance": 7621.08945887,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16416506,
+            "Balance": 0.16416506,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 154463.57599041,
+            "Balance": 154463.57599041,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7621.08945887,
+            "Balance": 7621.08945887,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16416506,
+            "Balance": 0.16416506,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 154463.57599041,
+            "Balance": 154463.57599041,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7621.08945887,
+            "Balance": 7621.08945887,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16416506,
+            "Balance": 0.16416506,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 154463.57599041,
+            "Balance": 154463.57599041,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7621.08945887,
+            "Balance": 7621.08945887,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.17086609,
+            "Balance": 0.17086609,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.99811133,
+            "Balance": 15.99811133,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.17086609,
+            "Balance": 0.17086609,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.67588864,
+            "Balance": 15.67588864,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16747907,
+            "Balance": 0.16747907,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5047.28177839,
+            "Balance": 5047.28177839,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 29.96919905,
+            "Balance": 29.96919905,
+            "CryptoAddress": null,
+            "Currency": "ETC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.67588864,
+            "Balance": 15.67588864,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16747907,
+            "Balance": 0.16747907,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5051.78875262,
+            "Balance": 5051.78875262,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 29.96919905,
+            "Balance": 29.96919905,
+            "CryptoAddress": null,
+            "Currency": "ETC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.67588864,
+            "Balance": 15.67588864,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16747907,
+            "Balance": 0.16747907,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5051.78875262,
+            "Balance": 5051.78875262,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 29.96919905,
+            "Balance": 29.96919905,
+            "CryptoAddress": null,
+            "Currency": "ETC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.67588864,
+            "Balance": 15.67588864,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16747907,
+            "Balance": 0.16747907,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5051.78875262,
+            "Balance": 5051.78875262,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 29.96919905,
+            "Balance": 29.96919905,
+            "CryptoAddress": null,
+            "Currency": "ETC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.67588864,
+            "Balance": 15.67588864,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16747907,
+            "Balance": 0.16747907,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5051.78875262,
+            "Balance": 5051.78875262,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 29.96919905,
+            "Balance": 29.96919905,
+            "CryptoAddress": null,
+            "Currency": "ETC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.67588864,
+            "Balance": 15.67588864,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16747907,
+            "Balance": 0.16747907,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5051.78875262,
+            "Balance": 5051.78875262,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 29.96919905,
+            "Balance": 29.96919905,
+            "CryptoAddress": null,
+            "Currency": "ETC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}
+{
+    "message": "",
+    "result": [
+        {
+            "Available": 273.11766315,
+            "Balance": 273.11766315,
+            "CryptoAddress": null,
+            "Currency": "ADA",
+            "Pending": 0.0
+        },
+        {
+            "Available": 15.67588864,
+            "Balance": 15.67588864,
+            "CryptoAddress": "17QBQ6NFZNUY22jSXaXHyiKsTXWUaVCA1x",
+            "Currency": "BCH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "1EY1SACFWoN7GUVhb1YjyXRhWX9i1ogv64",
+            "Currency": "BSV",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.16747907,
+            "Balance": 0.16747907,
+            "CryptoAddress": "1EEAJtQHvipDR39Z6zvcYiH7wVgoUEMhck",
+            "Currency": "BTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 5051.78875262,
+            "Balance": 5051.78875262,
+            "CryptoAddress": null,
+            "Currency": "BTXCRD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "XsqSSsnvZ7ogFQKxdpQy1N99YLE3eHKMi8",
+            "Currency": "DASH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "DMpjwuqMCSuaawEE6d7oZH3pvKjuebSnGT",
+            "Currency": "DGB",
+            "Pending": 0.0
+        },
+        {
+            "Available": 131604.86085165,
+            "Balance": 131604.86085165,
+            "CryptoAddress": null,
+            "Currency": "DOGE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 29.96919905,
+            "Balance": 29.96919905,
+            "CryptoAddress": null,
+            "Currency": "ETC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "0x1b4db0f51ee700ad364087c98882a78ea768f92b",
+            "Currency": "ETH",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "a32ykvsxFmCcW7VGKYS9BViXkK1toMb882",
+            "Currency": "FIRO",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2943.01644469,
+            "Balance": 2943.01644469,
+            "CryptoAddress": null,
+            "Currency": "GAME",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "RWZ5UH3Z7PEYSZ5C5EOWWST6APPTUJKP",
+            "Currency": "GBYTE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 2314.61021815,
+            "Balance": 2314.61021815,
+            "CryptoAddress": null,
+            "Currency": "LBC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 11.0868066,
+            "Balance": 11.0868066,
+            "CryptoAddress": null,
+            "Currency": "LINK",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "LPQdt49xbsxu3L6QSV32qqTtCfggkpnKxj",
+            "Currency": "LTC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "PLi8Ez1tDpjXCEKTv7emMUjoDJkPSY5FAL",
+            "Currency": "POT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 62003.62585939,
+            "Balance": 62003.62585939,
+            "CryptoAddress": null,
+            "Currency": "RDD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 21977.30827614,
+            "Balance": 21977.30827614,
+            "CryptoAddress": null,
+            "Currency": "TUBE",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.00012632,
+            "Balance": 0.00012632,
+            "CryptoAddress": "BTXKT1OR34VERLNQZLZ52EYJ",
+            "Currency": "USD",
+            "Pending": 0.0
+        },
+        {
+            "Available": 7775.33474144,
+            "Balance": 7775.33474144,
+            "CryptoAddress": null,
+            "Currency": "USDT",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "e7fdd8709aba4d0ea5e",
+            "Currency": "XLM",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "86DTEBhhWNt6RdQHHvueoKTdzuNTWhVvJV2W9ePJrZBLVgyYj4mHMabXhkwprqw5VPXyJWBnfbDe4VZhcu2QrXieCDduFZN",
+            "Currency": "XMR",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "t1eaAfSDysZeoREC1d2W5x54mbbzNek2CmP",
+            "Currency": "ZEC",
+            "Pending": 0.0
+        },
+        {
+            "Available": 0.0,
+            "Balance": 0.0,
+            "CryptoAddress": "zna7YDfs2FFgRgnmXsbfDd6u74FSKzzvNpA",
+            "Currency": "ZEN",
+            "Pending": 0.0
+        },
+        {
+            "Available": 238.64429491,
+            "Balance": 238.64429491,
+            "CryptoAddress": null,
+            "Currency": "ZRX",
+            "Pending": 0.0
+        }
+    ],
+    "success": true
+}

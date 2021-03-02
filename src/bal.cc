@@ -49,7 +49,7 @@ money_t btc_min_size() {
   return usd_min_size()/usd_spot();
 };
 
-array<string,2> ignored_syms = { "DASH", "XMR" };
+set<sym_t> ignored_syms;
 void load_config()
 {
   goals_t res;
@@ -74,18 +74,30 @@ void load_config()
     for( auto &goal : res ) {
       goal.second*=100000;
     };
+    json ignore = data.at("ignore");
+    for( auto b(ignore.begin()), e(ignore.end()); b!=e; b++ ) {
+      sym_t sym = *b;
+      ignored_syms.insert(sym);
+    };
   } catch ( exception &e ) {
     cout << e << endl;
   };
   json ndata;
   ndata["goals"]=res;
-  json ldata;
-  ldata["usd_min_size"]=usd_min_size().get();
-  ldata["usd_max_size"]=usd_max_size().get();
-  ndata["limits"]=ldata;
+  {
+    json ldata;
+    ldata["usd_min_size"]=usd_min_size().get();
+    ldata["usd_max_size"]=usd_max_size().get();
+    ndata["limits"]=ldata;
+  }
+  {
+    json idata;
+    idata = ignored_syms;
+    ndata["ignore"]=idata;
+  };
   stringstream str;
   str << setw(4) << ndata;
-  write_file("etc/goals.json.new",str.str());
+  write_file("log/goals.json",str.str());
 };
 
 using bittrex::simple_xact;
