@@ -27,8 +27,8 @@ namespace coin {
     market_t();
     market_t(const data_t &);
     market_t(const market_t &);
-    market_t(const string &name, money_t bid, money_t ask);
     public:
+    market_t(const string &name, money_t bid=money_t(0), money_t ask=money_t(0));
     market_t reverse() const;
    
     explicit operator bool() const; 

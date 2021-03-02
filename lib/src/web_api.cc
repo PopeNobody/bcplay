@@ -91,7 +91,8 @@ static const pair<string,string> read_creds()
   static int first=0;
   cerr << "first: " << first << endl;
   xassert(!first++);
-  string text=util::read_gpg_file("etc/cred.json.asc");
+  string fname = string(getenv("HOME"))+"/.bcplay/keys.json.asc";
+  string text=util::read_gpg_file(fname);
   json js = parse_json(text);
   pair<string,string> res;
   res.first=js["key"];

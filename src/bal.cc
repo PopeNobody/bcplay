@@ -54,8 +54,7 @@ void load_config()
 {
   goals_t res;
   try {
-    string text=util::read_file("etc/goals.json");
-    json data=json::parse(text);
+    json data=json::parse(util::read_file("etc/goals.json"));
     json jgoals=data.at("goals");
     json jlims=data.at("limits");
     _usd_min_size=(double)jlims.at("usd_min_size");
@@ -94,6 +93,7 @@ using bittrex::simple_xact;
 namespace coin {
   struct todo_t
   {
+    sym_t     cur;
     sym_t     sym;
     money_t   bal;
     

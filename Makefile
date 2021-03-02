@@ -1,4 +1,5 @@
 MAKEFLAGS+= -rR
+
 include etc/default_target.mk
 include etc/chain.mk
 

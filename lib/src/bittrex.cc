@@ -260,7 +260,8 @@ void coin::from_json(const json &j, balance_t &bal) {
       from_json(j.at("CryptoAddress"),res.addr);
     };
     try {
-      res.btc=market_t::conv(res.bal,res.sym,"BTC");
+      if(res.bal)
+        res.btc=market_t::conv(res.bal,res.sym,"BTC");
     } catch ( exception &ex ) {
       xtrace(ex.what());
       throw;

@@ -44,6 +44,24 @@ coin::market_t::market_t(const string &name, money_t bid, money_t ask)
       );
   };
 };
+market_t market_t::reverse() const {
+  data_t tmp;
+  tmp.cur=data.sym;
+  tmp.sym=data.cur;
+  tmp.name=tmp.cur+"-"+tmp.sym;
+  tmp.ask=1/data.bid;
+  tmp.bid=1/data.ask;
+  tmp.low=1/data.high;
+  tmp.high=1/data.low;
+  tmp.last=1/data.last;
+  tmp.avg=1/data.avg;
+  tmp.vol=data.vol;
+
+  xassert(tmp.bid>0 && tmp.bid<tmp.ask);
+  market_t mkt(tmp);
+  cout << mkt << endl;
+  return mkt;
+};
 const market_l& market_t::get_markets()
 {
   if(!markets.size())

@@ -33,7 +33,7 @@ namespace coin {
         return bal;
     };
     if(except)
-      throw runtime_error("unable to fine balance for "+sym);
+      throw runtime_error("unable to find balance for "+sym);
     static balance_t temp;
     temp.sym=sym;
     return temp;
