@@ -9,7 +9,6 @@ out
 bin/*
 */obj
 obj
-log
 .gdb_history
 all_deps
 tags
