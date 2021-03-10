@@ -285,6 +285,16 @@ void show_todos(const todo_t &btc, todo_v &todos, const todo_t &tot_all, const s
   };
 };
 todo_m todo_map;
+template<typename val_t>
+int sign(const val_t &val)
+{
+  if(!val)
+    return 0;
+  if(val==abs(val))
+    return 1;
+  else
+    return -1;
+};
 todo_v mk_todos()
 {
   todo_map.clear();
@@ -318,6 +328,7 @@ todo_v mk_todos()
   }
   {
     todo_v todos;
+    auto &btc=todo_map["BTC"];
     for ( auto &item : todo_map ) {
       auto &sym=item.first;
       bool skipped =  find(ignored_syms.begin(),ignored_syms.end(),item.first)!=ignored_syms.end();
@@ -336,7 +347,6 @@ todo_v mk_todos()
         todos.push_back(todo);
     };
     {
-      vector<sym_t> avoid;
       auto &btc=todo_map["BTC"];
       {
         if(btc.btc_del<0) {
@@ -344,12 +354,11 @@ todo_v mk_todos()
         } else {
           sort(todos.begin(),todos.end(),todo_less());
         };
-        todo_t tot_all("Total");
-        for( auto &todo : todos  )
-          tot_all+=todo;
-        tot_all+=btc;
-        show_todos(btc, todos, tot_all,"etc/todos.json");
-      };
+      todo_t tot_all("Total");
+      for( auto &todo : todos  )
+        tot_all+=todo;
+      tot_all+=btc;
+      show_todos(btc, todos, tot_all,"etc/todos.json");
       {
         todo_v willdo;
         todo_t tot_all("Total");
@@ -357,6 +366,20 @@ todo_v mk_todos()
           if( abs(todo.btc_del) >= btc_min_size() ) {
             tot_all+=todo;
             willdo.push_back(todo);
+          };
+        };
+        if(!willdo.size() ) {
+          if(abs(btc.btc_del) >= btc_min_size()/2) {
+            auto btc_sign=sign(btc.btc_del);
+            for( auto &todo:todos ) {
+              auto todo_sign=sign(todo.btc_del);
+              if(btc_sign+todo_sign==0) {
+                todo.btc_del=todo_sign*btc_min_size();
+                todo.btc_goal=todo.btc+todo.btc_del;
+                willdo.push_back(todo);
+              };
+              break;
+            };
           };
         };
         if(willdo.size())

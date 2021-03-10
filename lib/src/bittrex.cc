@@ -48,7 +48,7 @@ void bittrex::save_json(const string &fname, const json &json, bool backup)
   };
   if(!ofile)
     xthrowre("open:"+fname+strerror(errno));
-  ofile<<setw(4)<<json<<endl;
+  ofile<<setw(4)<<json<<endl<<endl;
   if(!ofile)
     xthrowre("error writing "+fname);
 };
