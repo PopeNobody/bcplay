@@ -74,7 +74,7 @@ void load_config()
     for( auto &goal : res ) {
       goal.second*=100000;
     };
-    json ignore = data.at("ignore");
+    json ignore = data.at("ignored");
     for( auto b(ignore.begin()), e(ignore.end()); b!=e; b++ ) {
       sym_t sym = *b;
       ignored_syms.insert(sym);
@@ -93,7 +93,7 @@ void load_config()
   {
     json idata;
     idata = ignored_syms;
-    ndata["ignore"]=idata;
+    ndata["ignored"]=idata;
   };
   stringstream str;
   str << setw(4) << ndata;
