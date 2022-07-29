@@ -1,4 +1,4 @@
-#include <bittrex_json.hh>
+#include "bittrex_json.hh"
 #include <fmt.hh>
 #include <json.hh>
 #include <typeinfo>
@@ -354,39 +354,40 @@ todo_v mk_todos()
         } else {
           sort(todos.begin(),todos.end(),todo_less());
         };
-      todo_t tot_all("Total");
-      for( auto &todo : todos  )
-        tot_all+=todo;
-      tot_all+=btc;
-      show_todos(btc, todos, tot_all,"etc/todos.json");
-      {
-        todo_v willdo;
         todo_t tot_all("Total");
-        for( auto &todo:todos ) {
-          if( abs(todo.btc_del) >= btc_min_size() ) {
-            tot_all+=todo;
-            willdo.push_back(todo);
-          };
-        };
-        if(!willdo.size() ) {
-          if(abs(btc.btc_del) >= btc_min_size()/2) {
-            auto btc_sign=sign(btc.btc_del);
-            for( auto &todo:todos ) {
-              auto todo_sign=sign(todo.btc_del);
-              if(btc_sign+todo_sign==0) {
-                todo.btc_del=todo_sign*btc_min_size();
-                todo.btc_goal=todo.btc+todo.btc_del;
-                willdo.push_back(todo);
-              };
-              break;
+        for( auto &todo : todos  )
+          tot_all+=todo;
+        tot_all+=btc;
+        show_todos(btc, todos, tot_all,"etc/todos.json");
+        {
+          todo_v willdo;
+          todo_t tot_all("Total");
+          for( auto &todo:todos ) {
+            if( abs(todo.btc_del) >= btc_min_size() ) {
+              tot_all+=todo;
+              willdo.push_back(todo);
             };
           };
-        };
-        if(willdo.size())
-          show_todos(todo_t(),willdo,tot_all);
-        return willdo;
-      }
-    };
+          if(!willdo.size() ) {
+            if(abs(btc.btc_del) >= btc_min_size()/2) {
+              auto btc_sign=sign(btc.btc_del);
+              for( auto &todo:todos ) {
+                auto todo_sign=sign(todo.btc_del);
+                if(btc_sign+todo_sign==0) {
+                  todo.btc_del=todo_sign*btc_min_size();
+                  todo.btc_goal=todo.btc+todo.btc_del;
+                  willdo.push_back(todo);
+                };
+                break;
+              };
+            };
+          };
+          if(willdo.size())
+            show_todos(todo_t(),willdo,tot_all);
+          return willdo;
+        }
+      };
+    }
   }
   return todo_v();
 };
@@ -508,12 +509,23 @@ void adjust(const todo_t &todo)
   };
   cout << endl << endl;
 };
+void generate() {
+  int num=1;
+  for ( auto &b : balance_l::load_balances() ) {
+    cout << "#" << num++ << ": ";
+    cout << b << endl;
+  }
+  exit(0);
+};
 int xmain( const argv_t &args )
 {
   for( auto arg : args ) {
     if( arg == "-y" ) {
       bittrex::fake_buys=false;
       cout << "really gonna do it!" << endl;
+    } else if ( arg == "-g" ) {
+      cout << "Generating Goals from Holdings" << endl;
+      generate();
     } else {
       cerr << "bad arg: " << arg << endl;
       exit(1);

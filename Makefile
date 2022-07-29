@@ -3,6 +3,9 @@ MAKEFLAGS+= -rR
 include etc/default_target.mk
 include etc/chain.mk
 
+bin/bal.test: bin/bal
+	bin/bal -g
+
 all:=
 
 PWD:=$(shell pwd)
@@ -14,12 +17,13 @@ LDLIBS += -lcurlpp
 LDLIBS += -Wl,--end-group
 
 LCOIN_SRC:=$(wildcard lib/src/*.cc)
+LCOIN_CPP:=$(patsubst lib/src/%.cc,lib/obj/%.i,$(LCOIN_SRC))
 LCOIN_OBJ:=$(patsubst lib/src/%.cc,lib/obj/%.o,$(LCOIN_SRC))
 LCOIN_DEP:=$(patsubst %.o, %.d, $(LCOIN_OBJ))
 LCOIN_LIB:=lib/libcoin.a
 
-$(LCOIN_OBJ): etc/chain.mk
-#all+= $(LCOIN_LIB) $(LCOIN_OBJ)
+$(LCOIN_CPP) $(LCOIN_OBJ): etc/chain.mk
+
 
 ifeq (1,1)
 TESTS_SRC:=$(wildcard test/src/*.cc)
@@ -35,6 +39,7 @@ TESTS:= $(shell echo)
 endif
 EXES_SRC:=$(wildcard src/*.cc)
 EXES_OBJ:=$(patsubst src/%.cc, obj/%.o, $(EXES_SRC))
+EXES_CPP:=$(patsubst src/%.cc, obj/%.i, $(EXES_SRC))
 EXES_DEP:=$(patsubst %.o, %.d, $(EXES_OBJ))
 EXES:=$(patsubst src/%.cc, bin/%, $(EXES_SRC))
 
@@ -59,6 +64,10 @@ ETC_FLAGS_M:=$(filter-out $(ETC_FLAGS_P),$(ETC_FLAGS))
 $(LCOIN_LIB): $(LCOIN_OBJ)
 	flock $@.lock $(AR) $(ARFLAGS) $@ $^
 
+$(LCOIN_CPP): lib/obj/%.i: lib/src/%.cc etc/cppflags etc/cxxflags
+	@mkdir -p $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $@
+
 $(LCOIN_OBJ): lib/obj/%.o: lib/src/%.cc etc/cppflags etc/cxxflags
 	@mkdir -p $(dir $@)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
@@ -69,6 +78,10 @@ $(TESTS_OBJ): test/obj/%.o: test/src/%.cc etc/cppflags etc/cxxflags
 
 $(TESTS_DEP): $(TESTS_OBJ)
 	@echo made test objs
+
+$(EXES_CPP): obj/%.i: src/%.cc etc/cppflags etc/cxxflags
+	@mkdir -p $(dir $@)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -E $< -o $@
 
 $(EXES_OBJ): obj/%.o: src/%.cc etc/cppflags etc/cxxflags
 	@mkdir -p $(dir $@)
@@ -94,6 +107,6 @@ clean:
 	rm -f $(LCOIN_LIB)
 
 all: $(all) tags
-	make tags
+	${MAKE} tags
 
-
+include $(shell echo /dev/null ; find -name '*.d')

@@ -9,6 +9,7 @@
 using namespace coin;
 using namespace util;
 using namespace fmt;
+using namespace web;
 using std::ostringstream;
 using nlohmann::detail::value_t;
 
@@ -29,7 +30,7 @@ bool bittrex::fake_loads=false;
 bool bittrex::fake_buys=true;
 bool bittrex::show_urls=true;
 const static string api_url = "https://bittrex.com/api/v1.1/";
-
+using web::load_page;
 void bittrex::save_json(const string &fname, const json &json, bool backup)
 {
   trace_from_json(__PRETTY_FUNCTION__ << ": fname=" << fname);
@@ -66,7 +67,12 @@ const json bittrex::load_json(const string &url, const string &save_to, bool bac
       while(getline(str,line))
         page+=line;
     } else {
-      page = web::load_hmac_page(url);
+      page = web::load_sec_page(url,"");
+      xassert(page.length());
+      const char *text=page.c_str();
+      cout << "page:" << endl;
+      cout << text << endl;
+      cout << "page:" << endl;
     };
     json jpage=json::parse(page);
     save_json(save_to,jpage,backup);
@@ -367,7 +373,7 @@ string bittrex::simple_xact (
     << endl
     ;
   const static string sl_url=
-    "https://bittrex.com/api/v1.1/market/";
+    "https://bittrex.com/api/v3/market/";
   string url=sl_url+act+"limit?";
   url+="market="+market.data.name;
   url+="&quantity="+strip(lexical_cast<string>(qty));
@@ -381,7 +387,7 @@ string bittrex::simple_xact (
     return "faked";
 
   try {
-    string page = web::load_hmac_page(url);
+    string page = web::load_sec_page(url,"");
     auto jpage=json::parse(page);
     cout << setw(4) << jpage << endl;
     if(!jpage.at("success")) {
@@ -403,8 +409,8 @@ string bittrex::simple_xact (
 void bittrex::show_withdrawals() {
   cout << "with" << endl;
   const static string gw_url=
-    "https://bittrex.com/api/v1.1/account/getwithdrawalhistory?";
-  string page = web::load_hmac_page(gw_url);
+    "https://bittrex.com/api/v3/account/getwithdrawalhistory?";
+  string page = web::load_sec_page(gw_url,"");
   //	cout << string('-',20) << endl;
   cout << "--------------" << endl << page << endl << endl;
   json jpage=json::parse(page);
@@ -420,8 +426,8 @@ void bittrex::show_withdrawals() {
 void bittrex::show_deposits() {
   cout << "dep" << endl;
   const static string gd_url=
-    "https://bittrex.com/api/v1.1/account/getdeposithistory?";
-  string page = web::load_hmac_page(gd_url);
+    "https://bittrex.com/api/v3/account/getdeposithistory?";
+  string page = web::load_sec_page(gd_url,"");
   //	cout << string('*',20) << endl;
   json jpage=json::parse(page);
   if(!jpage.at("success")) {
@@ -436,10 +442,12 @@ void bittrex::show_deposits() {
 const coin::balance_l bittrex::load_balances()
 {
   const static string gb_url=
-    "https://bittrex.com/api/v1.1/account/getbalances?";
-  json jpage=load_json(gb_url, "log/balances.json");
+    "https://bittrex.com/v3/balances";
+
+  json jpage = load_json(gb_url,"logs/balances.json");
   balance_l temp;
   for( json bal : jpage ) {
+    cout << bal["Currency"] << endl;
     if(bal.at("Currency")=="BTXCRD")
       continue;
     balance_t obj(bal);
@@ -503,7 +511,7 @@ order_l bittrex::get_order( const string& uuid )
   if ( show_urls )
     xexpose(my_url);
   xassert(uuid.size());
-  string page = web::load_hmac_page( my_url );
+  string page = web::load_sec_page( my_url ,"");
   auto jpage = json::parse( page );
   save_json("log/order.json",jpage);
   jpage = jpage[ "result" ];

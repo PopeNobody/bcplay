@@ -13,11 +13,16 @@ std::string encode_base16(const data_slice& data);
 namespace web {
 	using std::list;
 
-	const string load_page(const string &url, const list<string> &headers);
-	inline const string load_page(const string &url )
-	{
-		return load_page(url,list<string>());
-	};
+
+	const string load_sec_page(const string &url, const string &content);
+//     inline const string load_sec_page(const string &url, const string &content) {
+//       return load_sec_page(url,content,list<string>());
+//     };
+	const string load_page(const string &url, const list<string> headers);
+//   	inline const string load_page(const string &url )
+//   	{
+//   		return load_page(url,list<string>());
+//   	};
 	const string load_hmac_page( const string &url );
 	string pp_json_url(const string &url);
 	string pp_json(const string &url);

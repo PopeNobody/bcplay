@@ -43,6 +43,8 @@ typedef struct HMACSHA512CTX
     SHA512CTX octx;
 } HMACSHA512CTX;
 
+void SHA512(const uint8_t*input, size_t length, uint8_t digest[SHA512_DIGEST_LENGTH]);
+
 void HMACSHA512(const uint8_t* input, size_t length, const uint8_t* key,
     size_t key_length, uint8_t digest[HMACSHA512_DIGEST_LENGTH]);
 

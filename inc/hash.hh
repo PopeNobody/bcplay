@@ -211,8 +211,22 @@ using std::setw;
 typedef std::array<uint8_t, 64> long_hash;
 typedef std::vector<unsigned char> data_chunk;
 
+inline data_chunk str2chunk(const string &str) {
+  return data_chunk(str.begin(),str.end());
+};
 /// Generate a hmac sha512 hash.
 long_hash hmac_sha512_hash(const data_chunk &data, const data_chunk &key);
+inline long_hash hmac_sha512_hash(const string &str, const data_chunk &key) {
+  data_chunk data;
+  std::copy(str.begin(),str.end(),back_inserter(data));  
+  return hmac_sha512_hash(data,key);
+}
+long_hash sha512_hash(const data_chunk &data);
+inline long_hash sha512_hash(const string &str){
+  data_chunk data;
+  std::copy(str.begin(),str.end(),back_inserter(data));  
+  return sha512_hash(data);
+};
 
 template<size_t size>
 string encode_base16(const array<uint8_t,size> &rhs)

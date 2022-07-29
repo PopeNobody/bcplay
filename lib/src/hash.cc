@@ -26,3 +26,9 @@ long_hash hmac_sha512_hash(const data_chunk& data, const data_chunk& key)
     HMACSHA512(data.data(), data.size(), key.data(), key.size(), hash.data());
     return hash;
 }
+long_hash sha512_hash(const data_chunk &data)
+{
+  long_hash hash;
+  SHA512(data.data(),data.size(),hash.data());
+  return hash;
+};
